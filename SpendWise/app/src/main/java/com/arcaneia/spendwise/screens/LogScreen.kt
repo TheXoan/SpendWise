@@ -12,34 +12,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import com.arcaneia.spendwise.navigation.AppNavigation
-import com.arcaneia.spendwise.navigation.AppScreens
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavController) {
+fun LogScreen(navController: NavController) {
 
-    Scaffold { BodyContent(navController) }
+    Scaffold { LogBodyContent(navController) }
 }
 
 @Composable
-fun BodyContent(navController: NavController) {
+fun LogBodyContent(navController: NavController) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Hi! Son Juan!!!!! ✅")
-        Button(onClick = { navController.navigate( route = AppScreens.LogScreen.route)}) {
+        Text("Hi! Son LOG SCREEN!! 📚📚📚")
+        Button(onClick = { }) {
             Text("TEST")
         }
     }
 }
-
 /*
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview(){
-    MainScreen()
+fun LogDefaultPreview(){
+    LogScreen()
 }
 */
