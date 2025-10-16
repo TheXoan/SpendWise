@@ -17,6 +17,7 @@ import com.arcaneia.spendwise.ui.theme.SpendWiseTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Permite utilizar la bottom navigation bar
         enableEdgeToEdge()
         setContent {
             AppNavigation()
