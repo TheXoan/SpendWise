@@ -1,18 +1,6 @@
-# ANTEPROXECTO
+# ANTEPROXECTO SPENDWISE
 
-ANTEPROXECTO SPENDWISE
-
-Juan Vázquez Bueno
-
-[1. Descrición do proxecto
-[3](#descrición-do-proxecto)](#descrición-do-proxecto)
-
-[2. Recursos [5](#recursos)](#recursos)
-
-[3. Análise de requirimentos do sistema
-[5](#análise-de-requirimentos-do-sistema)](#análise-de-requirimentos-do-sistema)
-
-[4. Deseño [7](#deseño)](#deseño)
+_Juan Vázquez Bueno_
 
 # Descrición do proxecto
 
@@ -137,44 +125,17 @@ plataformas como Supabase ou a un servidor de BBDD propio.
 
 1.  Funcionalidades
 
-+-----------------------------------+-----------------------------------+
-| ACCIÓN                            | DESCRICIÓN                        |
-+===================================+:==================================+
-| Alta gasto                        | Engadir un novo gasto na base de  |
-|                                   | datos                             |
-+-----------------------------------+-----------------------------------+
-| Alta ingreso                      | Engadir un novo ingreso na base   |
-|                                   | de datos                          |
-+-----------------------------------+-----------------------------------+
-| Alta gasto/ingreso recurrente     | Crear un novo gasto/ingreso       |
-|                                   | periódico                         |
-|                                   |                                   |
-|                                   | que se rexistrará automaticamente |
-|                                   | como un gasto ou ingreso según    |
-|                                   | corresponda                       |
-+-----------------------------------+-----------------------------------+
-| Consulta balance mensual          | Amosar un resumo do balance entre |
-|                                   | ingresos e gastos                 |
-+-----------------------------------+-----------------------------------+
-| Consulta historial                | Visualizar o rexistro de gastos e |
-|                                   | ingresos doutros meses ou anos    |
-|                                   | anteriores                        |
-+-----------------------------------+-----------------------------------+
-| Consultar movementos recurrentes  | Amosar a lista completa de        |
-|                                   | movementos recurrentes activos e  |
-|                                   | a cantidade correspondente a cada |
-|                                   | un                                |
-+-----------------------------------+-----------------------------------+
-| Consultar movementos recurrentes  | Amosa a lista completa de         |
-| activos                           | movementos recurrentes sexan      |
-|                                   | ingresos ou gastos                |
-+-----------------------------------+-----------------------------------+
-| Exportado de Datos                | Permitirá exportar os datos da    |
-|                                   | BBDD                              |
-+-----------------------------------+-----------------------------------+
-| Importado de Datos                | Permitirá importar os datos       |
-|                                   | incluíndo un fichero coa BBDD     |
-+-----------------------------------+-----------------------------------+
+| **ACCIÓN**                             | **DESCRICIÓN**                                                                                                   |
+|:---------------------------------------|:------------------------------------------------------------------------------------------------------------------|
+| **Alta gasto**                         | Engadir un novo gasto na base de datos                                                                           |
+| **Alta ingreso**                       | Engadir un novo ingreso na base de datos                                                                         |
+| **Alta gasto/ingreso recorrente**      | Crear un novo gasto/ingreso periódico que se rexistrará automaticamente como un gasto ou ingreso segundo corresponda |
+| **Consulta balance mensual**           | Amosar un resumo do balance entre ingresos e gastos                                                              |
+| **Consulta historial**                 | Visualizar o rexistro de gastos e ingresos doutros meses ou anos anteriores                                      |
+| **Consultar movementos recorrentes**   | Amosar a lista completa de movementos recorrentes activos e a cantidade correspondente a cada un                 |
+| **Consultar movementos recorrentes activos** | Amosa a lista completa de movementos recorrentes sexan ingresos ou gastos                                    |
+| **Exportado de Datos**                 | Permitirá exportar os datos da BBDD                                                                              |
+| **Importado de Datos**                 | Permitirá importar os datos incluíndo un ficheiro coa BBDD                                                       |
 
 2.  Normativa
 
@@ -258,12 +219,45 @@ emprega ningunha conexión á nube.
 Modelo datos: Define a información que se gardan na base de datos e se
 utilizan en toda a aplicación.
 
-![](media/image1.png){width="6.268055555555556in"
-height="5.204861111111111in"}
+![Arquitectura](img/Arquitectura.png)
 
 2.  Deseño da persistencia de datos
 
-![](media/image2.png){width="6.268055555555556in"
-height="2.6284722222222223in"}
+![Persistencia de datos](img/Persistencia_Datos.png)
+
+![Diagrama Entidad Relación](img/Entidad_Relacion.png)
 
 3.  Deseño da interface de usuario
+
+Main Screen: Será a pantalla principal que nos mostrará o balance de ingresos/gastos e nos permitirá engadir ingresos ou gastos
+
+![Main Screen](img/Main_Screen.png)
+
+Income Screen: Pantalla de ingresos, servirá para crear un novo ingreso
+
+![Income Screen](img/Income_Screen.png)
+
+Expense Screen: Pantalla de gastos, servirá para crear un novo gasto
+
+![Expense Screen](img/Expense_Screen.png)
+
+Log Screen: Pantalla destinada a mostrar o historial de gastos, incluídos os gastos recurrentes
+
+![Log Screen](img/Log_Screen.png)
+
+Recurrin Screen: Pantalla destinada a crear los gastos recurrentes
+
+![Recurrin Screen](img/Recurrin_Screen.png)
+
+Recurrin History: Pantalla destinada a ver los movimientos recurrentes que tenemos configurados actualmente, tanto ingresos como gastos
+
+![Recurrin History Screen](img/Recurrin_History_Screen.png)
+
+Data Screen: Pantalla destinada al importado y exportado de datos
+
+![Data Screen](img/Data_Screen.png)
+
+4. Navegación de vistas:
+Disporase de un bottom menú para a navegación entre as pantallas principales
+
+![Navigation](img/Navigation.png)
