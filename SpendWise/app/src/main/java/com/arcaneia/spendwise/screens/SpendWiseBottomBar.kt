@@ -32,6 +32,7 @@ fun SpendWiseBottomBar(
             val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
             NavigationBarItem(
                 selected = selected,
+
                 onClick = {
                     navController.navigate(item.route) {
                         // Mantiene un solo destino en la parte superior y RESTAURA estado
