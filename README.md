@@ -6,6 +6,15 @@ IMPORTANTE: [Información e documentos de axuda para a elaboración do proxecto 
 
 > *TODO*: Realiza unha breve descrición de quen eres (perfil profesional), os teus puntos fortes, as tecnoloxías que máis dominas... e o porqué te decantaches por este proxecto. **Non máis de 200 palabras**. Indica unha forma fiable de contactar contigo no presente e no futuro.
 
+Son Juan Vázquez Bueno, administrador de sistemas e programador. Ademáis deso teño certificacións como __LPIC-1__, __Docker__, __Git-GitHub__ e 4 anos de experiencia como SysAdmin donde obtiven diversos coñecementos en administración de Firewalls como Fortinet, en switch managment, Active Directory entre outras.
+Como developer o meu recorrido é máis corto, actualmente formo parte do equipo de Desenvolvemento dunha aplicación que forma parte da AMTEGA. Os meus coñecementos máis amplios están en linguaxes como Java, Kotlin e Python tamén teño coñecementos en ThymeLeaf e Spring Boot, e experiencia en BBDD MySql, Oracle e PostgreSQL.
+Os meus puntos fortes son a constancia, as ganas por aprender, a dedicación e a profesionalidad, sempre trato de aportar proactividade aos proxectos donde me atopo
+Escollin este proxecto porque vin unha necesidade nunha gran parte da sociedade, que busca unha solución ao descontrol das súas finanzas, con esta aplicación tratarei de solucionar este problema e poder facer unha aportación a comunidade.
+
+Se tes algunha dúbida ou proposta, podes contactarme no seguinte correo:
+juanbuenovazquez@gmail.com
+
+
 ## Uso
 
 > *TODO*: Nste apartado describe brevemente cómo se usará o software que proxectas. Si tin unha interface de terminal, describe aquí a súa sintaxe. Se ten unha interface gráfica de usuario, describe aquí **sólo o uso** (a modo de sumario) **dos aspectos máis relevantes do seu funcionamento** (máxima brevidade, como se fose un anuncio ou reclamo comercial).
