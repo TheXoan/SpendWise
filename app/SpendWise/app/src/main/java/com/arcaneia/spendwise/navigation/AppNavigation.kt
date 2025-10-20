@@ -1,6 +1,5 @@
 package com.arcaneia.spendwise.navigation
 
-import android.app.Activity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -8,7 +7,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -17,9 +15,9 @@ import com.arcaneia.spendwise.screens.LogScreen
 import com.arcaneia.spendwise.screens.MainScreen
 import com.arcaneia.spendwise.screens.SpendWiseBottomBar
 import com.arcaneia.spendwise.screens.SplashScreen
-
+import com.arcaneia.spendwise.viewmodel.AuthViewModel
 @Composable
-fun AppNavigation() {
+fun AppNavigation(authViewModel: AuthViewModel) {
 
     // Único control de navegación. Controla la navegación de todas las vistas
     val navController = rememberNavController()
@@ -57,7 +55,7 @@ fun AppNavigation() {
             startDestination = AppScreens.SplashScreen.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(AppScreens.SplashScreen.route) { SplashScreen() }
+            composable(AppScreens.SplashScreen.route) { SplashScreen(navController, authViewModel) }
 
             composable(AppScreens.MainScreen.route) { MainScreen(navController) }
             composable(AppScreens.LogScreen.route) { LogScreen(navController) }

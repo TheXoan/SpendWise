@@ -1,53 +1,55 @@
 package com.arcaneia.spendwise
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.setContent
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.arcaneia.spendwise.navigation.AppNavigation
-import com.arcaneia.spendwise.screens.SplashScreen
+import com.arcaneia.spendwise.ui.theme.SpendWiseTheme
+import com.arcaneia.spendwise.viewmodel.AuthViewModel
 
 class MainActivity : FragmentActivity() {
+
+    private lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Pantalla inicial: splash visual
+        // Este objeto cambiará a true cuando se autentique el usuario e iniciará la navegación de vistas
+        authViewModel = AuthViewModel()
+
         setContent {
-            SplashScreen()
+            // Habilita la gestión dinámica de estilos y temas
+            SpendWiseTheme {  AppNavigation(authViewModel = authViewModel) }
         }
 
-        // Lanza autenticación
+        // Se lanza autenticación biométrica
         authenticateUser()
     }
 
+    /**
+     * Nos permitirá autenticar al usuario mediante biometría o patrón/PIN de desbloqueo
+     */
     private fun authenticateUser() {
         val biometricManager = BiometricManager.from(this)
-        val can = biometricManager.canAuthenticate(
+        val canAuth = biometricManager.canAuthenticate(
             BiometricManager.Authenticators.BIOMETRIC_STRONG or
                     BiometricManager.Authenticators.DEVICE_CREDENTIAL
         )
-
-        if (can != BiometricManager.BIOMETRIC_SUCCESS) {
-            val msg = when (can) {
+        if (canAuth != BiometricManager.BIOMETRIC_SUCCESS) {
+            val msg = when (canAuth) {
                 BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
                     "Tu dispositivo no tiene sensor biométrico."
                 BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-                    "No tienes huella, rostro o PIN configurado.\nConfigúralo en Ajustes → Seguridad."
+                    "Configura huella, rostro o PIN en tu dispositivo."
                 BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-                    "El sensor biométrico no está disponible."
-                else -> "Autenticación no disponible."
+                    "Sensor biométrico no disponible."
+                else -> "Fallo de autenticación."
             }
-
-            // ✅ En lugar de cerrar la app, mostramos un mensaje
-            runOnUiThread {
-                Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-            }
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
             return
         }
 
@@ -55,28 +57,16 @@ class MainActivity : FragmentActivity() {
         val prompt = BiometricPrompt(this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        setContent {
-                            AppNavigation()
-                        }
-                    }, 2000)
+                    authViewModel.setAuthenticated(true)
+                    Toast.makeText(applicationContext, "Autenticación correcta", Toast.LENGTH_SHORT).show()
                 }
-
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    // ✅ No cierres aquí. Solo muestra un aviso.
-                    runOnUiThread {
-                        Toast.makeText(
-                            applicationContext,
-                            "Error: $errString",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    Toast.makeText(applicationContext, "Error: $errString", Toast.LENGTH_SHORT).show()
+                    authViewModel.setAuthenticated(false)
                 }
 
                 override fun onAuthenticationFailed() {
-                    runOnUiThread {
-                        Toast.makeText(applicationContext, "No reconocido", Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(applicationContext, "Fallo de autenticación", Toast.LENGTH_SHORT).show()
                 }
             })
 
