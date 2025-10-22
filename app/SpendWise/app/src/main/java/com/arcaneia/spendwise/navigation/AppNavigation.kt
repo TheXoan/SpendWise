@@ -11,13 +11,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.arcaneia.spendwise.data.model.*
 import com.arcaneia.spendwise.screens.LogScreen
 import com.arcaneia.spendwise.screens.MainScreen
 import com.arcaneia.spendwise.screens.SpendWiseBottomBar
 import com.arcaneia.spendwise.screens.SplashScreen
 import com.arcaneia.spendwise.viewmodel.AuthViewModel
 @Composable
-fun AppNavigation(authViewModel: AuthViewModel) {
+fun AppNavigation(
+    authViewModel: AuthViewModel,
+    movViewModel: MovViewModel,
+    categoriaViewModel: CategoriaViewModel,
+    movRecurViewModel: MovRecurViewModel
+) {
 
     // Único control de navegación. Controla la navegación de todas las vistas
     val navController = rememberNavController()
@@ -56,8 +62,12 @@ fun AppNavigation(authViewModel: AuthViewModel) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(AppScreens.SplashScreen.route) { SplashScreen(navController, authViewModel) }
-
-            composable(AppScreens.MainScreen.route) { MainScreen(navController) }
+            composable(AppScreens.MainScreen.route) {
+                MainScreen(
+                    navController = navController,
+                    movViewModel = movViewModel
+                )
+            }
             composable(AppScreens.LogScreen.route) { LogScreen(navController) }
 
             // Ejemplo de pantalla sin BottomBar:

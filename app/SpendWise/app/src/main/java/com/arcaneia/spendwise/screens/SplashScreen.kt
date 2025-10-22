@@ -25,7 +25,7 @@ fun SplashScreen(navController: NavController, authViewModel: AuthViewModel) {
     // Cuando isAuthenticated.value se ponga en true iniciará la navegación
     LaunchedEffect(authViewModel.isAuthenticated.value) {
         if (authViewModel.isAuthenticated.value) {
-            delay(3000) // Espera visual de 3. Nos permitirá cargar datos de la UI sin empeorar la experiencia
+            delay(2000) // Espera visual de 2. Nos permitirá cargar datos de la UI sin empeorar la experiencia
             // Navega a la pantalla princial y elimina la pantalla splash de la pila
             navController.navigate(
                 AppScreens.MainScreen.route) {

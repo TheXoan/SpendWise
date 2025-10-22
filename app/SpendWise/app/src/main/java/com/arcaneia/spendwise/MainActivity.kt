@@ -7,9 +7,13 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.arcaneia.spendwise.data.database.AppDatabase
+import com.arcaneia.spendwise.data.model.*
+import com.arcaneia.spendwise.data.repository.*
 import com.arcaneia.spendwise.navigation.AppNavigation
 import com.arcaneia.spendwise.ui.theme.SpendWiseTheme
 import com.arcaneia.spendwise.viewmodel.AuthViewModel
+import kotlinx.coroutines.*
 
 class MainActivity : FragmentActivity() {
 
@@ -21,9 +25,29 @@ class MainActivity : FragmentActivity() {
         // Este objeto cambiará a true cuando se autentique el usuario e iniciará la navegación de vistas
         authViewModel = AuthViewModel()
 
+        /**
+         * Instancia de ViewModels y creación de la BBDD
+         */
+        val db = AppDatabase.getDatabase(application)
+
+        val movRepository = MovRepository(db.movDao())
+        val categoriaRepository = CategoriaRepository(db.categoriaDao())
+        val movRecurRepository = MovRecurRepository(db.movRecurDao())
+
+        val movViewModel = MovViewModel(movRepository)
+        val categoriaViewModel = CategoriaViewModel(categoriaRepository)
+        val movRecurViewModel = MovRecurViewModel(movRecurRepository)
+
         setContent {
             // Habilita la gestión dinámica de estilos y temas
-            SpendWiseTheme {  AppNavigation(authViewModel = authViewModel) }
+            SpendWiseTheme {
+                AppNavigation(
+                    authViewModel = authViewModel,
+                    movViewModel = movViewModel,
+                    categoriaViewModel = categoriaViewModel,
+                    movRecurViewModel = movRecurViewModel
+                )
+            }
         }
 
         // Se lanza autenticación biométrica
