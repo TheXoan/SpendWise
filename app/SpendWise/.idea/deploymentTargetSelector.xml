@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-10-22T19:47:49.824281100Z">
+        <DropdownSelection timestamp="2025-10-23T18:38:52.404183300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=RZCW60YLC2L" />
@@ -14,20 +14,6 @@
         <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="test">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-09-25T20:16:53.059128600Z">
-          <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\juanb\.android\avd\Pixel_9_Pro_XL.avd" />
-            </handle>
-          </Target>
-        </DropdownSelection>
-        <DialogSelection />
-      </SelectionState>
-      <SelectionState runConfigName="BottomBar">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="showMetod">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

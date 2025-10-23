@@ -40,7 +40,7 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             // Habilita la gestión dinámica de estilos y temas
-            SpendWiseTheme {
+            SpendWiseTheme (darkTheme = true) {
                 AppNavigation(
                     authViewModel = authViewModel,
                     movViewModel = movViewModel,

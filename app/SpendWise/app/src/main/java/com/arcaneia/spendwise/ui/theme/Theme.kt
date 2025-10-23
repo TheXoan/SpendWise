@@ -15,17 +15,20 @@ private val LightColors = lightColorScheme(
 private val DarkColors = darkColorScheme(
     primary = DarkPrimary,
     secondary = DarkSecondary,
-    tertiary = DarkTertiary
+    tertiary = DarkTertiary,
 )
 
 @Composable
 fun SpendWiseTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true, // Material You si está disponible
+    darkTheme: Boolean = true,
+    dynamicColor: Boolean = false, // Material You si está disponible
     content: @Composable () -> Unit
 )
         /**
          * Cambia de forma dinámica el tema y la paleta de colores según el que tengamos habilitado en el dispositivo
+         *  en función de un tema generado automáticamente Material you.
+         *  #######DISABLED
+         *  darkTheme: Boolean = isSystemInDarkTheme()
          */
 {
     val colorScheme = when {
@@ -40,7 +43,7 @@ fun SpendWiseTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography, // Usa la tipografía por defecto (NOTA PENDIENTE ACTUALIZAR)
+        typography = SpendWiseTypography,
         content = content
     )
 }
