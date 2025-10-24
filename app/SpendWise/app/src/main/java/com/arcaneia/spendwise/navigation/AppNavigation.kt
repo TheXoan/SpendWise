@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.arcaneia.spendwise.data.model.*
-import com.arcaneia.spendwise.screens.LogScreen
+import com.arcaneia.spendwise.screens.HistoryScreen
 import com.arcaneia.spendwise.screens.MainScreen
 import com.arcaneia.spendwise.screens.SpendWiseBottomBar
 import com.arcaneia.spendwise.screens.SplashScreen
@@ -37,7 +37,7 @@ fun AppNavigation(
     // Rutas que SÍ muestran la BottomBar
     val bottomBarRoutes = setOf(
         AppScreens.MainScreen.route,
-        AppScreens.LogScreen.route,
+        AppScreens.HistoryScreen.route,
     )
     //Comprueba que a la pantalla que queremos navegar está incluida en las rutas que muestran el bottombar (bottomBarRoutes)
     val showBottomBar = destination.isInRoutes(bottomBarRoutes)
@@ -62,13 +62,8 @@ fun AppNavigation(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(AppScreens.SplashScreen.route) { SplashScreen(navController, authViewModel) }
-            composable(AppScreens.MainScreen.route) {
-                MainScreen(
-                    navController = navController,
-                    movViewModel = movViewModel
-                )
-            }
-            composable(AppScreens.LogScreen.route) { LogScreen(navController) }
+            composable(AppScreens.MainScreen.route) {MainScreen(navController = navController,movViewModel = movViewModel)}
+            composable(AppScreens.HistoryScreen.route) { HistoryScreen(navController) }
 
             // Ejemplo de pantalla sin BottomBar:
             // composable(AppScreens.Detail.route) { DetailScreen(navController) }

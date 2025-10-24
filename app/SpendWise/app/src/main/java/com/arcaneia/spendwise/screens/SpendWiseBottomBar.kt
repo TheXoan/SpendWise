@@ -24,7 +24,7 @@ fun SpendWiseBottomBar(
     val items = listOf(
         BottomItem(
             AppScreens.MainScreen.route, "Home") { androidx.compose.material3.Icon(Icons.Filled.Home, null) },
-        BottomItem(AppScreens.LogScreen.route, "Historial") { androidx.compose.material3.Icon(Icons.Filled.List, null) },
+        BottomItem(AppScreens.HistoryScreen.route, "Historial") { androidx.compose.material3.Icon(Icons.Filled.List, null) },
     )
 
     NavigationBar {

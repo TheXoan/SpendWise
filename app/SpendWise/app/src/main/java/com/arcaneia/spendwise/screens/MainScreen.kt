@@ -34,6 +34,7 @@ fun MainScreen(
     val db = AppDatabase.getDatabase(context)
     val scope = rememberCoroutineScope()
 
+    // Obter balance total ingresos e gastos
     val balanceMes by movViewModel.balanceMes.collectAsStateWithLifecycle()
 
     Column(
@@ -43,12 +44,12 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // 🏷️ Título arriba
+        // 🏷️ Título principal APP
         Text(
             text = "SpendWise",
             style = TitleTextStyle,
             fontSize = 50.sp,
-            color = MaterialTheme.colorScheme.primary,
+            color = Color.White,
             modifier = Modifier.padding(bottom = 20.dp)
         )
 
@@ -59,7 +60,7 @@ fun MainScreen(
             Text(
                 text = "Balance Ingresos/Gastos",
                 style = SubtitleTextStyle,
-                color = MaterialTheme.colorScheme.secondary
+                color = SubtitleColor
             )
             Spacer(modifier = Modifier.height(50.dp))
             Box(
@@ -71,7 +72,7 @@ fun MainScreen(
                         color = BackgroundBoxColorOne,
                         shape = RoundedCornerShape(50.dp)
                     ),
-                contentAlignment = Alignment.Center // 👈 centra el texto horizontal y verticalmente
+                contentAlignment = Alignment.Center // Centra el texto horizontal y verticalmente
             ) {
                 Text(
                     text = "%.2f €".format(balanceMes),
@@ -80,20 +81,11 @@ fun MainScreen(
                     fontSize = 35.sp
                 )
             }
-
-
-            Spacer(
-                modifier = Modifier.height(
-                    14.dp
-                )
-            )
-
-            // 🟢 Insertar categoría
+            Spacer(modifier = Modifier.height(14.dp))
+            // 🟢 Insertar categoría TMP
             Button(
                 onClick = {
-                    scope.launch(
-                        Dispatchers.IO
-                    ) {
+                    scope.launch(Dispatchers.IO) {
                         val categoria =
                             Categoria(
                                 id = 1,
@@ -118,19 +110,11 @@ fun MainScreen(
                     text = "INSERTAR CATEGORIA",
                 )
             }
-
-            Spacer(
-                modifier = Modifier.height(
-                    16.dp
-                )
-            )
-
+            Spacer(modifier = Modifier.height(16.dp))
             // 🔴 Insertar gasto
             Button(
                 onClick = {
-                    scope.launch(
-                        Dispatchers.IO
-                    ) {
+                    scope.launch(Dispatchers.IO){
                         val mov =
                             Mov(
                                 tipo = "gasto",
@@ -161,13 +145,7 @@ fun MainScreen(
                     color = Color.White
                 )
             }
-
-            Spacer(
-                modifier = Modifier.height(
-                    16.dp
-                )
-            )
-
+            Spacer(modifier = Modifier.height(16.dp))
             // 🟢 Insertar ingreso
             Button(
                 onClick = {
@@ -203,12 +181,6 @@ fun MainScreen(
                     "INGRESO"
                 )
             }
-
-            Spacer(
-                modifier = Modifier.height(
-                    16.dp
-                )
-            )
         }
     }
 }

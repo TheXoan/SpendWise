@@ -1,8 +1,6 @@
 package com.arcaneia.spendwise.ui.theme
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -61,11 +59,7 @@ val SubtitleTextStyle = SpendWiseTypography.titleLarge.copy(
     fontSize = 20.sp
 )
 
-// Texto normal (parrafos, contenido principal)
-val BodyTextStyle = SpendWiseTypography.bodyLarge.copy(
-)
-
-// Etiquetas, chips o texto pequeño
-val LabelTextStyle = SpendWiseTypography.labelSmall.copy(
-    letterSpacing = 0.2.sp
+val TitleTopBar = SpendWiseTypography.titleLarge.copy(
+    fontWeight = FontWeight.Medium,
+    fontSize = 20.sp
 )
