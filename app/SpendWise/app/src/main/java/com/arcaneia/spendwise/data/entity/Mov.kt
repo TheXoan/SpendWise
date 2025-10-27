@@ -30,9 +30,8 @@ data class Mov(
 
     val tipo: String,
     val importe: Double,
-    val data_mov: Long,
+    val data_mov: String,
     val descricion: String? = null,
-
     val categoria_id: Int,
     val mov_recur_id: Int? = null
 

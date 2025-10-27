@@ -15,4 +15,7 @@ class MovRepository (private val movDao: MovDao) {
     }
 
     fun getBalanceMesActual(): Flow<Double> = movDao.getBalanceMesActual()
+    fun getYearsWithValues(): Flow<List<String>> = movDao.getYearsWithValues()
+    fun getMonthsFromYear(year: String): Flow<List<String>> = movDao.getMonthsFromYear(year)
+    fun getMovementsForYearMonth(year: String, month: String): Flow<List<Mov>> = movDao.getMovementsForYearMonth(year, month)
 }

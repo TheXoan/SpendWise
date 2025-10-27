@@ -24,6 +24,9 @@ import com.arcaneia.spendwise.data.entity.*
 import com.arcaneia.spendwise.ui.theme.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun MainScreen(
@@ -115,12 +118,18 @@ fun MainScreen(
             Button(
                 onClick = {
                     scope.launch(Dispatchers.IO){
+                        val fechaActual = SimpleDateFormat(
+                            "yyyy-MM-dd HH:mm:ss",
+                            Locale.getDefault()
+                        ).format(
+                            Date()
+                        )
                         val mov =
                             Mov(
                                 tipo = "gasto",
                                 importe = 300.25,
-                                data_mov = System.currentTimeMillis(),
-                                descricion = "Compra de prueba desde Compose",
+                                data_mov = fechaActual,
+                                descricion = "Compra de prueba",
                                 categoria_id = 1,
                                 mov_recur_id = null
                             )
@@ -152,11 +161,17 @@ fun MainScreen(
                     scope.launch(
                         Dispatchers.IO
                     ) {
+                        val fechaActual = SimpleDateFormat(
+                            "yyyy-MM-dd HH:mm:ss",
+                            Locale.getDefault()
+                        ).format(
+                            Date()
+                        )
                         val mov =
                             Mov(
                                 tipo = "ingreso",
                                 importe = 510.45,
-                                data_mov = System.currentTimeMillis(),
+                                data_mov = fechaActual,
                                 descricion = "TEST",
                                 categoria_id = 1,
                                 mov_recur_id = null
@@ -183,45 +198,4 @@ fun MainScreen(
             }
         }
     }
-}
-
-
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun test(){
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // 🏷️ Título arriba
-        Text(
-            text = "SpendWise",
-            style = TitleTextStyle,
-            fontSize = 45.sp,
-            modifier = Modifier.align(Alignment.TopCenter)
-            .padding(top = 130.dp)
-        )
-
-        // 📋 Contenido centrado
-        Column(
-            modifier = Modifier.align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Text(
-                text = "Balance Ingresos/Gastos",
-                style = SubtitleTextStyle
-            )
-
-            Spacer(modifier = Modifier.height(25.dp))
-            Button(onClick = {}) { Text("INSERTAR CATEGORIA") }
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {}) { Text("GASTO") }
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {}) { Text("INGRESO") }
-        }
-    }
-
 }

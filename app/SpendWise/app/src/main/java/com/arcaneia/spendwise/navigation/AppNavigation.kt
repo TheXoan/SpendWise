@@ -62,8 +62,8 @@ fun AppNavigation(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(AppScreens.SplashScreen.route) { SplashScreen(navController, authViewModel) }
-            composable(AppScreens.MainScreen.route) {MainScreen(navController = navController,movViewModel = movViewModel)}
-            composable(AppScreens.HistoryScreen.route) { HistoryScreen(navController) }
+            composable(AppScreens.MainScreen.route) {MainScreen(navController = navController, movViewModel = movViewModel)}
+            composable(AppScreens.HistoryScreen.route) { HistoryScreen(navController,  movViewModel = movViewModel) }
 
             // Ejemplo de pantalla sin BottomBar:
             // composable(AppScreens.Detail.route) { DetailScreen(navController) }
