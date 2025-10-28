@@ -92,7 +92,7 @@ fun MainScreen(
                         val categoria =
                             Categoria(
                                 id = 1,
-                                nombre = "ocio",
+                                nome = "ocio",
                                 tipo = "gastos personales",
                             )
                         db.categoriaDao().insert(categoria)
@@ -129,7 +129,7 @@ fun MainScreen(
                                 tipo = "gasto",
                                 importe = 300.25,
                                 data_mov = fechaActual,
-                                descricion = "Compra de prueba",
+                                descricion = "Compra de prueba asdfasdfasdfasdfasdf".chunked(25).joinToString("\n"),
                                 categoria_id = 1,
                                 mov_recur_id = null
                             )
@@ -140,12 +140,12 @@ fun MainScreen(
                     }
                 },
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally) // 👈 centra el botón en su contenedor
+                    .align(Alignment.CenterHorizontally)
                     .padding(bottom = 10.dp)
                     .width(250.dp).height(70.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = BackgroundBoxColorRed, // 👈 fondo del botón
-                    contentColor = Color.Black              // 👈 color del texto
+                    containerColor = BackgroundBoxColorRed,
+                    contentColor = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp),
             ) {
@@ -183,12 +183,12 @@ fun MainScreen(
                     }
                 },
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally) // 👈 centra el botón en su contenedor
+                    .align(Alignment.CenterHorizontally)
                     .padding(bottom = 10.dp)
                     .width(250.dp).height(70.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = BackgroundBoxColorGreen, // 👈 fondo del botón
-                    contentColor = Color.White             // 👈 color del texto
+                    containerColor = BackgroundBoxColorGreen,
+                    contentColor = Color.White
                 ),
                 shape = RoundedCornerShape(12.dp),
             ) {

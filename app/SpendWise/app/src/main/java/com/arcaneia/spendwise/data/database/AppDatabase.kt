@@ -13,7 +13,7 @@ import com.arcaneia.spendwise.data.entity.MovRecur
 
 @Database(
     entities = [Categoria::class, Mov::class, MovRecur::class],
-    version = 3,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

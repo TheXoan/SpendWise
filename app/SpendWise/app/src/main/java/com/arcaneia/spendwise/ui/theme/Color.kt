@@ -24,6 +24,7 @@ val DarkTertiary = Color(0xFF0D47A1)
 val BackgroundBoxColorOne =  Color(0xFFBFC4F4)
 val BackgroundBoxColorGreen =  Color(0xFF17EB22)
 val BackgroundBoxColorRed =  Color(0xFFBA4A27)
+val BackgroundBoxHistory = Color(0xFF202734)
 
 // Subtitulos
 val SubtitleColor = Color(0xFFC4A3A3)

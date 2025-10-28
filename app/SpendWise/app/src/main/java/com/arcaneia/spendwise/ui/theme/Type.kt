@@ -63,3 +63,8 @@ val TitleTopBar = SpendWiseTypography.titleLarge.copy(
     fontWeight = FontWeight.Medium,
     fontSize = 20.sp
 )
+
+val TitleBox = SpendWiseTypography.displayMedium.copy(
+    fontWeight = FontWeight.Medium,
+    fontSize = 15.sp
+)

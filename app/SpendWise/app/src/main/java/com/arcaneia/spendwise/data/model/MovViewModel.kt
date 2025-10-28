@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arcaneia.spendwise.data.dao.MovDao
 import com.arcaneia.spendwise.data.entity.Mov
+import com.arcaneia.spendwise.data.entity.MovWithCategory
 import com.arcaneia.spendwise.data.repository.MovRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,11 +74,12 @@ class MovViewModel(private val repository: MovRepository) : ViewModel() {
     /**
      * Movimientos filtrados por mes y año
      */
-    val movements = combine(_selectedYear, _selectedMonth) { year, month ->
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val movements: StateFlow<List<MovWithCategory>> = combine(_selectedYear, _selectedMonth) { year, month ->
         if (year != null && month != null) {
             repository.getMovementsForYearMonth(year, month)
         } else {
-            flowOf(emptyList())
+            flowOf(emptyList<MovWithCategory>())
         }
     }.flatMapLatest { it }
         .stateIn(

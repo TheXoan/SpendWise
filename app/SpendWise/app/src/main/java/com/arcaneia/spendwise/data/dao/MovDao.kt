@@ -2,6 +2,7 @@ package com.arcaneia.spendwise.data.dao
 
 import androidx.room.*
 import com.arcaneia.spendwise.data.entity.Mov
+import com.arcaneia.spendwise.data.entity.MovWithCategory
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -41,11 +42,14 @@ interface MovDao {
 
     // Obtener todos los movimientos filtrados por mes y año
     @Query("""
-        SELECT * FROM mov
+        SELECT mov.*, categoria.nome AS categoriaNome
+        FROM mov
+        INNER JOIN categoria ON mov.categoria_id = categoria_id
         WHERE strftime('%Y', data_mov) = :year
-        AND strftime('%m', data_mov) = :month
+            AND strftime('%m', data_mov) = :month
         ORDER BY data_mov DESC
     """)
-    fun getMovementsForYearMonth(year: String, month: String): Flow<List<Mov>>
+    fun getMovementsForYearMonth(year: String, month: String): Flow<List<MovWithCategory>>
+
 
 }

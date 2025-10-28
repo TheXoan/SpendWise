@@ -21,4 +21,5 @@ interface CategoriaDao {
     @Delete
     suspend fun delete(categoria: Categoria)
 
+
 }

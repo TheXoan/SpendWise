@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val LightColors = lightColorScheme(
@@ -16,6 +17,7 @@ private val DarkColors = darkColorScheme(
     primary = DarkPrimary,
     secondary = DarkSecondary,
     tertiary = DarkTertiary,
+    background = Color.Black
 )
 
 @Composable
@@ -27,7 +29,7 @@ fun SpendWiseTheme(
         /**
          * Cambia de forma dinámica el tema y la paleta de colores según el que tengamos habilitado en el dispositivo
          *  en función de un tema generado automáticamente Material you.
-         *  #######DISABLED
+         *  #######está DISABLED
          *  darkTheme: Boolean = isSystemInDarkTheme()
          */
 {

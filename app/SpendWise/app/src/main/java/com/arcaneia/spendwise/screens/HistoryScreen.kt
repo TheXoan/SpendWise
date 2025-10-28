@@ -1,5 +1,6 @@
 package com.arcaneia.spendwise.screens
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,13 +27,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.arcaneia.spendwise.data.entity.Mov
+import com.arcaneia.spendwise.data.entity.MovWithCategory
 import com.arcaneia.spendwise.data.model.MovViewModel
-import com.arcaneia.spendwise.ui.theme.SubtitleColor
-import com.arcaneia.spendwise.ui.theme.SubtitleTextStyle
+import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
+import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
+import com.arcaneia.spendwise.ui.theme.BackgroundBoxHistory
 import com.arcaneia.spendwise.ui.theme.TitleTextStyle
-import com.arcaneia.spendwise.ui.theme.TitleTopBar
-import com.arcaneia.spendwise.ui.theme.TitleTopBarColor
 import com.arcaneia.spendwise.utils.ComboBoxGeneric
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,18 +79,19 @@ fun HistoryScreen(
                     label = "Año",
                     options = years,
                     selected = selectedYear,
-                    onSelected = { movViewModel.onYearSelected(it) }
+                    onSelected = { movViewModel.onYearSelected(it) },
+                    modifier = Modifier.weight(1f)
                 )
                 ComboBoxGeneric(
                     label = "Mes",
                     options = months,
                     selected = selectedMonth,
                     onSelected = { movViewModel.onMonthSelected(it) },
-                    enabled = selectedYear != null
+                    modifier = Modifier.weight(1f)
                 )
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             // Lista de movimientos filtrados
             HistoryList(
@@ -99,7 +104,7 @@ fun HistoryScreen(
 
 @Composable
 fun HistoryList(
-    transacciones: List<Mov>,
+    transacciones: List<MovWithCategory>,
     modifier: Modifier = Modifier
 ) {
     if (transacciones.isEmpty()) {
@@ -124,14 +129,19 @@ fun HistoryList(
     }
 }
 
+@SuppressLint(
+    "DefaultLocale"
+)
 @Composable
-fun TransaccionItem(mov: Mov) {
-    val esIngreso = mov.tipo == "ingreso"
-    val colorCantidad = if (esIngreso) Color(0xFF4CAF50) else Color(0xFFFF5252)
+fun TransaccionItem(
+    movWithCategory: MovWithCategory
+) {
+    val esIngreso = movWithCategory.mov.tipo == "ingreso"
+    val colorCantidad = if (esIngreso) BackgroundBoxColorGreen else BackgroundBoxColorRed
 
     Surface(
-        color = Color(0xFF1A1A24),
-        shape = MaterialTheme.shapes.medium,
+        color = BackgroundBoxHistory,
+        shape = RoundedCornerShape(50.dp),
         tonalElevation = 2.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -143,25 +153,29 @@ fun TransaccionItem(mov: Mov) {
         ) {
             Column {
                 Text(
-                    text = mov.descricion ?: "Movimiento",
+                    text = movWithCategory.mov.descricion ?: "Movimiento",
                     color = Color.White,
-                    fontSize = 16.sp,
+                    fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.height(3.dp))
                 Text(
-                    text = mov.data_mov ?: "Sin categoría",
+                    text =  SimpleDateFormat("dd/MM/yyyy HH:mm",Locale.getDefault())
+                        .format(SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+                            Locale.getDefault()).parse(movWithCategory.mov.data_mov)!!),
                     color = Color.Gray,
-                    fontSize = 14.sp
+                    fontSize = 10.sp
                 )
             }
             Text(
-                text = mov.categoria_id.toString(),
-                color = colorCantidad,
+                text = movWithCategory.categoriaNome,
+                color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(end = 70.dp)
             )
             Text(
-                text = String.format("%.2f€", mov.importe),
+                text = String.format("%.2f€", movWithCategory.mov.importe),
                 color = colorCantidad,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
