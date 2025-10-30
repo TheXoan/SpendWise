@@ -32,6 +32,7 @@ import com.arcaneia.spendwise.data.model.MovViewModel
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxHistory
+import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.ui.theme.TitleTextStyle
 import com.arcaneia.spendwise.utils.ComboBoxGeneric
 import java.text.SimpleDateFormat
@@ -149,14 +150,16 @@ fun TransaccionItem(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
                 Text(
                     text = movWithCategory.mov.descricion ?: "Movimiento",
                     color = Color.White,
                     fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 10.dp)
                 )
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
@@ -164,21 +167,22 @@ fun TransaccionItem(
                         .format(SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
                             Locale.getDefault()).parse(movWithCategory.mov.data_mov)!!),
                     color = Color.Gray,
-                    fontSize = 10.sp
+                    fontSize = 10.sp,
+                    modifier = Modifier.padding(start = 10.dp)
+
                 )
             }
             Text(
                 text = movWithCategory.categoriaNome,
                 color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(end = 70.dp)
+                fontSize = 15.sp,
+                modifier = Modifier.padding(end = 50.dp)
             )
             Text(
                 text = String.format("%.2f€", movWithCategory.mov.importe),
                 color = colorCantidad,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                style = TitleBox,
+                modifier = Modifier.padding(end = 10.dp)
             )
         }
     }

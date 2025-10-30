@@ -21,6 +21,7 @@ import com.arcaneia.spendwise.data.model.MovViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.entity.*
+import com.arcaneia.spendwise.navigation.AppNavigation
 import com.arcaneia.spendwise.ui.theme.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -117,27 +118,7 @@ fun MainScreen(
             // 🔴 Insertar gasto
             Button(
                 onClick = {
-                    scope.launch(Dispatchers.IO){
-                        val fechaActual = SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm:ss",
-                            Locale.getDefault()
-                        ).format(
-                            Date()
-                        )
-                        val mov =
-                            Mov(
-                                tipo = "gasto",
-                                importe = 300.25,
-                                data_mov = fechaActual,
-                                descricion = "Compra de prueba asdfasdfasdfasdfasdf".chunked(25).joinToString("\n"),
-                                categoria_id = 1,
-                                mov_recur_id = null
-                            )
-                        db.movDao()
-                            .insert(
-                                mov
-                            )
-                    }
+                    navController.navigate("expense_screen")
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)

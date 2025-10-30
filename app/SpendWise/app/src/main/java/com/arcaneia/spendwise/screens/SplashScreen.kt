@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,26 +33,26 @@ fun SplashScreen(navController: NavController, authViewModel: AuthViewModel) {
                 popUpTo(
                     AppScreens.SplashScreen.route) { inclusive = true }
             }
-        }}
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    painter = painterResource(id = R.drawable.clean_spendwise_logo),
-                    contentDescription = "SpendWise logo",
-                    modifier = Modifier.size(250.dp)
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-                Text("SpendWise", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(24.dp))
-                Text("Verificando identidad...", fontSize = 16.sp)
-                Spacer(modifier = Modifier.height(8.dp))
-                CircularProgressIndicator()
-            }
+        }
+    }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(), // ocupa toda la pantalla
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+            Image(
+                painter = painterResource(id = R.drawable.clean_spendwise_logo),
+                contentDescription = "SpendWise logo",
+                modifier = Modifier.size(350.dp)
+                    .padding(end = 30.dp),
+            )
+            Text("SpendWise", fontSize = 28.sp, fontWeight = FontWeight.Bold,
+                color = Color.White)
+            Spacer(modifier = Modifier.height(24.dp))
+            Text("Verificando identidad...", fontSize = 16.sp,
+                color = Color.White)
+            Spacer(modifier = Modifier.height(8.dp))
+            CircularProgressIndicator()
         }
     }

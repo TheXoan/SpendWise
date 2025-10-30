@@ -1,10 +1,14 @@
 package com.arcaneia.spendwise.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
@@ -12,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.arcaneia.spendwise.data.model.*
+import com.arcaneia.spendwise.screens.ExpenseScreen
 import com.arcaneia.spendwise.screens.HistoryScreen
 import com.arcaneia.spendwise.screens.MainScreen
 import com.arcaneia.spendwise.screens.SpendWiseBottomBar
@@ -38,6 +43,7 @@ fun AppNavigation(
     val bottomBarRoutes = setOf(
         AppScreens.MainScreen.route,
         AppScreens.HistoryScreen.route,
+        AppScreens.ExpenseScreen.route
     )
     //Comprueba que a la pantalla que queremos navegar está incluida en las rutas que muestran el bottombar (bottomBarRoutes)
     val showBottomBar = destination.isInRoutes(bottomBarRoutes)
@@ -59,11 +65,21 @@ fun AppNavigation(
         NavHost(
             navController = navController,
             startDestination = AppScreens.SplashScreen.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(
+                PaddingValues(
+                    top = innerPadding.calculateTopPadding(),
+                    start = innerPadding.calculateStartPadding(
+                        LayoutDirection.Ltr),
+                    end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
+                    bottom = innerPadding.calculateBottomPadding() / 2 // Reducir el espacio entre la bottombar y las pantallas
+                )
+            )
+
         ) {
             composable(AppScreens.SplashScreen.route) { SplashScreen(navController, authViewModel) }
             composable(AppScreens.MainScreen.route) {MainScreen(navController = navController, movViewModel = movViewModel)}
             composable(AppScreens.HistoryScreen.route) { HistoryScreen(navController,  movViewModel = movViewModel) }
+            composable(AppScreens.ExpenseScreen.route) { ExpenseScreen(navController,  movViewModel = movViewModel) }
 
             // Ejemplo de pantalla sin BottomBar:
             // composable(AppScreens.Detail.route) { DetailScreen(navController) }

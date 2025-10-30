@@ -10,7 +10,9 @@ val BlueTertiary = Color(0xFF82B1FF)
 // DARK THEME
 
 // BLANCO
-val DarkPrimary = Color(0xFFFFFFFF)
+val DarkPrimary = Color(
+    0xFF000000
+)
 // ROSA
 val DarkSecondary = Color(0xFFC4A3A3)
 
@@ -21,14 +23,21 @@ val DarkTertiary = Color(0xFF0D47A1)
  */
 
 // Cajas y Botones
-val BackgroundBoxColorOne =  Color(0xFFBFC4F4)
+val BackgroundBoxColorOne =  Color(0xFFC7CAF1)
 val BackgroundBoxColorGreen =  Color(0xFF17EB22)
 val BackgroundBoxColorRed =  Color(0xFFBA4A27)
 val BackgroundBoxHistory = Color(0xFF202734)
 
 // Subtitulos
 val SubtitleColor = Color(0xFFC4A3A3)
+val SubtitleColorn2 = Color(
+    0xFF9E9C9C
+)
 
 
 // Titulos
 val TitleTopBarColor = Color(0xFF1F13B0)
+
+
+// BottomBar
+val SelectedItemBottomBar = Color(0xFF707ADB)

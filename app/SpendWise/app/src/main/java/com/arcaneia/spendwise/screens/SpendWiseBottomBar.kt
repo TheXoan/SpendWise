@@ -1,18 +1,24 @@
 package com.arcaneia.spendwise.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.arcaneia.spendwise.navigation.AppScreens
+import com.arcaneia.spendwise.ui.theme.SelectedItemBottomBar
 
 data class BottomItem(val route: String, val label: String, val icon: @Composable () -> Unit)
 
@@ -24,15 +30,16 @@ fun SpendWiseBottomBar(
     val items = listOf(
         BottomItem(
             AppScreens.MainScreen.route, "Home") { androidx.compose.material3.Icon(Icons.Filled.Home, null) },
-        BottomItem(AppScreens.HistoryScreen.route, "Historial") { androidx.compose.material3.Icon(Icons.Filled.List, null) },
+        BottomItem(AppScreens.HistoryScreen.route, "Historial") { androidx.compose.material3.Icon(Icons.Filled.History, null) },
     )
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = Color.Black
+    ) {
         items.forEach { item ->
             val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
             NavigationBarItem(
                 selected = selected,
-
                 onClick = {
                     navController.navigate(item.route) {
                         // Mantiene un solo destino en la parte superior y RESTAURA estado
@@ -44,7 +51,12 @@ fun SpendWiseBottomBar(
                     }
                 },
                 icon = item.icon,
-                label = { Text(item.label) }
+                label = { Text(text = item.label,
+                    color = Color.White
+                ) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = SelectedItemBottomBar
+                )
             )
         }
     }
