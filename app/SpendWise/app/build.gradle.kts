@@ -58,6 +58,9 @@ dependencies {
     // Navigation & Biometric
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.biometric)
+    implementation(
+        libs.androidx.compose.foundation
+    )
 
     // Test & debug
     testImplementation(libs.junit)

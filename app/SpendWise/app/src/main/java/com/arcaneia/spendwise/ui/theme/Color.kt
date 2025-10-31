@@ -24,6 +24,7 @@ val DarkTertiary = Color(0xFF0D47A1)
 
 // Cajas y Botones
 val BackgroundBoxColorOne =  Color(0xFFC7CAF1)
+val BackgroundBoxColorOneSelected =  Color(0xFFD7D9F1)
 val BackgroundBoxColorGreen =  Color(0xFF17EB22)
 val BackgroundBoxColorRed =  Color(0xFFBA4A27)
 val BackgroundBoxHistory = Color(0xFF202734)
