@@ -287,3 +287,13 @@ Data Screen: Pantalla destinada al importado y exportado de datos
 Disporase de un bottom menú para a navegación entre as pantallas principales
 
 ![Navigation](img/Navigation.png)
+
+5. Problemas atopados
+
+- Necesidade de un método de autenticación ou verificación para autenticar o usuario e que solo o usuario teña acceso. Para solucionar esto implementase unha verificación biométrica
+
+- Necesidade de un menú de navegación. Tiña un problema que sempre tiña que pintar a bottomnavigationbar en todas as pantallas. Para solucionar esto creeina como unha screen máis e implementeina na navegación. Así podo xestionar en que pantallas quero que se visualice e en cales no. E ao xestionar a navegación de vistas a través de AppNavigation teño moito máis control das navegacións
+
+- Necesidade actualización constante de variables como o balance de ingresos e gastos. Cando añadía os gastos gardabase na base de datos pero para actualizalos tiña que salir e volver a entrar. Para solucionar esto implementei FLOW que permite facer actualizacións automáticas cada vez que insertas ou moficas na base de datos. Unha vez añado un gasto este actualiza o balance globar e tamén o history etc
+
+1. Modificacións do código ou funcionalidades

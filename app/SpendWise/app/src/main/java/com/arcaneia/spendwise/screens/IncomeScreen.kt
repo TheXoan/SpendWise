@@ -45,8 +45,8 @@ import androidx.compose.ui.text.style.TextAlign
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.model.CategoriaViewModel
+import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
-import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.utils.ComboBoxCategorias
 import java.text.SimpleDateFormat
@@ -54,7 +54,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun ExpenseScreen(
+fun IncomeScreen(
     navController: NavController,
     movViewModel: MovViewModel,
     categoriaViewModel: CategoriaViewModel
@@ -87,7 +87,7 @@ fun ExpenseScreen(
         )
         Spacer(modifier = Modifier.height( 20.dp ))
         Text(
-            text = "Agrega un nuevo gasto",
+            text = "Agrega un nuevo ingreso",
             style = SubtitleTextStyle,
             color = SubtitleColor,
             fontSize = 15.sp,
@@ -197,7 +197,7 @@ fun ExpenseScreen(
                 ).format(Date())
 
                 val mov = Mov(
-                    tipo = "gasto",
+                    tipo = "ingreso",
                     importe = cantidadGasto.toDoubleOrNull() ?: 0.0,
                     data_mov = fechaActual,
                     descricion = expenseDescription,
@@ -207,7 +207,7 @@ fun ExpenseScreen(
 
                 if (categoriaSeleccionadaId != null) {
                     movViewModel.insert(mov)
-                    Toast.makeText(context, "Gasto guardado correctamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Ingreso guardado correctamente", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 } else {
                     Toast.makeText(context, "Debes seleccionar una categoría", Toast.LENGTH_SHORT).show()
@@ -218,13 +218,13 @@ fun ExpenseScreen(
                 .padding(bottom = 10.dp)
                 .width(250.dp).height(70.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = BackgroundBoxColorRed,
+                containerColor = BackgroundBoxColorGreen,
                 contentColor = Color.Black
             ),
             shape = RoundedCornerShape(12.dp),
         ) {
             Text(
-                "GUARDAR GASTO",
+                "GUARDAR INGRESO",
                 color = Color.White
             )
         }
@@ -239,7 +239,7 @@ fun ExpenseScreen(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun ExpenseScreenPreview() {
+fun IncomeScreen() {
 
     //ExpenseScreen()
 

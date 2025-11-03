@@ -34,7 +34,7 @@ import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxHistory
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.ui.theme.TitleTextStyle
-import com.arcaneia.spendwise.utils.ComboBoxGeneric
+import com.arcaneia.spendwise.utils.ComboBoxHistory
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -76,14 +76,14 @@ fun HistoryScreen(
                 )
 
             ) {
-                ComboBoxGeneric(
+                ComboBoxHistory(
                     label = "Año",
                     options = years,
                     selected = selectedYear,
                     onSelected = { movViewModel.onYearSelected(it) },
                     modifier = Modifier.weight(1f)
                 )
-                ComboBoxGeneric(
+                ComboBoxHistory(
                     label = "Mes",
                     options = months,
                     selected = selectedMonth,

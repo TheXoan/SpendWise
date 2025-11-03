@@ -139,29 +139,7 @@ fun MainScreen(
             // 🟢 Insertar ingreso
             Button(
                 onClick = {
-                    scope.launch(
-                        Dispatchers.IO
-                    ) {
-                        val fechaActual = SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm:ss",
-                            Locale.getDefault()
-                        ).format(
-                            Date()
-                        )
-                        val mov =
-                            Mov(
-                                tipo = "ingreso",
-                                importe = 510.45,
-                                data_mov = fechaActual,
-                                descricion = "TEST",
-                                categoria_id = 1,
-                                mov_recur_id = null
-                            )
-                        db.movDao()
-                            .insert(
-                                mov
-                            )
-                    }
+                    navController.navigate("income_screen")
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -169,7 +147,7 @@ fun MainScreen(
                     .width(250.dp).height(70.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = BackgroundBoxColorGreen,
-                    contentColor = Color.White
+                    contentColor = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp),
             ) {

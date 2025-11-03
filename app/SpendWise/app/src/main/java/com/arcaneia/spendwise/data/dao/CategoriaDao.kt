@@ -21,5 +21,7 @@ interface CategoriaDao {
     @Delete
     suspend fun delete(categoria: Categoria)
 
-
+    // Obtener todas las categorías
+    @Query("SELECT * FROM categoria")
+    fun getAllCategories(): Flow<List<Categoria>>
 }
