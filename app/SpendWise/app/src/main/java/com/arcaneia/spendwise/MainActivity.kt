@@ -13,7 +13,6 @@ import com.arcaneia.spendwise.data.repository.*
 import com.arcaneia.spendwise.navigation.AppNavigation
 import com.arcaneia.spendwise.ui.theme.SpendWiseTheme
 import com.arcaneia.spendwise.viewmodel.AuthViewModel
-import kotlinx.coroutines.*
 
 class MainActivity : FragmentActivity() {
 
@@ -87,6 +86,8 @@ class MainActivity : FragmentActivity() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     Toast.makeText(applicationContext, "Error: $errString", Toast.LENGTH_SHORT).show()
                     authViewModel.setAuthenticated(false)
+                    finishAndRemoveTask()
+                    kotlin.system.exitProcess(0)
                 }
 
                 override fun onAuthenticationFailed() {

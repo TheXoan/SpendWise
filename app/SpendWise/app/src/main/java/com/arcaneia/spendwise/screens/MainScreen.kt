@@ -1,7 +1,5 @@
 package com.arcaneia.spendwise.screens
 
-import android.content.res.Configuration
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -21,13 +18,9 @@ import com.arcaneia.spendwise.data.model.MovViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.entity.*
-import com.arcaneia.spendwise.navigation.AppNavigation
 import com.arcaneia.spendwise.ui.theme.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun MainScreen(
@@ -48,7 +41,7 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // 🏷️ Título principal APP
+        // Título principal APP
         Text(
             text = "SpendWise",
             style = TitleTextStyle,
@@ -57,7 +50,6 @@ fun MainScreen(
             modifier = Modifier.padding(bottom = 20.dp)
         )
 
-        // 📋 Contenido principal centrado
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -76,7 +68,7 @@ fun MainScreen(
                         color = BackgroundBoxColorOne,
                         shape = RoundedCornerShape(50.dp)
                     ),
-                contentAlignment = Alignment.Center // Centra el texto horizontal y verticalmente
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "%.2f €".format(balanceMes),
@@ -86,14 +78,14 @@ fun MainScreen(
                 )
             }
             Spacer(modifier = Modifier.height(14.dp))
-            // 🟢 Insertar categoría TMP
+            // Insertar categoría TMP
             Button(
                 onClick = {
                     scope.launch(Dispatchers.IO) {
                         val categoria =
                             Categoria(
                                 id = 1,
-                                nome = "ocio",
+                                nome = "Ocio",
                                 tipo = "gastos personales",
                             )
                         db.categoriaDao().insert(categoria)
@@ -101,12 +93,12 @@ fun MainScreen(
 
                 },
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally) // 👈 centra el botón en su contenedor
+                    .align(Alignment.CenterHorizontally)
                     .padding(bottom = 10.dp)
                     .width(250.dp).height(70.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = BackgroundBoxColorOne, // 👈 fondo del botón
-                    contentColor = Color.Black              // 👈 color del texto
+                    containerColor = BackgroundBoxColorOne,
+                    contentColor = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp),
                 ) {
@@ -115,7 +107,7 @@ fun MainScreen(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            // 🔴 Insertar gasto
+            // Insertar gasto
             Button(
                 onClick = {
                     navController.navigate("expense_screen")

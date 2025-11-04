@@ -174,7 +174,7 @@ fun IncomeScreen(
             onValueChange = { entradaUsuarip ->
                 expenseDescription = entradaUsuarip
             },
-            placeholder = { Text("Descrición", color = Color.Black) },
+            placeholder = { Text("Descripción", color = Color.Black, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             colors = TextFieldDefaults.colors(
@@ -186,7 +186,7 @@ fun IncomeScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height( 20.dp ))
+        Spacer(modifier = Modifier.height( 35.dp ))
 
         Button(
             onClick = {
@@ -239,9 +239,8 @@ fun IncomeScreen(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun IncomeScreen() {
+fun IncomeScreenPreview() {
 
-    //ExpenseScreen()
-
+    //IncomeScreen()
 
 }

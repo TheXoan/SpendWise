@@ -21,17 +21,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.entity.MovWithCategory
 import com.arcaneia.spendwise.data.model.MovViewModel
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxHistory
+import com.arcaneia.spendwise.ui.theme.TextBoxBold
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.ui.theme.TitleTextStyle
 import com.arcaneia.spendwise.utils.ComboBoxHistory
@@ -125,6 +123,7 @@ fun HistoryList(
         ) {
             items(transacciones) { mov ->
                 TransaccionItem(mov)
+                Spacer(modifier = Modifier.height( 5.dp ))
             }
         }
     }
@@ -150,47 +149,59 @@ fun TransaccionItem(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
                     text = movWithCategory.mov.descricion ?: "Movimiento",
                     color = Color.White,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = TextBoxBold,
                     modifier = Modifier.padding(start = 10.dp)
                 )
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
-                    text =  SimpleDateFormat("dd/MM/yyyy HH:mm",Locale.getDefault())
-                        .format(SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                            Locale.getDefault()).parse(movWithCategory.mov.data_mov)!!),
+                    text = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                        .format(
+                            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                                .parse(movWithCategory.mov.data_mov)!!
+                        ),
                     color = Color.Gray,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 10.dp)
-
                 )
             }
-            Text(
-                text = movWithCategory.categoriaNome,
-                color = Color.White,
-                fontSize = 15.sp,
-                modifier = Modifier.padding(end = 50.dp)
-            )
-            Text(
-                text = String.format("%.2f€", movWithCategory.mov.importe),
-                color = colorCantidad,
-                style = TitleBox,
-                modifier = Modifier.padding(end = 10.dp)
-            )
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = movWithCategory.categoriaNome,
+                    color = Color.White,
+                    style = TextBoxBold
+                )
+            }
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                // Si la cifra es muy alta reduce el tamaño del texto
+                val importeTexto = String.format("%.2f€", movWithCategory.mov.importe)
+                val fontSize = when {
+                    importeTexto.length > 15 -> 11.sp
+                    importeTexto.length > 10 -> 12.sp
+                    else -> 15.sp
+                }
+                Text(
+                    text = importeTexto,
+                    color = colorCantidad,
+                    style = TitleBox,
+                    fontSize = fontSize,
+                    modifier = Modifier.padding(end = 10.dp)
+                )
+            }
         }
-    }
-}
 
-@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun LogDefaultPreview(){
-    val transacciones: List<Mov>
-    //TransaccionItem(mov = transacciones)
+    }
 }

@@ -43,9 +43,9 @@ val SpendWiseTypography = Typography(
     )
 )
 
-// -------------------------------
-//  Estilos reutilizables
-// -------------------------------
+/**
+ * TYPES CUSTOM
+ */
 
 // Títulos grandes
 val TitleTextStyle = SpendWiseTypography.displayLarge.copy(
@@ -66,5 +66,10 @@ val TitleTopBar = SpendWiseTypography.titleLarge.copy(
 
 val TitleBox = SpendWiseTypography.displayMedium.copy(
     fontWeight = FontWeight.Medium,
+    fontSize = 15.sp
+)
+
+val TextBoxBold = SpendWiseTypography.displayMedium.copy(
+    fontWeight = FontWeight.Bold,
     fontSize = 15.sp
 )

@@ -174,7 +174,7 @@ fun ExpenseScreen(
             onValueChange = { entradaUsuarip ->
                 expenseDescription = entradaUsuarip
             },
-            placeholder = { Text("Descrición", color = Color.Black) },
+            placeholder = { Text("Descripción", color = Color.Black, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             colors = TextFieldDefaults.colors(
@@ -186,7 +186,7 @@ fun ExpenseScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height( 20.dp ))
+        Spacer(modifier = Modifier.height( 35.dp ))
 
         Button(
             onClick = {
