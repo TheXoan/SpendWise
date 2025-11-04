@@ -3,6 +3,7 @@ package com.arcaneia.spendwise.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.NavigationBar
@@ -28,9 +29,9 @@ fun SpendWiseBottomBar(
     currentDestination: NavDestination?
 ){
     val items = listOf(
-        BottomItem(
-            AppScreens.MainScreen.route, "Home") { androidx.compose.material3.Icon(Icons.Filled.Home, null) },
+        BottomItem(AppScreens.MainScreen.route, "Home") { androidx.compose.material3.Icon(Icons.Filled.Home, null) },
         BottomItem(AppScreens.HistoryScreen.route, "Historial") { androidx.compose.material3.Icon(Icons.Filled.History, null) },
+        BottomItem(AppScreens.CategoryScreen.route, "Categorías") { androidx.compose.material3.Icon(Icons.Filled.Category, null) },
     )
 
     NavigationBar(

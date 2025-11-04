@@ -9,4 +9,6 @@ class CategoriaRepository(private val categoriaDao: CategoriaDao) {
     suspend fun insert(categoria: Categoria) = categoriaDao.insert(categoria)
     suspend fun delete(categoria: Categoria) = categoriaDao.delete(categoria)
     fun getAllCategories(): Flow<List<Categoria>> = categoriaDao.getAllCategories()
+
+    suspend fun deleteById(id: Int) = categoriaDao.deleteById(id)
 }

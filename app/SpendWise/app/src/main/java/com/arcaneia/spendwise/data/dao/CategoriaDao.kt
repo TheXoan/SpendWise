@@ -24,4 +24,7 @@ interface CategoriaDao {
     // Obtener todas las categorías
     @Query("SELECT * FROM categoria")
     fun getAllCategories(): Flow<List<Categoria>>
+
+    @Query("DELETE FROM categoria WHERE id = :categoriaId")
+    suspend fun deleteById(categoriaId: Int)
 }

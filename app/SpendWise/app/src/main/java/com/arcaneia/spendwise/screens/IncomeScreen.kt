@@ -49,6 +49,9 @@ import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.utils.ComboBoxCategorias
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -59,6 +62,7 @@ fun IncomeScreen(
     movViewModel: MovViewModel,
     categoriaViewModel: CategoriaViewModel
 ) {
+    var isSaving by remember { mutableStateOf(false) }
 
     var cantidadGasto by remember {mutableStateOf("")}
     var expenseDescription by remember { mutableStateOf("") }
@@ -190,43 +194,46 @@ fun IncomeScreen(
 
         Button(
             onClick = {
-
-                val fechaActual = SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss",
-                    Locale.getDefault()
-                ).format(Date())
-
-                val mov = Mov(
-                    tipo = "ingreso",
-                    importe = cantidadGasto.toDoubleOrNull() ?: 0.0,
-                    data_mov = fechaActual,
-                    descricion = expenseDescription,
-                    categoria_id = categoriaSeleccionadaId ?: 0,
-                    mov_recur_id = null
-                )
+                if (isSaving) return@Button
+                isSaving = true
 
                 if (categoriaSeleccionadaId != null) {
-                    movViewModel.insert(mov)
-                    Toast.makeText(context, "Ingreso guardado correctamente", Toast.LENGTH_SHORT).show()
-                    navController.popBackStack()
+                    val fechaActual = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+                    val mov = Mov(
+                        tipo = "ingreso",
+                        importe = cantidadGasto.toDoubleOrNull() ?: 0.0,
+                        data_mov = fechaActual,
+                        descricion = expenseDescription,
+                        categoria_id = categoriaSeleccionadaId ?: 0,
+                        mov_recur_id = null
+                    )
+
+                    scope.launch(
+                        Dispatchers.IO) {
+                        movViewModel.insert(mov)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context, "Ingreso guardado correctamente", Toast.LENGTH_SHORT).show()
+                            isSaving = false
+                            navController.popBackStack()
+                        }
+                    }
                 } else {
                     Toast.makeText(context, "Debes seleccionar una categoría", Toast.LENGTH_SHORT).show()
+                    isSaving = false
                 }
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = 10.dp)
-                .width(250.dp).height(70.dp),
+                .width(250.dp)
+                .height(70.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = BackgroundBoxColorGreen,
                 contentColor = Color.Black
             ),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(12.dp)
         ) {
-            Text(
-                "GUARDAR INGRESO",
-                color = Color.White
-            )
+            Text("GUARDAR INGRESO", color = Color.White)
         }
 
     }

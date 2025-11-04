@@ -23,9 +23,7 @@ import androidx.room.PrimaryKey
 )
 data class Mov(
 
-    @PrimaryKey(
-        autoGenerate = true
-    )
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
     val tipo: String,

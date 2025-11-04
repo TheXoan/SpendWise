@@ -12,7 +12,7 @@ class MovRepository (private val movDao: MovDao) {
     }
 
     suspend fun delete(mov: Mov) {
-        movDao.insert(mov)
+        movDao.delete(mov)
     }
 
     fun getBalanceMesActual(): Flow<Double> = movDao.getBalanceMesActual()

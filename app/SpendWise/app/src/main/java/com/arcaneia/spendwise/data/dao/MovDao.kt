@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MovDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insert(mov: Mov): Long
 
     @Update
@@ -42,13 +42,13 @@ interface MovDao {
 
     // Obtener todos los movimientos filtrados por mes y año
     @Query("""
-        SELECT mov.*, categoria.nome AS categoriaNome
-        FROM mov
-        INNER JOIN categoria ON mov.categoria_id = categoria_id
-        WHERE strftime('%Y', data_mov) = :year
-            AND strftime('%m', data_mov) = :month
-        ORDER BY data_mov DESC
-    """)
+    SELECT mov.*, categoria.nome AS categoriaNome
+    FROM mov
+    INNER JOIN categoria ON mov.categoria_id = categoria.id
+    WHERE strftime('%Y', mov.data_mov) = :year
+      AND strftime('%m', mov.data_mov) = :month
+    ORDER BY mov.data_mov DESC
+""")
     fun getMovementsForYearMonth(year: String, month: String): Flow<List<MovWithCategory>>
 
 

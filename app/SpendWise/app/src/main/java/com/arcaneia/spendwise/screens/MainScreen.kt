@@ -77,35 +77,6 @@ fun MainScreen(
                     fontSize = 35.sp
                 )
             }
-            Spacer(modifier = Modifier.height(14.dp))
-            // Insertar categoría TMP
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.IO) {
-                        val categoria =
-                            Categoria(
-                                id = 1,
-                                nome = "Ocio",
-                                tipo = "gastos personales",
-                            )
-                        db.categoriaDao().insert(categoria)
-                    }
-
-                },
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 10.dp)
-                    .width(250.dp).height(70.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = BackgroundBoxColorOne,
-                    contentColor = Color.Black
-                ),
-                shape = RoundedCornerShape(12.dp),
-                ) {
-                Text(
-                    text = "INSERTAR CATEGORIA",
-                )
-            }
             Spacer(modifier = Modifier.height(16.dp))
             // Insertar gasto
             Button(

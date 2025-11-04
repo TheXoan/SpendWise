@@ -27,15 +27,15 @@ val BackgroundBoxColorOne =  Color(0xFFC7CAF1)
 val BackgroundBoxColorOneSelected =  Color(0xFFD7D9F1)
 val BackgroundBoxColorGreen =  Color(0xFF17EB22)
 val BackgroundBoxColorRed =  Color(0xFFBA4A27)
-val BackgroundBoxHistory = Color(
-    0xA632374C
+val BackgroundBoxHistory = Color(0xA632374C)
+
+val BackgroundBoxCategory = Color(
+    0xBCFFE447
 )
 
 // Subtitulos
 val SubtitleColor = Color(0xFFC4A3A3)
-val SubtitleColorn2 = Color(
-    0xFF9E9C9C
-)
+val SubtitleColorn2 = Color(0xFF9E9C9C)
 
 
 // Titulos
