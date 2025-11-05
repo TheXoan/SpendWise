@@ -70,7 +70,7 @@ fun CategoryScreen(
         Text(
             text = "Categorías",
             style = TitleTopBar,
-            fontSize = 30.sp,
+            fontSize = 50.sp,
             color = Color.White,
         )
         Spacer(modifier = Modifier.height( 20.dp ))

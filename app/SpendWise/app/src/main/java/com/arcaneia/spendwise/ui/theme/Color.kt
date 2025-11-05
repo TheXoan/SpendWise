@@ -30,7 +30,7 @@ val BackgroundBoxColorRed =  Color(0xFFBA4A27)
 val BackgroundBoxHistory = Color(0xA632374C)
 
 val BackgroundBoxCategory = Color(
-    0xBCFFE447
+    0xE2FFE447
 )
 
 // Subtitulos

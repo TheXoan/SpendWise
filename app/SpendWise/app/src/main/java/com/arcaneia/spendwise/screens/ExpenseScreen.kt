@@ -66,9 +66,6 @@ fun ExpenseScreen(
     var categoriaSeleccionadaId by remember { mutableStateOf<Int?>(null) }
 
     val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context)
-    val scope = rememberCoroutineScope()
-
 
     Column(
         modifier = Modifier
@@ -230,18 +227,5 @@ fun ExpenseScreen(
         }
 
     }
-
-}
-
-
-@Preview(
-    showSystemUi = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun ExpenseScreenPreview() {
-
-    //ExpenseScreen()
-
 
 }

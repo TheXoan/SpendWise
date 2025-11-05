@@ -2,6 +2,7 @@ package com.arcaneia.spendwise.screens
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.arcaneia.spendwise.data.entity.MovWithCategory
 import com.arcaneia.spendwise.data.model.MovViewModel
+import com.arcaneia.spendwise.ui.theme.BackgroundBoxCategory
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxHistory
@@ -171,17 +173,21 @@ fun TransaccionItem(
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 10.dp)
                 )
-            }
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
+                Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = movWithCategory.categoriaNome,
-                    color = Color.White,
-                    style = TextBoxBold
+                    color = Color.Black,
+                    style = TextBoxBold,
+                    fontSize = 10.sp,
+                    modifier = Modifier
+                        .padding(start = 15.dp)
+                        .background(color = Color(
+                            0xA9FFD900
+                        ), shape = RoundedCornerShape(50.dp))
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
                 )
             }
+
             Box(
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.CenterEnd

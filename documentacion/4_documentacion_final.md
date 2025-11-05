@@ -251,3 +251,8 @@ Disponse de un bottom menú para a navegación entre as pantallas principales.
 - Necesidade de un menú de navegación. Tiña un problema que sempre tiña que pintar a BottomBar en todas as pantallas. Para solucionar esto creeina como unha screen máis e implementeina na navegación. Así podo xestionar en que pantallas quero que se visualice e en cales no. E ao xestionar a navegación de vistas a través de AppNavigation teño moito máis control das navegacións
 
 - Necesidade actualización constante de variables como o balance de ingresos e gastos. Cando añadía os gastos gardabase na base de datos pero para actualizalos tiña que salir e volver a entrar. Para solucionar esto implementei FLOW que permite facer actualizacións automáticas cada vez que insertas ou moficas na base de datos. Unha vez añado un gasto este actualiza o balance global e tamén o history etc.
+
+- Na pantalla de HistoryScreen donde se almacena o histórico de movementos, nun inicio tiña pensado ubicar a categoría na parte central entre o importe e a descrición pero esto provocoume moitos problemas cando a cantidade era moi grande ou a descrición moi larga, polo que decidin ubicar a categoría debaixo da data do movemento así hai máis espazo tanto para a cantidade como para a descrición.
+
+- Con respecto ao tamaño do importe no histórico de movementos decidin que cando pase de x cifras cambie o tamaño da fonte para facelo máis pequeno así non se come toda a pantalla cando son cifras altas.
+- En relación a descrición no histórico de movementos tiña o problema que cando era moi largo perdía lexibilidade e igual que a cantidade comíase moita pantalla polo que implmentei que cando pase de n caracteres meta un intro e separe en máis lineas.

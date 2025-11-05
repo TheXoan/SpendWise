@@ -27,9 +27,6 @@ fun MainScreen(
     navController: NavController,
     movViewModel: MovViewModel
 ) {
-    val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context)
-    val scope = rememberCoroutineScope()
 
     // Obter balance total ingresos e gastos
     val balanceMes by movViewModel.balanceMes.collectAsStateWithLifecycle()

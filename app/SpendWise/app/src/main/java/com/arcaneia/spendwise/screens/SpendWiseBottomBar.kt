@@ -1,19 +1,16 @@
 package com.arcaneia.spendwise.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -29,9 +26,10 @@ fun SpendWiseBottomBar(
     currentDestination: NavDestination?
 ){
     val items = listOf(
-        BottomItem(AppScreens.MainScreen.route, "Home") { androidx.compose.material3.Icon(Icons.Filled.Home, null) },
+        BottomItem(AppScreens.MainScreen.route, "Inicio") { androidx.compose.material3.Icon(Icons.Filled.Home, null) },
         BottomItem(AppScreens.HistoryScreen.route, "Historial") { androidx.compose.material3.Icon(Icons.Filled.History, null) },
         BottomItem(AppScreens.CategoryScreen.route, "Categorías") { androidx.compose.material3.Icon(Icons.Filled.Category, null) },
+        BottomItem(AppScreens.SettingScreen.route, "Ajustes") { androidx.compose.material3.Icon(Icons.Filled.Settings, null) },
     )
 
     NavigationBar(
