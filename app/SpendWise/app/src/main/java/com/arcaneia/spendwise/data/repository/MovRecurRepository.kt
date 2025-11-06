@@ -13,4 +13,6 @@ class MovRecurRepository(private val movRecurDao: MovRecurDao) {
     suspend fun delete(movRecur: MovRecur) {
         movRecurDao.delete(movRecur)
     }
+
+    fun getAllMovRecur(): Flow<List<MovRecur>> = movRecurDao.getAllMovRecur()
 }

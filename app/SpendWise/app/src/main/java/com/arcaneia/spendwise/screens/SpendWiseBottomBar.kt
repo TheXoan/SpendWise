@@ -1,6 +1,7 @@
 package com.arcaneia.spendwise.screens
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
@@ -27,8 +28,9 @@ fun SpendWiseBottomBar(
 ){
     val items = listOf(
         BottomItem(AppScreens.MainScreen.route, "Inicio") { androidx.compose.material3.Icon(Icons.Filled.Home, null) },
-        BottomItem(AppScreens.HistoryScreen.route, "Historial") { androidx.compose.material3.Icon(Icons.Filled.History, null) },
         BottomItem(AppScreens.CategoryScreen.route, "Categorías") { androidx.compose.material3.Icon(Icons.Filled.Category, null) },
+        BottomItem(AppScreens.HistoryScreen.route, "Historial") { androidx.compose.material3.Icon(Icons.Filled.History, null) },
+        BottomItem(AppScreens.MovRecurHistoryScreen.route, "Mov. Recur") { androidx.compose.material3.Icon(Icons.Filled.CalendarMonth, null) },
         BottomItem(AppScreens.SettingScreen.route, "Ajustes") { androidx.compose.material3.Icon(Icons.Filled.Settings, null) },
     )
 

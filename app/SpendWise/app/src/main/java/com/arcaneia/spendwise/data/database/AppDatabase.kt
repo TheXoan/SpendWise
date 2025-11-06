@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.arcaneia.spendwise.data.dao.CategoriaDao
 import com.arcaneia.spendwise.data.dao.MovDao
 import com.arcaneia.spendwise.data.dao.MovRecurDao
@@ -16,6 +17,7 @@ import com.arcaneia.spendwise.data.entity.MovRecur
     version = 7,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun categoriaDao(): CategoriaDao

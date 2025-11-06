@@ -21,6 +21,8 @@ import com.arcaneia.spendwise.screens.ExpenseScreen
 import com.arcaneia.spendwise.screens.HistoryScreen
 import com.arcaneia.spendwise.screens.IncomeScreen
 import com.arcaneia.spendwise.screens.MainScreen
+import com.arcaneia.spendwise.screens.MovRecurHistoryScreen
+import com.arcaneia.spendwise.screens.NewMovRecurScreen
 import com.arcaneia.spendwise.screens.SettingScreen
 import com.arcaneia.spendwise.screens.SpendWiseBottomBar
 import com.arcaneia.spendwise.screens.SplashScreen
@@ -49,7 +51,9 @@ fun AppNavigation(
         AppScreens.ExpenseScreen.route,
         AppScreens.IncomeScreen.route,
         AppScreens.CategoryScreen.route,
-        AppScreens.SettingScreen.route
+        AppScreens.SettingScreen.route,
+        AppScreens.NewMovRecurScreen.route,
+        AppScreens.MovRecurHistoryScreen.route,
     )
     //Comprueba que a la pantalla que queremos navegar está incluida en las rutas que muestran el bottombar (bottomBarRoutes)
     val showBottomBar = destination.isInRoutes(bottomBarRoutes)
@@ -89,6 +93,8 @@ fun AppNavigation(
             composable(AppScreens.IncomeScreen.route) { IncomeScreen(navController,  movViewModel = movViewModel, categoriaViewModel = categoriaViewModel) }
             composable(AppScreens.CategoryScreen.route) { CategoryScreen(navController, categoriaViewModel = categoriaViewModel) }
             composable(AppScreens.SettingScreen.route) { SettingScreen(navController) }
+            composable(AppScreens.MovRecurHistoryScreen.route) { MovRecurHistoryScreen(navController, movRecurViewModel = movRecurViewModel) }
+            composable(AppScreens.NewMovRecurScreen.route) { NewMovRecurScreen(navController, movRecurViewModel = movRecurViewModel) }
 
             // Ejemplo de pantalla sin BottomBar:
             // composable(AppScreens.Detail.route) { DetailScreen(navController) }

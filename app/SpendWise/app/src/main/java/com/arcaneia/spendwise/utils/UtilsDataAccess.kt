@@ -29,6 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 
+/**
+ * Combo Box para los años y meses que filtran el historial de movimientos
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComboBoxHistory(
@@ -107,7 +110,9 @@ fun ComboBoxHistory(
     }
 }
 
-
+/**
+ * Combo box para mostrar todas las categorías disponibles
+ */
 @OptIn(
     ExperimentalMaterial3Api::class)
 @Composable
@@ -168,4 +173,13 @@ fun ComboBoxCategorias(
             }
         }
     }
+}
+
+/**
+ * Combo box para obtener todos los movimientos recurrentes
+ */
+
+@Composable
+fun ComboBoxMovRecur(){
+
 }

@@ -16,4 +16,12 @@ class MovRecurViewModel(private val repository: MovRecurRepository) : ViewModel(
 
     fun insert(m: MovRecur) = viewModelScope.launch { repository.insert(m) }
     fun delete(m: MovRecur) = viewModelScope.launch { repository.delete(m) }
+
+    // Todos los Movimientos recurrentes ordenados por id DESC
+    val movRecurList: StateFlow<List<MovRecur>> = repository.getAllMovRecur()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 }
