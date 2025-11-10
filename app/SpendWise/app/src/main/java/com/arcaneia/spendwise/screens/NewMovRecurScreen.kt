@@ -38,9 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.arcaneia.spendwise.components.RecurrenceSpinner
+import com.arcaneia.spendwise.components.TypeMovSpinner
 import com.arcaneia.spendwise.data.entity.Mov
+import com.arcaneia.spendwise.data.entity.MovRecur
 import com.arcaneia.spendwise.data.model.MovRecurViewModel
 import com.arcaneia.spendwise.data.model.Recurrence
+import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOne
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
@@ -48,6 +51,7 @@ import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.SubtitleColorn2
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.ui.theme.TitleTopBar
+import com.arcaneia.spendwise.ui.theme.TittleTopBox
 import com.arcaneia.spendwise.utils.ComboBoxCategorias
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -77,13 +81,19 @@ fun NewMovRecurScreen(
         )
 
     var selectedRecurrence by remember { mutableStateOf<Recurrence?>(null) }
+    var selectedTypeMov by remember { mutableStateOf<TypeMov?>(null) }
+
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 30.dp, vertical = 40.dp),
+            .verticalScroll(scrollState)
+            .padding(
+                horizontal = 30.dp
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "Nuevo movimiento recurrente",
@@ -93,12 +103,13 @@ fun NewMovRecurScreen(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height( 50.dp ))
+        Spacer(modifier = Modifier.height( 30.dp ))
 
         Text(
             text = "Importe",
             modifier = Modifier.align(Alignment.Start),
-            color = SubtitleColorn2
+            color = SubtitleColorn2,
+            style = TittleTopBox
         )
         OutlinedTextField(
             value = amount,
@@ -157,14 +168,15 @@ fun NewMovRecurScreen(
         Text(
             text = "Nombre",
             modifier = Modifier.align(Alignment.Start),
-            color = SubtitleColorn2
+            color = SubtitleColorn2,
+            style = TittleTopBox
         )
         OutlinedTextField(
             value = name,
             onValueChange = { userInput ->
                 name = userInput
             },
-            placeholder = { Text("Nombre gasto recurrente", color = Color.Black, style = TitleBox) },
+            placeholder = { Text("Nombre gasto recurrente", color = Color.Black, style = TitleBox, fontSize = 15.sp) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             colors = TextFieldDefaults.colors(
@@ -173,37 +185,36 @@ fun NewMovRecurScreen(
                 cursorColor = Color.Transparent,
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black
-            )
+            ),
+            shape = RoundedCornerShape(12.dp)
         )
         Spacer(modifier = Modifier.height( 15.dp ))
         Text(
-            text = "Fecha Inicio 📅",
+            text = "Fecha Inicio",
             modifier = Modifier.align(Alignment.Start),
-            color = SubtitleColorn2
+            color = SubtitleColorn2,
+            style = TittleTopBox
         )
         Button(
             onClick = { datePickerDialog.show() },
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = 10.dp)
+                .align(Alignment.Start)
                 .fillMaxWidth()
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = BackgroundBoxColorOne,
-                contentColor = Color.Black
+                contentColor = Color.Black,
             ),
             shape = RoundedCornerShape(12.dp)
         ) {
             Box(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().height(50.dp)
             ) {
                 Text(
                     text = selectedDate,
-                    modifier = Modifier.align(
-                        Alignment.Center
-                    ),
+                    modifier = Modifier.align(Alignment.CenterStart),
                     color = Color.Black,
-                    fontSize = 20.sp
+                    fontSize = 15.sp
                 )
             }
         }
@@ -211,40 +222,59 @@ fun NewMovRecurScreen(
         Text(
             text = "Periodicidad",
             modifier = Modifier.align(Alignment.Start),
-            color = SubtitleColorn2
+            color = SubtitleColorn2,
+            style = TittleTopBox
         )
         RecurrenceSpinner(
             selectedRecurrence = selectedRecurrence,
             onRecurrenceSelected = { selectedRecurrence = it }
         )
+        Spacer(modifier = Modifier.height( 15.dp ))
+        Text(
+            text = "Tipo",
+            modifier = Modifier.align(Alignment.Start),
+            color = SubtitleColorn2,
+            style = TittleTopBox
+        )
+        TypeMovSpinner(
+            selectedTypeMov = selectedTypeMov,
+            onSelectedTypeMov = { selectedTypeMov = it }
+        )
         Spacer(modifier = Modifier.height( 40.dp ))
         Button(
             onClick = {
-                /*val fechaActual = SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss",
-                    Locale.getDefault()
-                ).format(Date())
 
-                val mov = Mov(
-                    tipo = "gasto",
-                    importe = cantidadGasto.toDoubleOrNull() ?: 0.0,
-                    data_mov = fechaActual,
-                    descricion = expenseDescription,
-                    categoria_id = categoriaSeleccionadaId ?: 0,
-                    mov_recur_id = null
+                // Convierte la fecha seleccionada (String) a Long (timestamp)
+                val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val dataIni = formato.parse(selectedDate)?.time ?: System.currentTimeMillis()
+
+                // Calcula la fecha de renovación (ejemplo según periodicidad)
+                val dateRnv = when (selectedRecurrence) {
+                    Recurrence.SEMANAL -> dataIni + 7L * 24 * 60 * 60 * 1000 // +1 semana
+                    Recurrence.MENSUAL -> dataIni + 30L * 24 * 60 * 60 * 1000 // +1 mes aprox
+                    Recurrence.ANUAL -> dataIni + 365L * 24 * 60 * 60 * 1000 // +1 año
+                    else -> dataIni
+                }
+
+                val movRecur = MovRecur(
+                    nombre = name,
+                    importe = amount.toDoubleOrNull() ?: 0.0,
+                    periodicidade = selectedRecurrence,
+                    data_ini = dataIni,
+                    data_rnv = dateRnv,
+                    tipo = selectedTypeMov
                 )
 
-                if (categoriaSeleccionadaId != null) {
-                    movViewModel.insert(mov)
-                    Toast.makeText(context, "Gasto guardado correctamente", Toast.LENGTH_SHORT).show()
+                if (selectedRecurrence != null && selectedTypeMov != null && name != "" && amount != "") {
+                    movRecurViewModel.insert(movRecur)
+                    Toast.makeText(context, "Movimiento recurrente guardado correctamente", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 } else {
-                    Toast.makeText(context, "Debes seleccionar una categoría", Toast.LENGTH_SHORT).show()
-                }*/
+                    Toast.makeText(context, "Debes seleccionar todos los campos", Toast.LENGTH_SHORT).show()
+                }
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(bottom = 10.dp)
                 .width(250.dp).height(70.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = BackgroundBoxColorGreen,

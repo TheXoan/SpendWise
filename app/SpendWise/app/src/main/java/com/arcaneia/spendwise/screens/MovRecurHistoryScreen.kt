@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
@@ -25,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -43,16 +46,13 @@ import java.util.Locale
 fun MovRecurHistoryScreen(
     navController: NavController,
     movRecurViewModel: MovRecurViewModel
-){
-
+) {
     val movsRecur by movRecurViewModel.movRecurList.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                horizontal = 30.dp
-            ),
+            .padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -61,35 +61,36 @@ fun MovRecurHistoryScreen(
             style = TitleTopBar,
             fontSize = 50.sp,
             color = Color.White,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height( 50.dp ))
 
+        Spacer(modifier = Modifier.height(50.dp))
 
+        // 👇 Aquí la lista maneja su propio scroll
         MovRecurList(
             movsRecur = movsRecur,
-            modifier = Modifier.fillMaxSize().fillMaxWidth()
-                .weight(1f)
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f) // ocupa todo el espacio disponible
         )
 
-        Spacer(modifier = Modifier.height( 50.dp ))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-            onClick = {
-                navController.navigate("newMovRecur_screen")
-            },
+            onClick = { navController.navigate("newMovRecur_screen") },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(bottom = 10.dp)
-                .width(250.dp).height(70.dp),
+                .padding(bottom = 55.dp)
+                .width(250.dp)
+                .height(70.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = BackgroundBoxColorGreen,
                 contentColor = Color.Black
             ),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(12.dp)
         ) {
-            Text(
-                text = "Nuevo",
-            )
+            Text(text = "Nuevo")
         }
     }
 }
@@ -112,15 +113,16 @@ fun MovRecurList(
     } else {
         LazyColumn(
             modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = 80.dp) // espacio bajo el botón o BottomBar
         ) {
             items(movsRecur) { mov ->
                 MovRecurItem(mov)
-                Spacer(modifier = Modifier.height(5.dp))
             }
         }
     }
 }
+
 
 @SuppressLint("SimpleDateFormat",
     "DefaultLocale"
@@ -180,7 +182,7 @@ fun MovRecurItem(mov: MovRecur) {
 
                 // Periodicidad
                 Text(
-                    text = mov.periodicidade.description
+                    text = mov.periodicidade!!.description
                         .replaceFirstChar { it.titlecase(Locale.getDefault()) },
                     color = Color.Black,
                     style = TextBoxBold,

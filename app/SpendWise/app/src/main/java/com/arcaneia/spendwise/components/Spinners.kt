@@ -15,12 +15,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arcaneia.spendwise.data.model.Recurrence
+import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOne
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
 
@@ -28,8 +30,12 @@ import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
 fun RecurrenceSpinner(
     selectedRecurrence: Recurrence?,
     onRecurrenceSelected: (Recurrence) -> Unit
-){
-    var expanded by remember { mutableStateOf(false) }
+) {
+    var expanded by remember {
+        mutableStateOf(
+            false
+        )
+    }
 
     Box(modifier = Modifier.fillMaxWidth()) {
         // Botón principal que muestra el valor seleccionado
@@ -37,37 +43,118 @@ fun RecurrenceSpinner(
             onClick = { expanded = true },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(70.dp),
+                .height(
+                    50.dp
+                ),
             colors = ButtonDefaults.buttonColors(
                 containerColor = BackgroundBoxColorOne,
                 contentColor = Color.Black
             ),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text(
-                text = selectedRecurrence?.description ?: "Seleccionar periodicidad",
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
-            )
-        }
-
-        // Menú desplegable con los valores del enum
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .fillMaxWidth().
-                    height(50.dp)
-                .background(BackgroundBoxColorOneSelected)
-        ) {
-            Recurrence.values().forEach { recurrence ->
-                DropdownMenuItem(
-                    text = { Text(recurrence.description, color = Color.Black) },
-                    onClick = {
-                        onRecurrenceSelected(recurrence)
-                        expanded = false
-                    }
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = selectedRecurrence?.description
+                        ?: "Seleccionar periodicidad",
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Start
                 )
+            }
+
+            // Menú desplegable con los valores del enum
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = {expanded = false},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        BackgroundBoxColorOneSelected
+                    )
+            ) {
+                Recurrence.values()
+                    .forEach { recurrence ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(recurrence.description,
+                                    color = Color.Black
+                                )
+                            },
+                            onClick = {onRecurrenceSelected(recurrence)
+                                expanded =
+                                    false
+                            }
+                        )
+                    }
+            }
+        }
+    }
+}
+
+@Composable
+fun TypeMovSpinner(
+    selectedTypeMov: TypeMov?,
+    onSelectedTypeMov: (TypeMov) -> Unit
+) {
+    var expanded by remember {
+        mutableStateOf(
+            false
+        )
+    }
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        // Botón principal que muestra el valor seleccionado
+        Button(
+            onClick = { expanded = true },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(
+                    50.dp
+                ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = BackgroundBoxColorOne,
+                contentColor = Color.Black
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = selectedTypeMov?.description
+                        ?: "Seleccionar tipo de movimiento",
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Start
+                )
+            }
+
+            // Menú desplegable con los valores del enum
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = {expanded = false},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        BackgroundBoxColorOneSelected
+                    )
+            ) {
+                TypeMov.values()
+                    .forEach { recurrence ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(recurrence.description,
+                                    color = Color.Black
+                                )
+                            },
+                            onClick = {onSelectedTypeMov(recurrence)
+                                expanded =
+                                    false
+                            }
+                        )
+                    }
             }
         }
     }

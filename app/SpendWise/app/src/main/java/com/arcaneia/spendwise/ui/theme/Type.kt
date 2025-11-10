@@ -64,6 +64,10 @@ val TitleTopBar = SpendWiseTypography.titleLarge.copy(
     fontSize = 20.sp
 )
 
+
+/**
+ * Titulos BOX
+ */
 val TitleBox = SpendWiseTypography.displayMedium.copy(
     fontWeight = FontWeight.Medium,
     fontSize = 15.sp
@@ -71,5 +75,10 @@ val TitleBox = SpendWiseTypography.displayMedium.copy(
 
 val TextBoxBold = SpendWiseTypography.displayMedium.copy(
     fontWeight = FontWeight.Bold,
+    fontSize = 15.sp
+)
+
+val TittleTopBox = SpendWiseTypography.labelSmall.copy(
+    fontWeight = FontWeight.Medium,
     fontSize = 15.sp
 )
