@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
@@ -34,6 +32,7 @@ import androidx.navigation.NavController
 import com.arcaneia.spendwise.data.entity.MovRecur
 import com.arcaneia.spendwise.data.model.MovRecurViewModel
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
+import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxHistory
 import com.arcaneia.spendwise.ui.theme.TextBoxBold
 import com.arcaneia.spendwise.ui.theme.TitleBox
@@ -72,7 +71,7 @@ fun MovRecurHistoryScreen(
             movsRecur = movsRecur,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f) // ocupa todo el espacio disponible
+                .weight(1f)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -114,7 +113,6 @@ fun MovRecurList(
         LazyColumn(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = 80.dp) // espacio bajo el botón o BottomBar
         ) {
             items(movsRecur) { mov ->
                 MovRecurItem(mov)
@@ -206,9 +204,12 @@ fun MovRecurItem(mov: MovRecur) {
                     importeTexto.length > 10 -> 12.sp
                     else -> 15.sp
                 }
+
+                val colorCantidad = if (mov.tipo!!.name == "INGRESO") BackgroundBoxColorGreen else BackgroundBoxColorRed
+
                 Text(
                     text = importeTexto,
-                    color = Color(0xFF4CAF50), // Verde para recurrentes
+                    color = colorCantidad,
                     style = TitleBox,
                     fontSize = fontSize,
                     modifier = Modifier.padding(end = 10.dp)

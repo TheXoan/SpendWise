@@ -17,6 +17,6 @@ interface MovRecurDao {
     @Delete
     suspend fun delete(movRecur: MovRecur)
 
-    @Query("SELECT * FROM mov_recur ORDER BY id DESC")
+    @Query("SELECT * FROM mov_recur ORDER BY data_rnv ASC")
     fun getAllMovRecur(): Flow<List<MovRecur>>
 }

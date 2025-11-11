@@ -248,11 +248,11 @@ fun NewMovRecurScreen(
                 val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val dataIni = formato.parse(selectedDate)?.time ?: System.currentTimeMillis()
 
-                // Calcula la fecha de renovación (ejemplo según periodicidad)
+                // Calcula la fecha de renovación
                 val dateRnv = when (selectedRecurrence) {
-                    Recurrence.SEMANAL -> dataIni + 7L * 24 * 60 * 60 * 1000 // +1 semana
-                    Recurrence.MENSUAL -> dataIni + 30L * 24 * 60 * 60 * 1000 // +1 mes aprox
-                    Recurrence.ANUAL -> dataIni + 365L * 24 * 60 * 60 * 1000 // +1 año
+                    Recurrence.SEMANAL -> dataIni + 7L * 24 * 60 * 60 * 1000
+                    Recurrence.MENSUAL -> dataIni + 30L * 24 * 60 * 60 * 1000
+                    Recurrence.ANUAL -> dataIni + 365L * 24 * 60 * 60 * 1000
                     else -> dataIni
                 }
 

@@ -118,12 +118,17 @@ fun CategoryScreen(
         Button(
             onClick = {
                 scope.launch {
-                    val categoria = Categoria(nome = nameCategory, tipo = "")
-                    if (nameCategory != "") {
+                    if (nameCategory != ""  && categoriaSeleccionadaId != 0 && categoriaSeleccionadaId != null)  {
+                        val categoria = Categoria(id = categoriaSeleccionadaId!!, nome = nameCategory, tipo = "")
+                        db.categoriaDao().update(categoria)
+                        Toast.makeText(context, "Categoría actualizada correctamente", Toast.LENGTH_SHORT).show()
+                        nameCategory = ""
+                    } else if (nameCategory != "" ){
+                        val categoria = Categoria(nome = nameCategory, tipo = "")
                         db.categoriaDao().insert(categoria)
                         Toast.makeText(context, "Categoría creada correctamente", Toast.LENGTH_SHORT).show()
                         nameCategory = ""
-                    } else {
+                    }else {
                         Toast.makeText(context, "El nombre de la categoría no puede estar vacío", Toast.LENGTH_SHORT).show()
                     }
                 }
