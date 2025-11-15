@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.model.CategoriaViewModel
+import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
 import com.arcaneia.spendwise.ui.theme.TitleBox
@@ -200,7 +201,7 @@ fun IncomeScreen(
                 if (categoriaSeleccionadaId != null) {
                     val fechaActual = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
                     val mov = Mov(
-                        tipo = "ingreso",
+                        tipo = TypeMov.INGRESO,
                         importe = cantidadGasto.toDoubleOrNull() ?: 0.0,
                         data_mov = fechaActual,
                         descricion = expenseDescription,

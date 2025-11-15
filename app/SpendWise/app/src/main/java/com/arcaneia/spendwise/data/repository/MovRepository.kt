@@ -15,6 +15,10 @@ class MovRepository (private val movDao: MovDao) {
         movDao.delete(mov)
     }
 
+    suspend fun update(mov: Mov) {
+        movDao.update(mov)
+    }
+
     fun getBalanceMesActual(): Flow<Double> = movDao.getBalanceMesActual()
     fun getYearsWithValues(): Flow<List<String>> = movDao.getYearsWithValues()
     fun getMonthsFromYear(year: String): Flow<List<String>> = movDao.getMonthsFromYear(year)

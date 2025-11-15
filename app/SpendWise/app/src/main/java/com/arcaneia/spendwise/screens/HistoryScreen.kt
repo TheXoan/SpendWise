@@ -3,6 +3,7 @@ package com.arcaneia.spendwise.screens
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,21 +13,36 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.arcaneia.spendwise.components.EditarEliminar
+import com.arcaneia.spendwise.components.RecurrenceSpinner
+import com.arcaneia.spendwise.components.TypeMovSpinner
+import com.arcaneia.spendwise.data.entity.Mov
+import com.arcaneia.spendwise.data.entity.MovRecur
 import com.arcaneia.spendwise.data.entity.MovWithCategory
+import com.arcaneia.spendwise.data.model.CategoriaViewModel
 import com.arcaneia.spendwise.data.model.MovViewModel
+import com.arcaneia.spendwise.data.model.Recurrence
+import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxCategory
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
@@ -34,15 +50,18 @@ import com.arcaneia.spendwise.ui.theme.BackgroundBoxHistory
 import com.arcaneia.spendwise.ui.theme.TextBoxBold
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.ui.theme.TitleTextStyle
+import com.arcaneia.spendwise.utils.ComboBoxCategorias
 import com.arcaneia.spendwise.utils.ComboBoxHistory
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
     navController: NavController,
-    movViewModel: MovViewModel
+    movViewModel: MovViewModel,
+    categoriaViewModel: CategoriaViewModel
 ) {
     val years by movViewModel.yearsAvailable.collectAsState()
     val months by movViewModel.monthsAvailable.collectAsState()
@@ -97,7 +116,9 @@ fun HistoryScreen(
             // Lista de movimientos filtrados
             HistoryList(
                 transacciones = movimientos,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                viewModel = movViewModel,
+                categoriaViewModel = categoriaViewModel
             )
         }
     }
@@ -106,8 +127,15 @@ fun HistoryScreen(
 @Composable
 fun HistoryList(
     transacciones: List<MovWithCategory>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: MovViewModel,
+    categoriaViewModel: CategoriaViewModel
 ) {
+
+    var selectedMov by remember { mutableStateOf<MovWithCategory?>(null) }
+    var showOptions by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
+
     if (transacciones.isEmpty()) {
         Box(
             modifier = modifier.fillMaxSize(),
@@ -124,10 +152,39 @@ fun HistoryList(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(transacciones) { mov ->
-                TransaccionItem(mov)
+                TransaccionItem(mov){
+                    selectedMov = mov
+                    showOptions = true
+                }
                 Spacer(modifier = Modifier.height( 5.dp ))
             }
         }
+    }
+    if (showOptions && selectedMov != null && selectedMov!!.mov.descricion!= null ) {
+        EditarEliminar(
+            title = selectedMov!!.mov.descricion!!,
+            onEditar = {
+                showOptions = false
+                showEditDialog = true
+            },
+            onEliminar = {
+                viewModel.delete(selectedMov!!.mov)
+                showOptions = false
+            },
+            onDismiss = { showOptions = false }
+        )
+    }
+
+    if (showEditDialog && selectedMov != null) {
+        EditMovDialog(
+            mov = selectedMov!!.mov,
+            onGuardar = {
+                viewModel.update(it)
+                showEditDialog = false
+            },
+            onDismiss = { showEditDialog = false },
+            categoriaViewModel = categoriaViewModel
+        )
     }
 }
 
@@ -136,16 +193,19 @@ fun HistoryList(
 )
 @Composable
 fun TransaccionItem(
-    movWithCategory: MovWithCategory
+    movWithCategory: MovWithCategory,
+    onClick: () -> Unit,
 ) {
-    val esIngreso = movWithCategory.mov.tipo == "ingreso"
+    val esIngreso = movWithCategory.mov.tipo == TypeMov.INGRESO
     val colorCantidad = if (esIngreso) BackgroundBoxColorGreen else BackgroundBoxColorRed
 
     Surface(
         color = BackgroundBoxHistory,
         shape = RoundedCornerShape(50.dp),
         tonalElevation = 2.dp,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
     ) {
         Row(
             modifier = Modifier
@@ -210,4 +270,142 @@ fun TransaccionItem(
         }
 
     }
+}
+
+@SuppressLint(
+    "SimpleDateFormat"
+)
+@Composable
+fun EditMovDialog(
+    mov: Mov,
+    onGuardar: (Mov) -> Unit,
+    onDismiss: () -> Unit,
+    categoriaViewModel: CategoriaViewModel
+){
+    var nameMov by remember { mutableStateOf(mov.descricion) }
+    var amountMov by remember { mutableStateOf(mov.importe.toString()) }
+
+    val formatoDB = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    var date by remember { mutableStateOf(formatoDB.parse(mov.data_mov) ?: Date()) }
+
+    var tipo by remember { mutableStateOf(mov.tipo) }
+    var mostrarPicker by remember { mutableStateOf(false) }
+    var categoria by remember { mutableStateOf(mov.categoria_id) }
+
+    val formato = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
+
+    // Date picker para seleccionar la  fecha
+    if (mostrarPicker) {
+        val pickerState = rememberDatePickerState(initialSelectedDateMillis = date.time)
+        DatePickerDialog(
+            onDismissRequest = { mostrarPicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    pickerState.selectedDateMillis?.let { date = Date(it) }
+                    mostrarPicker = false
+                }) { Text("Aceptar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { mostrarPicker = false }) { Text("Cancelar") }
+            }
+        ) {
+            DatePicker(state = pickerState)
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Editar: ${mov.descricion}") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                // Nombre
+                OutlinedTextField(
+                    value = nameMov?: "",
+                    onValueChange = { nameMov = it },
+                    label = { Text("Nombre") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // Importe
+                OutlinedTextField(
+                    value = amountMov,
+                    onValueChange = { amountMov = it },
+                    label = { Text("Importe (€)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // Fecha de inicio
+                OutlinedTextField(
+                    value = formato.format(date),
+                    onValueChange = {},
+                    label = { Text("Fecha del gasto") },
+                    readOnly = true,
+                    trailingIcon = {
+                        IconButton(onClick = { mostrarPicker = true }) {
+                            Icon(Icons.Default.CalendarMonth, contentDescription = "Seleccionar fecha")
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // Tipo
+                TypeMovSpinner(
+                    selectedTypeMov = tipo,
+                    onSelectedTypeMov = { tipo = it }
+                )
+
+                ComboBoxCategorias(
+                    categoriaViewModel,
+                    onCategoriaSeleccionada = { id ->
+                        categoria = id
+                    }
+                )
+
+            }
+        },
+        confirmButton = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = {
+
+                        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date)
+
+                        onGuardar(
+                            mov.copy(
+                                id = mov.id,
+                                tipo = tipo,
+                                importe = amountMov.toDouble(),
+                                data_mov = dateFormat,
+                                descricion = nameMov,
+                                categoria_id = categoria,
+                            )
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = BackgroundBoxColorGreen),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.width(120.dp)
+                ) {
+                    Text("Guardar", color = Color.Black)
+                }
+
+                Spacer(modifier = Modifier.width(20.dp))
+
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(containerColor = BackgroundBoxColorRed),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.width(120.dp)
+                ) {
+                    Text("Cancelar", color = Color.White)
+                }
+            }
+        },
+        dismissButton = {}
+    )
 }

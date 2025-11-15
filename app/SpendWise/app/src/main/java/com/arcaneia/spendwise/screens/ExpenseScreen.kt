@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.model.CategoriaViewModel
+import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.TitleBox
@@ -194,7 +195,7 @@ fun ExpenseScreen(
                 ).format(Date())
 
                 val mov = Mov(
-                    tipo = "gasto",
+                    tipo = TypeMov.GASTO,
                     importe = cantidadGasto.toDoubleOrNull() ?: 0.0,
                     data_mov = fechaActual,
                     descricion = expenseDescription,

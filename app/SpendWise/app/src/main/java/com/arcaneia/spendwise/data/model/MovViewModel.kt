@@ -25,6 +25,7 @@ class MovViewModel(private val repository: MovRepository) : ViewModel() {
 
     fun insert(movimiento: Mov) = viewModelScope.launch { repository.insert(movimiento) }
     fun delete(movimiento: Mov) = viewModelScope.launch { repository.delete(movimiento) }
+    fun update(movimiento: Mov) = viewModelScope.launch { repository.update(movimiento) }
 
     val balanceMes = repository.getBalanceMesActual()
         .stateIn(

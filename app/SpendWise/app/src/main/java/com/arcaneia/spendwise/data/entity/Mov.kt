@@ -3,6 +3,7 @@ package com.arcaneia.spendwise.data.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.arcaneia.spendwise.data.model.TypeMov
 
 @Entity(
     tableName = "mov",
@@ -26,7 +27,7 @@ data class Mov(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    val tipo: String,
+    val tipo: TypeMov?,
     val importe: Double,
     val data_mov: String,
     val descricion: String? = null,

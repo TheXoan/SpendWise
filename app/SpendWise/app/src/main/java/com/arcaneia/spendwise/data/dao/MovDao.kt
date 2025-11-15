@@ -20,8 +20,8 @@ interface MovDao {
     // Balance ingresos/gastos del mes actual
     @Query("""
     SELECT 
-        (IFNULL(SUM(CASE WHEN tipo = 'ingreso' THEN importe END), 0) -
-         IFNULL(SUM(CASE WHEN tipo = 'gasto' THEN importe END), 0))
+        (IFNULL(SUM(CASE WHEN tipo = 'INGRESO' THEN importe END), 0) -
+         IFNULL(SUM(CASE WHEN tipo = 'GASTO' THEN importe END), 0))
     FROM mov
     WHERE strftime('%Y-%m', data_mov) = strftime('%Y-%m', 'now', 'localtime')
     """)

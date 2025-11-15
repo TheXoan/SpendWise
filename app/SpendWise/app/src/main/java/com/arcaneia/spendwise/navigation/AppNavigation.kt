@@ -88,7 +88,7 @@ fun AppNavigation(
         ) {
             composable(AppScreens.SplashScreen.route) { SplashScreen(navController, authViewModel) }
             composable(AppScreens.MainScreen.route) {MainScreen(navController = navController, movViewModel = movViewModel)}
-            composable(AppScreens.HistoryScreen.route) { HistoryScreen(navController,  movViewModel = movViewModel) }
+            composable(AppScreens.HistoryScreen.route) { HistoryScreen(navController,  movViewModel = movViewModel, categoriaViewModel = categoriaViewModel) }
             composable(AppScreens.ExpenseScreen.route) { ExpenseScreen(navController,  movViewModel = movViewModel, categoriaViewModel = categoriaViewModel) }
             composable(AppScreens.IncomeScreen.route) { IncomeScreen(navController,  movViewModel = movViewModel, categoriaViewModel = categoriaViewModel) }
             composable(AppScreens.CategoryScreen.route) { CategoryScreen(navController, categoriaViewModel = categoriaViewModel) }
