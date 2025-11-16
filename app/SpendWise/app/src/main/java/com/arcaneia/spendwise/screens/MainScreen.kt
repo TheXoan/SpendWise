@@ -92,7 +92,7 @@ fun MainScreen(
             ) {
                 Text(
                     "GASTO",
-                    color = Color.White
+                    color = Color.Black
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))

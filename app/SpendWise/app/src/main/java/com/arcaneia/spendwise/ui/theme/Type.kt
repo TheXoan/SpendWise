@@ -52,6 +52,10 @@ val TitleTextStyle = SpendWiseTypography.displayLarge.copy(
     fontSize = 50.sp,
     letterSpacing = (-0.3).sp
 )
+val TitleTextLittle = SpendWiseTypography.displayLarge.copy(
+    fontSize = 27.sp,
+    letterSpacing = (-0.3).sp
+)
 
 // Subtítulo o encabezado secundario
 val SubtitleTextStyle = SpendWiseTypography.titleLarge.copy(

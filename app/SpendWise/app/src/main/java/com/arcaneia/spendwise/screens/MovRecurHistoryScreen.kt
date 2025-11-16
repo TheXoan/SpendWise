@@ -41,18 +41,16 @@ fun MovRecurHistoryScreen(
             .fillMaxSize()
             .padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
     ) {
         Text(
             text = "Movimientos recurrentes",
-            style = TitleTopBar,
-            fontSize = 50.sp,
+            style = TitleTextLittle,
             color = Color.White,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = 50.dp),
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         MovRecurList(
             movsRecur = movsRecur,

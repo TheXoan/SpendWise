@@ -35,6 +35,7 @@ import com.arcaneia.spendwise.ui.theme.BackgroundBoxCategory
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOne
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
+import com.arcaneia.spendwise.ui.theme.ColorHint
 import com.arcaneia.spendwise.ui.theme.SubtitleColor
 import com.arcaneia.spendwise.ui.theme.SubtitleColorn2
 import com.arcaneia.spendwise.ui.theme.SubtitleTextStyle
@@ -103,7 +104,7 @@ fun CategoryScreen(
             onValueChange = { entradaUsuario ->
                 nameCategory = entradaUsuario
             },
-            placeholder = { Text("Nombre Categoría", color = Color.Gray, style = TitleBox) },
+            placeholder = { Text("Nombre Categoría", color = ColorHint, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             colors = TextFieldDefaults.colors(

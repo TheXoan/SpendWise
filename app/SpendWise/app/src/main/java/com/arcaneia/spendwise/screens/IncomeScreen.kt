@@ -48,6 +48,7 @@ import com.arcaneia.spendwise.data.model.CategoriaViewModel
 import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
+import com.arcaneia.spendwise.ui.theme.ColorHint
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.utils.ComboBoxCategorias
 import kotlinx.coroutines.Dispatchers
@@ -179,7 +180,7 @@ fun IncomeScreen(
             onValueChange = { entradaUsuarip ->
                 expenseDescription = entradaUsuarip
             },
-            placeholder = { Text("Descripción", color = Color.Black, style = TitleBox) },
+            placeholder = { Text("Descripción", color = ColorHint, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             colors = TextFieldDefaults.colors(
@@ -238,17 +239,5 @@ fun IncomeScreen(
         }
 
     }
-
-}
-
-
-@Preview(
-    showSystemUi = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun IncomeScreenPreview() {
-
-    //IncomeScreen()
 
 }

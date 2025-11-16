@@ -49,6 +49,7 @@ import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxHistory
 import com.arcaneia.spendwise.ui.theme.TextBoxBold
 import com.arcaneia.spendwise.ui.theme.TitleBox
+import com.arcaneia.spendwise.ui.theme.TitleTextLittle
 import com.arcaneia.spendwise.ui.theme.TitleTextStyle
 import com.arcaneia.spendwise.utils.ComboBoxCategorias
 import com.arcaneia.spendwise.utils.ComboBoxHistory
@@ -81,8 +82,7 @@ fun HistoryScreen(
             Text(
                 text = "Resumen financiero",
                 color = Color.White,
-                style = TitleTextStyle,
-                fontSize = 30.sp,
+                style = TitleTextLittle,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(30.dp))
@@ -329,7 +329,12 @@ fun EditMovDialog(
                 // Importe
                 OutlinedTextField(
                     value = amountMov,
-                    onValueChange = { amountMov = it },
+                    onValueChange = { amountMovMod ->
+                        // Solo permite números y decimales separados por punto
+                        if (amountMovMod.matches(
+                                Regex("^\\d*\\.?\\d*\$"))
+                        ) { amountMov = amountMovMod }
+                    },
                     label = { Text("Importe (€)") },
                     keyboardOptions = KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()

@@ -48,6 +48,7 @@ import com.arcaneia.spendwise.data.model.CategoriaViewModel
 import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
+import com.arcaneia.spendwise.ui.theme.ColorHint
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.utils.ComboBoxCategorias
 import java.text.SimpleDateFormat
@@ -172,7 +173,7 @@ fun ExpenseScreen(
             onValueChange = { entradaUsuarip ->
                 expenseDescription = entradaUsuarip
             },
-            placeholder = { Text("Descripción", color = Color.Black, style = TitleBox) },
+            placeholder = { Text("Descripción", color = ColorHint, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             colors = TextFieldDefaults.colors(
