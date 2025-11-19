@@ -24,10 +24,13 @@ import com.arcaneia.spendwise.components.RecurrenceSpinner
 import com.arcaneia.spendwise.components.TypeMovSpinner
 import com.arcaneia.spendwise.data.entity.MovRecur
 import com.arcaneia.spendwise.data.model.MovRecurViewModel
-import com.arcaneia.spendwise.data.model.Recurrence
 import com.arcaneia.spendwise.ui.theme.*
-import java.text.SimpleDateFormat
-import java.util.*
+import com.arcaneia.spendwise.utils.calculateNextDate
+import com.arcaneia.spendwise.utils.uiFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.Instant
+import java.util.Locale
 
 @Composable
 fun MovRecurHistoryScreen(
@@ -80,6 +83,8 @@ fun MovRecurHistoryScreen(
     }
 }
 
+
+/*********** LISTA ***********/
 @Composable
 fun MovRecurList(
     movsRecur: List<MovRecur>,
@@ -116,7 +121,6 @@ fun MovRecurList(
 
     if (showOptions && selectedMov != null) {
         EditarEliminar(
-
             title = selectedMov!!.nombre,
             onEditar = {
                 showOptions = false
@@ -142,7 +146,7 @@ fun MovRecurList(
     }
 }
 
-@SuppressLint("SimpleDateFormat", "DefaultLocale")
+@SuppressLint("DefaultLocale")
 @Composable
 fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
     Surface(
@@ -154,33 +158,36 @@ fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
             .clickable { onClick() }
     ) {
         Row(
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
+
                 Text(
                     text = mov.nombre,
                     color = Color.White,
                     style = TextBoxBold,
                     modifier = Modifier.padding(start = 10.dp)
                 )
+
                 Spacer(modifier = Modifier.height(3.dp))
 
                 Text(
-                    text = "Inicio: " + SimpleDateFormat("dd/MM/yyyy").format(Date(mov.data_ini)),
+                    text = "Inicio: ${uiFormat(mov.data_ini)}",
                     color = Color.Gray,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 10.dp)
                 )
+
                 Spacer(modifier = Modifier.height(3.dp))
+
                 Text(
-                    text = "Renovación: " + SimpleDateFormat("dd/MM/yyyy").format(Date(mov.data_rnv)),
+                    text = "Renovación: ${uiFormat(mov.data_rnv)}",
                     color = Color.Gray,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 10.dp)
                 )
+
                 Spacer(modifier = Modifier.height(5.dp))
 
                 Text(
@@ -191,13 +198,11 @@ fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
                     fontSize = 10.sp,
                     modifier = Modifier
                         .padding(start = 15.dp)
-                        .background(
-                            color = Color(0xA9FFD900),
-                            shape = RoundedCornerShape(50.dp)
-                        )
+                        .background(Color(0xA9FFD900), RoundedCornerShape(50.dp))
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 )
             }
+
             Box(
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.CenterEnd
@@ -208,8 +213,8 @@ fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
                     importeTexto.length > 10 -> 12.sp
                     else -> 15.sp
                 }
-
-                val colorCantidad = if (mov.tipo?.name == "INGRESO") BackgroundBoxColorGreen else BackgroundBoxColorRed
+                val colorCantidad =
+                    if (mov.tipo?.name == "INGRESO") BackgroundBoxColorGreen else BackgroundBoxColorRed
 
                 Text(
                     text = importeTexto,
@@ -223,6 +228,7 @@ fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditarMovDialog(
@@ -232,21 +238,29 @@ fun EditarMovDialog(
 ) {
     var nombre by remember { mutableStateOf(mov.nombre) }
     var importe by remember { mutableStateOf(mov.importe.toString()) }
-    var fecha by remember { mutableStateOf(Date(mov.data_ini)) }
+    var fecha by remember { mutableStateOf(mov.data_ini) } // String yyyy-MM-dd
     var periodicidade by remember { mutableStateOf(mov.periodicidade) }
     var tipo by remember { mutableStateOf(mov.tipo) }
     var mostrarPicker by remember { mutableStateOf(false) }
 
-    val formato = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
-
-    // Date picker para seleccionar la  fecha
     if (mostrarPicker) {
-        val pickerState = rememberDatePickerState(initialSelectedDateMillis = mov.data_ini)
+        val initialMillis = LocalDate.parse(fecha)
+            .atStartOfDay(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
+
+        val pickerState = rememberDatePickerState(initialSelectedDateMillis = initialMillis)
+
         DatePickerDialog(
             onDismissRequest = { mostrarPicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    pickerState.selectedDateMillis?.let { fecha = Date(it) }
+                    pickerState.selectedDateMillis?.let { millis ->
+                        fecha = Instant.ofEpochMilli(millis)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                            .toString()
+                    }
                     mostrarPicker = false
                 }) { Text("Aceptar") }
             },
@@ -264,7 +278,6 @@ fun EditarMovDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
-                // Nombre
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
@@ -272,7 +285,6 @@ fun EditarMovDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Importe
                 OutlinedTextField(
                     value = importe,
                     onValueChange = { importe = it },
@@ -281,9 +293,8 @@ fun EditarMovDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Fecha de inicio
                 OutlinedTextField(
-                    value = formato.format(fecha),
+                    value = uiFormat(fecha),
                     onValueChange = {},
                     label = { Text("Fecha de inicio") },
                     readOnly = true,
@@ -295,13 +306,11 @@ fun EditarMovDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Periodicidad
                 RecurrenceSpinner(
                     selectedRecurrence = periodicidade,
                     onRecurrenceSelected = { periodicidade = it }
                 )
 
-                // Tipo
                 TypeMovSpinner(
                     selectedTypeMov = tipo,
                     onSelectedTypeMov = { tipo = it }
@@ -317,19 +326,12 @@ fun EditarMovDialog(
             ) {
                 Button(
                     onClick = {
-                        val nuevaRenovacion = when (periodicidade) {
-                            Recurrence.MENSUAL -> fecha.time + 30L * 24 * 60 * 60 * 1000
-                            Recurrence.SEMANAL -> fecha.time + 7L * 24 * 60 * 60 * 1000
-                            Recurrence.ANUAL -> fecha.time + 365L * 24 * 60 * 60 * 1000
-                            else -> mov.data_rnv
-                        }
-
                         onGuardar(
                             mov.copy(
                                 nombre = nombre,
                                 importe = importe.toDoubleOrNull() ?: mov.importe,
-                                data_ini = fecha.time,
-                                data_rnv = nuevaRenovacion,
+                                data_ini = fecha,
+                                data_rnv = calculateNextDate(fecha, periodicidade!!),
                                 periodicidade = periodicidade,
                                 tipo = tipo
                             )

@@ -12,7 +12,7 @@ data class MovRecur(
     val nombre: String,
     val importe: Double,
     val periodicidade: Recurrence?, // "MENSUAL", "ANUAL", "SEMANAL"
-    val data_ini: Long,
-    val data_rnv: Long,
+    val data_ini: String,
+    val data_rnv: String,
     val tipo: TypeMov? // INGRESO, GASTO
 )

@@ -256,3 +256,10 @@ Disponse de un bottom menú para a navegación entre as pantallas principales.
 
 - Con respecto ao tamaño do importe no histórico de movementos decidin que cando pase de x cifras cambie o tamaño da fonte para facelo máis pequeno así non se come toda a pantalla cando son cifras altas.
 - En relación a descrición no histórico de movementos tiña o problema que cando era moi largo perdía lexibilidade e igual que a cantidade comíase moita pantalla polo que implmentei que cando pase de n caracteres meta un intro e separe en máis lineas.
+
+- Cando creo un movemento recurrente para poder ter tanto gastos como ingresos recurrentes non teño unha maneira de indicar que vai ser un gasto ou un ingreso.
+
+- No movemento recurrente tiña almacenada as datas como Long, pero dificultábame moito manexalas e operar con elas, polo que as cambio a String para utilizar os métodos comúns de date
+
+- Chamaba ao método de creación de movementos recurrentes no Main Activity, pero esto daba erros xa que cando a app estaba cerrada non se chamaban aos métodos, polo que se implementa unha clase Aplication. Forma de  facelo que recomenta Google: https://developer.android.com/topic/libraries/architecture/workmanager#schedule_from_application
+

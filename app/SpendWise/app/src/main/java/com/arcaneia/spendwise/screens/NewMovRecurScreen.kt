@@ -1,6 +1,5 @@
 package com.arcaneia.spendwise.screens
 
-import android.app.DatePickerDialog
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,9 +17,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +42,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.arcaneia.spendwise.components.RecurrenceSpinner
 import com.arcaneia.spendwise.components.TypeMovSpinner
-import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.entity.MovRecur
 import com.arcaneia.spendwise.data.model.MovRecurViewModel
 import com.arcaneia.spendwise.data.model.Recurrence
@@ -47,16 +49,16 @@ import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOne
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
-import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.SubtitleColorn2
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.ui.theme.TitleTopBar
 import com.arcaneia.spendwise.ui.theme.TittleTopBox
-import com.arcaneia.spendwise.utils.ComboBoxCategorias
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import com.arcaneia.spendwise.utils.calculateNextDate
+import com.arcaneia.spendwise.utils.formatDateForDB
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun NewMovRecurScreen(
@@ -69,16 +71,41 @@ fun NewMovRecurScreen(
     var amount by remember {mutableStateOf("")}
     var name by remember {mutableStateOf("")}
 
-    // FECHA
-    val dateFormat = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
-    val calendar = Calendar.getInstance()
-    var selectedDate by remember { mutableStateOf(dateFormat.format(Date())) }
-    val datePickerDialog =
-        DatePickerDialog(context,{ _, year, month, day -> calendar.set(year, month,day)
-                selectedDate = dateFormat.format(calendar.time)
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    var selectedDate by remember { mutableStateOf(
+        LocalDate.now().format(formatter)) }
+    var mostrarPicker by remember { mutableStateOf(false) }
+
+    if (mostrarPicker) {
+
+        val initialMillis = LocalDate.parse(selectedDate, formatter)
+            .atStartOfDay(
+                ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
+
+        val pickerState = rememberDatePickerState(initialSelectedDateMillis = initialMillis)
+
+        DatePickerDialog(
+            onDismissRequest = { mostrarPicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    pickerState.selectedDateMillis?.let { millis ->
+                        selectedDate = Instant.ofEpochMilli(millis)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                            .format(formatter) // dd/MM/yyyy
+                    }
+                    mostrarPicker = false
+                }) { Text("Aceptar") }
             },
-            calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)
-        )
+            dismissButton = {
+                TextButton(onClick = { mostrarPicker = false }) { Text("Cancelar") }
+            }
+        ) {
+            DatePicker(state = pickerState)
+        }
+    }
 
     var selectedRecurrence by remember { mutableStateOf<Recurrence?>(null) }
     var selectedTypeMov by remember { mutableStateOf<TypeMov?>(null) }
@@ -196,7 +223,7 @@ fun NewMovRecurScreen(
             style = TittleTopBox
         )
         Button(
-            onClick = { datePickerDialog.show() },
+            onClick = { mostrarPicker = true },
             modifier = Modifier
                 .align(Alignment.Start)
                 .fillMaxWidth()
@@ -244,24 +271,14 @@ fun NewMovRecurScreen(
         Button(
             onClick = {
 
-                // Convierte la fecha seleccionada (String) a Long (timestamp)
-                val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val dataIni = formato.parse(selectedDate)?.time ?: System.currentTimeMillis()
-
-                // Calcula la fecha de renovación
-                val dateRnv = when (selectedRecurrence) {
-                    Recurrence.SEMANAL -> dataIni + 7L * 24 * 60 * 60 * 1000
-                    Recurrence.MENSUAL -> dataIni + 30L * 24 * 60 * 60 * 1000
-                    Recurrence.ANUAL -> dataIni + 365L * 24 * 60 * 60 * 1000
-                    else -> dataIni
-                }
+                val dateIni = formatDateForDB(selectedDate)
 
                 val movRecur = MovRecur(
                     nombre = name,
                     importe = amount.toDoubleOrNull() ?: 0.0,
                     periodicidade = selectedRecurrence,
-                    data_ini = dataIni,
-                    data_rnv = dateRnv,
+                    data_ini = dateIni,
+                    data_rnv = calculateNextDate(dateIni, selectedRecurrence!!),
                     tipo = selectedTypeMov
                 )
 
@@ -286,6 +303,5 @@ fun NewMovRecurScreen(
                 text = "GUARDAR",
             )
         }
-
     }
 }

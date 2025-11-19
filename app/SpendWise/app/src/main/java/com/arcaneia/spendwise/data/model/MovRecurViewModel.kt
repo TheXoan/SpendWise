@@ -16,6 +16,7 @@ class MovRecurViewModel(private val repository: MovRecurRepository) : ViewModel(
 
     fun insert(m: MovRecur) = viewModelScope.launch { repository.insert(m) }
     fun delete(m: MovRecur) = viewModelScope.launch { repository.delete(m) }
+    fun update(m: MovRecur) = viewModelScope.launch { repository.update(m) }
 
     // Todos los Movimientos recurrentes ordenados por id DESC
     val movRecurList: StateFlow<List<MovRecur>> = repository.getAllMovRecur()

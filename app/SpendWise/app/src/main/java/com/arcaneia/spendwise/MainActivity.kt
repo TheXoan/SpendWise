@@ -7,12 +7,18 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.model.*
 import com.arcaneia.spendwise.data.repository.*
+import com.arcaneia.spendwise.data.workers.RenewMovsRecurWorker
 import com.arcaneia.spendwise.navigation.AppNavigation
 import com.arcaneia.spendwise.ui.theme.SpendWiseTheme
 import com.arcaneia.spendwise.viewmodel.AuthViewModel
+import java.util.concurrent.TimeUnit
 
 class MainActivity : FragmentActivity() {
 
@@ -31,11 +37,18 @@ class MainActivity : FragmentActivity() {
 
         val movRepository = MovRepository(db.movDao())
         val categoriaRepository = CategoriaRepository(db.categoriaDao())
-        val movRecurRepository = MovRecurRepository(db.movRecurDao())
+        val movRecurRepository = MovRecurRepository(
+            movRecurDao = db.movRecurDao(),
+            movDao = db.movDao()
+        )
 
         val movViewModel = MovViewModel(movRepository)
         val categoriaViewModel = CategoriaViewModel(categoriaRepository)
         val movRecurViewModel = MovRecurViewModel(movRecurRepository)
+
+        val test = OneTimeWorkRequest.from(RenewMovsRecurWorker::class.java)
+        WorkManager.getInstance(this).enqueue(test)
+
 
         setContent {
             // Habilita la gestión dinámica de estilos y temas
@@ -51,6 +64,7 @@ class MainActivity : FragmentActivity() {
 
         // Se lanza autenticación biométrica
         authenticateUser()
+
     }
 
     /**

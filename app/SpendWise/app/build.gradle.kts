@@ -67,6 +67,9 @@ dependencies {
     implementation(
         libs.androidx.compose.foundation
     )
+    implementation(
+        libs.androidx.work.runtime.ktx
+    )
 
     // Test & debug
     testImplementation(libs.junit)

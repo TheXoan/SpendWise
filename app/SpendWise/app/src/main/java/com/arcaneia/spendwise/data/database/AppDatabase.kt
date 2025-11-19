@@ -14,7 +14,7 @@ import com.arcaneia.spendwise.data.entity.MovRecur
 
 @Database(
     entities = [Categoria::class, Mov::class, MovRecur::class],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -31,12 +31,14 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "spendwise_db"
-                )
-                    .fallbackToDestructiveMigration()
+                val instance =
+                    Room.databaseBuilder(
+                        context.applicationContext,
+                        AppDatabase::class.java,
+                        "spendwise_db"
+                    )
+                        .fallbackToDestructiveMigration(true)
+                    .addCallback(DatabaseCallBack(context))
                     .build()
                 INSTANCE = instance
                 instance
