@@ -30,10 +30,11 @@ class MovRecurRepository(
 
     fun getAllMovRecur(): Flow<List<MovRecur>> = movRecurDao.getAllMovRecur()
 
-    suspend fun processRenewals() {
+    suspend fun processRenewals(): List<Mov> {
+
+        val createdMovs = mutableListOf<Mov>()
 
         val dateComplete = SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault()).format(Date())
-
         val today = LocalDate.now().toString()
         val renewals = movRecurDao.getMovsToRenew(today)
 
@@ -53,12 +54,14 @@ class MovRecurRepository(
                         mov_recur_id = renews.id
                     )
                 movDao.insert(newMov)
+                createdMovs.add(newMov)
 
                 // Avanza a la siguiente fecha recurrente
                 nextDate = calculateNextDate(nextDate, renews.periodicidade!!)
             }
             movRecurDao.update(renews.copy(data_rnv = nextDate))
         }
+        return createdMovs
     }
 
     suspend fun getPendingRenewalsCount(): Int {

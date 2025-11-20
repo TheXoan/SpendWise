@@ -1,5 +1,10 @@
 package com.arcaneia.spendwise.screens
 
+import android.Manifest
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,14 +15,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.arcaneia.spendwise.data.model.MovViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.arcaneia.spendwise.data.database.AppDatabase
-import com.arcaneia.spendwise.data.entity.*
 import com.arcaneia.spendwise.ui.theme.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,6 +31,23 @@ fun MainScreen(
     navController: NavController,
     movViewModel: MovViewModel
 ) {
+
+    val context = LocalContext.current
+
+// Solo 1 launcher para toda la pantalla
+    val notificationPermissionLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { granted ->
+            val msg = if (granted) {
+                "Permiso de notificaciones concedido"
+            } else {
+                "Permiso de notificaciones denegado"
+            }
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        }
+
+
 
     // Obter balance total ingresos e gastos
     val balanceMes by movViewModel.balanceMes.collectAsStateWithLifecycle()
@@ -114,6 +135,31 @@ fun MainScreen(
                 Text(
                     "INGRESO"
                 )
+
+                Spacer(
+                    modifier = Modifier.height(
+                        16.dp
+                    )
+                )
+            }
+
+
+            Button(
+                onClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        notificationPermissionLauncher.launch(
+                            Manifest.permission.POST_NOTIFICATIONS
+                        )
+                    } else {
+                        Toast.makeText(context, "No es necesario pedir permiso", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .width(250.dp)
+                    .height(70.dp)
+            ) {
+                Text("PERMISO")
             }
         }
     }

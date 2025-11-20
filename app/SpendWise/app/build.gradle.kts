@@ -70,6 +70,9 @@ dependencies {
     implementation(
         libs.androidx.work.runtime.ktx
     )
+    implementation(
+        libs.androidx.appcompat
+    )
 
     // Test & debug
     testImplementation(libs.junit)
@@ -90,4 +93,7 @@ dependencies {
     // ViewModel + LiveData
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
+
+    // Material 3 themes e Bridge
+    implementation("com.google.android.material:material:1.12.0")
 }

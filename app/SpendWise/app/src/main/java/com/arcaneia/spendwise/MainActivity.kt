@@ -3,13 +3,9 @@ package com.arcaneia.spendwise
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.OneTimeWorkRequest
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.model.*
@@ -18,9 +14,10 @@ import com.arcaneia.spendwise.data.workers.RenewMovsRecurWorker
 import com.arcaneia.spendwise.navigation.AppNavigation
 import com.arcaneia.spendwise.ui.theme.SpendWiseTheme
 import com.arcaneia.spendwise.viewmodel.AuthViewModel
-import java.util.concurrent.TimeUnit
+import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
 
-class MainActivity : FragmentActivity() {
+class MainActivity : AppCompatActivity()  {
 
     private lateinit var authViewModel: AuthViewModel
 
