@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity()  {
         val test = OneTimeWorkRequest.from(RenewMovsRecurWorker::class.java)
         WorkManager.getInstance(this).enqueue(test)
 
-
         setContent {
             // Habilita la gestión dinámica de estilos y temas
             SpendWiseTheme (darkTheme = true) {

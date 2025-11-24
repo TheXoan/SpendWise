@@ -47,6 +47,7 @@ import com.arcaneia.spendwise.data.entity.MovRecur
 import com.arcaneia.spendwise.data.model.MovRecurViewModel
 import com.arcaneia.spendwise.data.model.Recurrence
 import com.arcaneia.spendwise.data.model.TypeMov
+import com.arcaneia.spendwise.permission.PermissionManager
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOne
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
@@ -66,6 +67,9 @@ fun NewMovRecurScreen(
     navController: NavController,
     movRecurViewModel: MovRecurViewModel
 ){
+
+    val permManager = remember { PermissionManager() }
+    permManager.GetNotificationPermission()
 
     val context = LocalContext.current
 
