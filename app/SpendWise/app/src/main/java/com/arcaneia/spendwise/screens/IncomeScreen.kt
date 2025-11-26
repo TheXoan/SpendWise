@@ -171,7 +171,8 @@ fun IncomeScreen(
             categoriaViewModel,
             onCategoriaSeleccionada = { id ->
                 categoriaSeleccionadaId = id
-            }
+            },
+            internalShape = RoundedCornerShape(12.dp)
         )
         Spacer(modifier = Modifier.height( 20.dp ))
 

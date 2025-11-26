@@ -66,7 +66,7 @@ fun EditarEliminar(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text("Eliminar", color = Color.White)
+                    Text("Eliminar", color = Color.Black)
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.arcaneia.spendwise.permission
 
 import android.Manifest
+import android.content.Context
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -11,7 +12,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.arcaneia.spendwise.data.database.PermissionsDataStore
 import kotlinx.coroutines.launch
-
+import android.content.Intent
+import android.provider.Settings
 
 class PermissionManager {
 
@@ -55,4 +57,10 @@ class PermissionManager {
             }
         }
     }
+}
+fun openNotificationSettings(context: Context) {
+    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+    }
+    context.startActivity(intent)
 }

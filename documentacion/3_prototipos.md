@@ -36,10 +36,13 @@ Funcionalidades engadidas na segunda versión:
   * Poderanse **editar** os datos dun movemento recurrente pulsando no mesmo dende a pantalla de movementos recurrentes
 * Implementado o **editado e eliminación** dun movemento dende a pantalla de historial de movementos: Poderase modificar os datos dun movemento xa engadido
 * Implementado sistema de notificacións para os movementos recurrentes: Engadido un worker que enviará notificacións sempre que se cree un movemento recurrente mostrando o nome e o valor da renovación. O permiso de notificación será solicitado unha vez se acceda a pantalla de novo movemento recurrente
+* Implementado o exportado de datos: Exportanse os 3 ficheiros da base de datos, a base de datos e os ficheros donde se gardan os datos temporais a un zip.
+* Implementado o importado de datos: Faise un importado dun zip a os ficheros da base de datos. Previamente cerrase a conexión coa base de datos para evitar corrupción 
 
 ### Pendente de implementar
-* Permitir o exportado dos datos da aplicación
-* Permitir importar os datos doutra aplicación
+* Filtrar os movementos por categoría
+* Abstraer algún código repetitivo máis nun método auxiliar
+* Formatear titulos e textos aliñar cousas do código de forma igual
 
 ### Problemas atopados
 * Cando creaba un movemento recurrente para poder ter tanto movementos recurrentes gastos como ingresos non tiña unha maneira de diferencialos. Como solución engadin un atributo **"val tipo: TypeMov?"**

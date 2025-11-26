@@ -91,7 +91,8 @@ fun CategoryScreen(
             categoriaViewModel,
             onCategoriaSeleccionada = { id ->
                 categoriaSeleccionadaId = id
-            }
+            },
+            internalShape = RoundedCornerShape(12.dp)
         )
         Spacer(modifier = Modifier.height( 20.dp ))
         Text(
@@ -107,6 +108,7 @@ fun CategoryScreen(
             placeholder = { Text("Nombre Categoría", color = ColorHint, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
+            shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = BackgroundBoxColorOne,
                 focusedContainerColor = BackgroundBoxColorOneSelected,

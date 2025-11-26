@@ -364,7 +364,8 @@ fun EditMovDialog(
                     categoriaViewModel,
                     onCategoriaSeleccionada = { id ->
                         categoria = id
-                    }
+                    },
+                    internalShape = RoundedCornerShape(12.dp)
                 )
 
             }

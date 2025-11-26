@@ -62,25 +62,31 @@ class RenewMovsRecurWorker(
         val channelId = "mov_recur_channel"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Movimientos recurrentes"
-            val descriptionText = "Notificaciones de renovaciones de movimientos recurrentes"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(
                 channelId,
-                name,
-                importance
+                "Movimientos recurrentes",
+                NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = descriptionText
+                description = "Notificaciones de renovaciones de movimientos recurrentes"
             }
-            val notificationManager: NotificationManager =
+            val notificationManager =
                 applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
 
         val manager = NotificationManagerCompat.from(applicationContext)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
         movs.forEach { mov ->
-            val title = "Movimiento recurrente renovado"
+            val title = "Nueva renovación"
             val content = "${mov.descricion ?: "Movimiento"} - %.2f€".format(mov.importe)
 
             val notification = NotificationCompat.Builder(applicationContext, channelId)

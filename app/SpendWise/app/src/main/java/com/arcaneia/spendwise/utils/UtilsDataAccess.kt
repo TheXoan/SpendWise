@@ -28,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 
 /**
  * Combo Box para los años y meses que filtran el historial de movimientos
@@ -118,7 +119,8 @@ fun ComboBoxHistory(
 @Composable
 fun ComboBoxCategorias(
     viewModel: CategoriaViewModel,
-    onCategoriaSeleccionada: (Int) -> Unit
+    onCategoriaSeleccionada: (Int) -> Unit,
+    internalShape: Shape
 ) {
     val categorias by viewModel.categorias.collectAsState()
     var expanded by remember { mutableStateOf(false) }
@@ -137,7 +139,7 @@ fun ComboBoxCategorias(
             readOnly = true,
             value = selectedCategoria?.nome ?: "",
             onValueChange = {},
-            placeholder = { Text("Categoría", color = Color.Black, style = TitleBox) },
+            placeholder = { Text("Categoría", color = Color.Black, style = TitleBox) }, shape = internalShape,
             trailingIcon = {
                 Icon(
                     imageVector = if (expanded)
@@ -158,7 +160,7 @@ fun ComboBoxCategorias(
         )
         ExposedDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false }, shape = internalShape
         ) {
             categorias.forEach { categoria ->
                 DropdownMenuItem(
@@ -173,13 +175,4 @@ fun ComboBoxCategorias(
             }
         }
     }
-}
-
-/**
- * Combo box para obtener todos los movimientos recurrentes
- */
-
-@Composable
-fun ComboBoxMovRecur(){
-
 }
