@@ -1,6 +1,5 @@
 package com.arcaneia.spendwise.screens
 
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -37,12 +35,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.model.CategoriaViewModel
 import com.arcaneia.spendwise.data.model.TypeMov
@@ -55,6 +51,26 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Pantalla para registrar un nuevo gasto en la aplicación.
+ *
+ * Esta vista permite al usuario:
+ * - Introducir un importe numérico.
+ * - Seleccionar una categoría existente.
+ * - Añadir una descripción opcional del gasto.
+ * - Guardar el movimiento en la base de datos mediante [MovViewModel].
+ *
+ * La pantalla incorpora validaciones básicas:
+ * - El importe solo admite números y decimales.
+ * - La categoría es obligatoria.
+ *
+ * Una vez guardado el gasto, se muestra un `Toast` confirmando la operación
+ * y se regresa a la pantalla anterior mediante `navController.popBackStack()`.
+ *
+ * @param navController Controlador de navegación para movernos entre pantallas.
+ * @param movViewModel ViewModel responsable de manejar operaciones relacionadas con movimientos.
+ * @param categoriaViewModel ViewModel para gestionar la lista de categorías disponibles.
+ */
 @Composable
 fun ExpenseScreen(
     navController: NavController,
@@ -62,9 +78,8 @@ fun ExpenseScreen(
     categoriaViewModel: CategoriaViewModel
 ) {
 
-    var cantidadGasto by remember {mutableStateOf("")}
+    var cantidadGasto by remember { mutableStateOf("") }
     var expenseDescription by remember { mutableStateOf("") }
-
     var categoriaSeleccionadaId by remember { mutableStateOf<Int?>(null) }
 
     val context = LocalContext.current
@@ -72,41 +87,43 @@ fun ExpenseScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                horizontal = 30.dp
-            ),
+            .padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
         Text(
             text = "Nuevo Gasto",
             style = TitleTopBar,
             fontSize = 30.sp,
             color = Color.White,
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         Text(
             text = "Agrega un nuevo gasto",
             style = SubtitleTextStyle,
             color = SubtitleColor,
             fontSize = 15.sp,
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
 
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // -------- INPUT: CANTIDAD --------
         Text(
             text = "Cantidad",
-            modifier = Modifier.align(
-                Alignment.Start
-            ),
+            modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
+
         OutlinedTextField(
             value = cantidadGasto,
             onValueChange = { cantidadGastoMod ->
-                // Solo permite números y decimales separados por punto
-                if (cantidadGastoMod.matches(
-                        Regex("^\\d*\\.?\\d*\$"))
-                ) { cantidadGasto = cantidadGastoMod }
+                // Solo se permiten números y decimales
+                if (cantidadGastoMod.matches(Regex("^\\d*\\.?\\d*\$"))) {
+                    cantidadGasto = cantidadGastoMod
+                }
             },
             placeholder = {
                 Row(
@@ -125,9 +142,7 @@ fun ExpenseScreen(
                         style = TitleBox,
                         color = Color.Black,
                         fontSize = 30.sp,
-                        modifier = Modifier.padding(
-                            start = 4.dp
-                        )
+                        modifier = Modifier.padding(start = 4.dp)
                     )
                 }
             },
@@ -140,11 +155,12 @@ fun ExpenseScreen(
                 fontSize = 30.sp,
                 textAlign = TextAlign.Center,
             ),
-            shape = RoundedCornerShape(
-                12.dp
-            ),
+            shape = RoundedCornerShape(12.dp),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally).height(120.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
+                .height(120.dp),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = BackgroundBoxColorOne,
                 focusedContainerColor = BackgroundBoxColorOneSelected,
@@ -153,7 +169,10 @@ fun ExpenseScreen(
                 unfocusedTextColor = Color.Black
             )
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // -------- INPUT: CATEGORÍA --------
         Text(
             text = "Categoría",
             modifier = Modifier.align(Alignment.Start),
@@ -167,12 +186,14 @@ fun ExpenseScreen(
             },
             internalShape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
 
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // -------- INPUT: DESCRIPCIÓN --------
         OutlinedTextField(
             value = expenseDescription,
-            onValueChange = { entradaUsuarip ->
-                expenseDescription = entradaUsuarip
+            onValueChange = { entradaUsuario ->
+                expenseDescription = entradaUsuario
             },
             placeholder = { Text("Descripción", color = ColorHint, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
@@ -186,8 +207,9 @@ fun ExpenseScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height( 35.dp ))
+        Spacer(modifier = Modifier.height(35.dp))
 
+        // -------- BOTÓN GUARDAR GASTO --------
         Button(
             onClick = {
 
@@ -216,7 +238,8 @@ fun ExpenseScreen(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = 10.dp)
-                .width(250.dp).height(70.dp),
+                .width(250.dp)
+                .height(70.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = BackgroundBoxColorRed,
                 contentColor = Color.Black
@@ -230,5 +253,4 @@ fun ExpenseScreen(
         }
 
     }
-
 }

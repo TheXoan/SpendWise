@@ -5,31 +5,38 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.model.*
 import com.arcaneia.spendwise.data.repository.*
-import com.arcaneia.spendwise.data.workers.RenewMovsRecurWorker
 import com.arcaneia.spendwise.navigation.AppNavigation
 import com.arcaneia.spendwise.ui.theme.SpendWiseTheme
 import com.arcaneia.spendwise.viewmodel.AuthViewModel
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 
-class MainActivity : AppCompatActivity()  {
+/**
+ * Actividad principal de la aplicación.
+ *
+ * Se encarga de:
+ * - Inicializar la base de datos y repositorios.
+ * - Crear e inyectar manualmente los ViewModels.
+ * - Cargar la UI basada en Jetpack Compose.
+ * - Ejecutar la autenticación biométrica/patrón antes de mostrar el contenido.
+ *
+ * Esta actividad sirve como contenedor raíz de toda la navegación.
+ */
+class MainActivity : AppCompatActivity() {
 
+    /** ViewModel que controla el estado de autenticación entre SplashScreen y MainScreen. */
     private lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Este objeto cambiará a true cuando se autentique el usuario e iniciará la navegación de vistas
+        // ViewModel que controlará el acceso a la app
         authViewModel = AuthViewModel()
 
-        /**
-         * Instancia de ViewModels y creación de la BBDD
-         */
+        // --- Inicialización de base de datos y repositorios ---
         val db = AppDatabase.getDatabase(application)
 
         val movRepository = MovRepository(db.movDao())
@@ -39,16 +46,14 @@ class MainActivity : AppCompatActivity()  {
             movDao = db.movDao()
         )
 
+        // --- ViewModels principales usados en la app ---
         val movViewModel = MovViewModel(movRepository)
         val categoriaViewModel = CategoriaViewModel(categoriaRepository)
         val movRecurViewModel = MovRecurViewModel(movRecurRepository)
 
-//        val test = OneTimeWorkRequest.from(RenewMovsRecurWorker::class.java)
-//        WorkManager.getInstance(this).enqueue(test)
-
+        // --- Renderizado de UI con Jetpack Compose ---
         setContent {
-            // Habilita la gestión dinámica de estilos y temas
-            SpendWiseTheme (darkTheme = true) {
+            SpendWiseTheme(darkTheme = true) {
                 AppNavigation(
                     authViewModel = authViewModel,
                     movViewModel = movViewModel,
@@ -58,20 +63,25 @@ class MainActivity : AppCompatActivity()  {
             }
         }
 
-        // Se lanza autenticación biométrica
+        // Lanzamos autenticación biométrica antes de dar acceso
         authenticateUser()
-
     }
 
     /**
-     * Nos permitirá autenticar al usuario mediante biometría o patrón/PIN de desbloqueo
+     * Inicia el proceso de autenticación biométrica o mediante PIN/credenciales del dispositivo.
+     *
+     * - Si la autenticación es correcta → se activa la navegación interna (Splash → Home).
+     * - Si falla → se cierra la app.
      */
     private fun authenticateUser() {
         val biometricManager = BiometricManager.from(this)
+
         val canAuth = biometricManager.canAuthenticate(
             BiometricManager.Authenticators.BIOMETRIC_STRONG or
                     BiometricManager.Authenticators.DEVICE_CREDENTIAL
         )
+
+        // Validación del hardware biométrico o credenciales del dispositivo
         if (canAuth != BiometricManager.BIOMETRIC_SUCCESS) {
             val msg = when (canAuth) {
                 BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
@@ -86,25 +96,48 @@ class MainActivity : AppCompatActivity()  {
             return
         }
 
+        // Executor para callbacks biométricos
         val executor = ContextCompat.getMainExecutor(this)
-        val prompt = BiometricPrompt(this, executor,
+
+        val prompt = BiometricPrompt(
+            this,
+            executor,
             object : BiometricPrompt.AuthenticationCallback() {
+
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     authViewModel.setAuthenticated(true)
-                    Toast.makeText(applicationContext, "Autenticación correcta", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Autenticación correcta",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    Toast.makeText(applicationContext, "Error: $errString", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Error: $errString",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
                     authViewModel.setAuthenticated(false)
+
+                    // Cerrar la app si el usuario aborta la autenticación
                     finishAndRemoveTask()
                     kotlin.system.exitProcess(0)
                 }
 
                 override fun onAuthenticationFailed() {
-                    Toast.makeText(applicationContext, "Fallo de autenticación", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Fallo de autenticación",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-            })
+            }
+        )
 
+        // Configuración del prompt
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle("Autenticación requerida")
             .setSubtitle("Usa tu huella, rostro o PIN para acceder")

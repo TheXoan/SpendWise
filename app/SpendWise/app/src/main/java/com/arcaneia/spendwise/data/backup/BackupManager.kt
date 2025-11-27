@@ -11,6 +11,21 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
+/**
+ * Clase encargada de gestionar las operaciones de **respaldo (backup)** y
+ * **restauración** de la base de datos de la aplicación.
+ *
+ * Proporciona funciones para:
+ * - Exportar la base de datos en archivos temporales comprimidos en formato ZIP.
+ * - Guardar la copia de seguridad en una ubicación elegida por el usuario mediante SAF.
+ * - Importar y restaurar la base de datos desde un archivo ZIP previamente generado.
+ *
+ * Esta clase opera en **corrutinas** utilizando `Dispatchers.IO`, ya que se realizan
+ * operaciones de lectura/escritura en disco.
+ *
+ * @property context Contexto necesario para acceder al sistema de archivos y resolver URIs.
+ * @property dbName Nombre del archivo de base de datos de Room. Por defecto `"spendwise_db"`.
+ */
 class BackupManager(
     private val context: Context,
     private val dbName: String = "spendwise_db"
@@ -23,7 +38,12 @@ class BackupManager(
         get() = dbPath.parentFile!!
 
     /**
-     * Exporta la base de datos a un ZIP
+     * Exporta los archivos de la base de datos (DB, SHM y WAL) hacia un archivo ZIP temporal.
+     *
+     * El ZIP se almacena dentro del directorio de caché de la aplicación,
+     * en la carpeta `"backup_temp"`. Si un archivo ZIP previo existe, se reemplaza.
+     *
+     * @return Archivo `File` que apunta al ZIP generado.
      */
     suspend fun exportDatabaseToTempFile(): File = withContext(Dispatchers.IO) {
 
@@ -52,7 +72,11 @@ class BackupManager(
     }
 
     /**
-     * Guarda la exportación en una ubicación elegida por el usuario con el SAF.
+     * Escribe la copia de seguridad temporal en una ubicación elegida por el usuario
+     * utilizando el **Storage Access Framework (SAF)**.
+     *
+     * @param uri URI proporcionada por el usuario donde se guardará el archivo ZIP.
+     * @return `true` si la operación finaliza correctamente, `false` si ocurre algún error.
      */
     suspend fun exportWriteToUri(uri: Uri): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
@@ -72,7 +96,13 @@ class BackupManager(
     }
 
     /**
-     * Restaura la base de datos desde un ZIP.
+     * Importa y restaura la base de datos desde un archivo ZIP.
+     *
+     * Antes de realizar la restauración, la base de datos de Room se cierra para evitar corrupción.
+     * Luego, los archivos incluidos en el ZIP se extraen y reemplazan la base de datos actual.
+     *
+     * @param uri URI del archivo ZIP desde el cual se restaurará la base de datos.
+     * @return `true` si la extracción y restauración se realizan correctamente, `false` si ocurre alguna excepción.
      */
     suspend fun importFromUri(uri: Uri): Boolean = withContext(Dispatchers.IO) {
         try {

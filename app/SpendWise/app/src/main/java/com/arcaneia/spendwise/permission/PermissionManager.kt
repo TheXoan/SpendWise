@@ -15,8 +15,33 @@ import kotlinx.coroutines.launch
 import android.content.Intent
 import android.provider.Settings
 
+/**
+ * Clase encargada de gestionar la solicitud de permisos relacionados con
+ * notificaciones dentro de la aplicación.
+ *
+ * Utiliza un mecanismo basado en Compose (`rememberLauncherForActivityResult`)
+ * junto con DataStore para persistir si el permiso fue concedido o no.
+ *
+ * Esta clase abstrae toda la lógica necesaria para solicitar el permiso
+ * `POST_NOTIFICATIONS` en Android 13+ y para marcarlo como concedido automáticamente
+ * en versiones anteriores donde dicho permiso no es requerido.
+ */
 class PermissionManager {
 
+    /**
+     * Composable que solicita automáticamente el permiso de notificaciones
+     * al iniciarse.
+     *
+     * Funciona del siguiente modo:
+     *
+     * - En **Android 13+ (API 33)**: lanza un diálogo de sistema solicitando el permiso
+     *   `POST_NOTIFICATIONS`.
+     * - En versiones anteriores: guarda automáticamente el permiso como concedido.
+     *
+     * Sin importar el resultado, este se guarda en DataStore mediante [PermissionsDataStore].
+     *
+     * Este composable no dibuja nada en pantalla: solo gestiona la solicitud del permiso.
+     */
     @Composable
     fun GetNotificationPermission() {
 
@@ -25,9 +50,7 @@ class PermissionManager {
 
         // DataStore
         val dataStore = remember {
-            PermissionsDataStore(
-                context
-            )
+            PermissionsDataStore(context)
         }
 
         // Corrutina
@@ -47,8 +70,7 @@ class PermissionManager {
         // Efecto para lanzarlo automáticamente (solo una vez)
         LaunchedEffect(Unit) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                launcher.launch(
-                    Manifest.permission.POST_NOTIFICATIONS)
+                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
             } else {
                 // Si Android < 13, se considera permitido
                 scope.launch {
@@ -58,6 +80,13 @@ class PermissionManager {
         }
     }
 }
+
+/**
+ * Abre la pantalla de ajustes del sistema donde el usuario puede gestionar manualmente
+ * los permisos de notificaciones de la aplicación.
+ *
+ * @param context Contexto necesario para iniciar el Intent hacia los ajustes.
+ */
 fun openNotificationSettings(context: Context) {
     val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
         putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)

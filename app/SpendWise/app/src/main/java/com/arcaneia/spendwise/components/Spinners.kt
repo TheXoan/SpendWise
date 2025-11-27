@@ -26,6 +26,19 @@ import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOne
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
 
+/**
+ * Componente que muestra un selector desplegable (`Spinner`) para elegir una opción
+ * de la enumeración [Recurrence].
+ *
+ * El botón principal muestra la periodicidad actualmente seleccionada o un texto
+ * predeterminado si no se ha seleccionado ninguna. Al hacer clic, se despliega
+ * un menú con todas las opciones disponibles.
+ *
+ * @param selectedRecurrence Valor actualmente seleccionado de tipo [Recurrence], o `null`
+ * si aún no hay selección.
+ * @param onRecurrenceSelected Callback que se ejecuta cuando el usuario selecciona
+ * una opción del menú, devolviendo la instancia seleccionada.
+ */
 @Composable
 fun RecurrenceSpinner(
     selectedRecurrence: Recurrence?,
@@ -93,6 +106,19 @@ fun RecurrenceSpinner(
     }
 }
 
+/**
+ * Componente que muestra un selector desplegable (`Spinner`) para elegir una opción
+ * de la enumeración [TypeMov].
+ *
+ * El botón principal muestra el tipo de movimiento actualmente seleccionado o un texto
+ * predeterminado si aún no hay selección. Al hacer clic, se despliega un menú con todas
+ * las opciones disponibles.
+ *
+ * @param selectedTypeMov Valor actualmente seleccionado de tipo [TypeMov], o `null`
+ * si aún no hay selección.
+ * @param onSelectedTypeMov Callback que se ejecuta cuando el usuario selecciona
+ * una opción del menú, devolviendo la instancia seleccionada.
+ */
 @Composable
 fun TypeMovSpinner(
     selectedTypeMov: TypeMov?,
@@ -142,7 +168,7 @@ fun TypeMovSpinner(
                     )
             ) {
                 TypeMov.values()
-                    .forEach { recurrence ->
+                    .forEach { recurrence -> // "recurrence" es el nombre de la variable en tu código original
                         DropdownMenuItem(
                             text = {
                                 Text(recurrence.description,

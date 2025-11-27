@@ -5,6 +5,37 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.arcaneia.spendwise.data.model.TypeMov
 
+/**
+ * Entidad que representa un movimiento económico dentro de la aplicación.
+ *
+ * Los movimientos pueden ser ingresos o gastos, y están asociados a una categoría y,
+ * opcionalmente, a un movimiento recurrente.
+ *
+ * Esta entidad define dos claves foráneas:
+ * 1. **categoria_id** → Referencia a [Categoria], con eliminación en cascada
+ *    (si se borra la categoría, se borran sus movimientos).
+ * 2. **mov_recur_id** → Referencia a [MovRecur], con acción `SET_NULL`
+ *    (si se elimina el movimiento recurrente, el campo queda en `null`).
+ *
+ * La tabla asociada se llama `mov`.
+ *
+ * @property id Identificador único del movimiento.
+ * Se genera automáticamente mediante `autoGenerate = true`.
+ *
+ * @property tipo Tipo de movimiento, representado por el enum [TypeMov]
+ * (por ejemplo: *INGRESO* o *GASTO*). Puede ser `null` en casos especiales.
+ *
+ * @property importe Monto económico del movimiento.
+ *
+ * @property data_mov Fecha del movimiento en formato `"YYYY-MM-DD"`.
+ *
+ * @property descricion Descripción opcional del movimiento.
+ *
+ * @property categoria_id ID de la categoría asociada al movimiento.
+ *
+ * @property mov_recur_id ID de un movimiento recurrente, si aplica.
+ * Puede ser `null` si el movimiento no proviene de una recurrencia.
+ */
 @Entity(
     tableName = "mov",
     foreignKeys = [

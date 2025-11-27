@@ -45,6 +45,27 @@ import com.arcaneia.spendwise.utils.ComboBoxCategorias
 import kotlinx.coroutines.launch
 
 
+/**
+ * Pantalla encargada de gestionar las categorías de la aplicación.
+ *
+ * Permite:
+ * - Visualizar las categorías existentes mediante un combo box.
+ * - Crear nuevas categorías.
+ * - Actualizar categorías seleccionadas.
+ * - Eliminar categorías.
+ *
+ * Esta pantalla utiliza `CategoriaViewModel` para interactuar con la capa de datos,
+ * aunque también recurre directamente al DAO cuando es necesario (actualización e inserción).
+ *
+ * Elementos principales de la UI:
+ * - Campo para seleccionar una categoría existente (selector).
+ * - Campo de texto para ingresar o modificar el nombre de la categoría.
+ * - Botón para guardar (crear o actualizar).
+ * - Botón para eliminar la categoría seleccionada.
+ *
+ * @param navController Controlador de navegación para cambiar de pantallas.
+ * @param categoriaViewModel ViewModel encargado de gestionar la lógica de categorías.
+ */
 @Composable
 fun CategoryScreen(
     navController: NavController,
@@ -52,7 +73,6 @@ fun CategoryScreen(
 ) {
 
     var categoriaSeleccionadaId by remember { mutableStateOf<Int?>(null) }
-
     var nameCategory by remember { mutableStateOf("") }
 
     val context = LocalContext.current
@@ -62,9 +82,7 @@ fun CategoryScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                horizontal = 30.dp
-            ),
+            .padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -74,19 +92,24 @@ fun CategoryScreen(
             fontSize = 50.sp,
             color = Color.White,
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         Text(
             text = "Agrega una nueva categoría",
             style = SubtitleTextStyle,
             color = SubtitleColor,
             fontSize = 15.sp,
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         Text(
             text = "Categorías",
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
+
         ComboBoxCategorias(
             categoriaViewModel,
             onCategoriaSeleccionada = { id ->
@@ -94,12 +117,15 @@ fun CategoryScreen(
             },
             internalShape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         Text(
             text = "Nombre Categoría",
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
+
         OutlinedTextField(
             value = nameCategory,
             onValueChange = { entradaUsuario ->
@@ -117,11 +143,14 @@ fun CategoryScreen(
                 unfocusedTextColor = Color.Black
             )
         )
+
         Spacer(modifier = Modifier.height(50.dp))
+
+        // BOTÓN PARA CREAR O ACTUALIZAR CATEGORÍAS
         Button(
             onClick = {
                 scope.launch {
-                    if (nameCategory != ""  && categoriaSeleccionadaId != 0 && categoriaSeleccionadaId != null)  {
+                    if (nameCategory != "" && categoriaSeleccionadaId != 0 && categoriaSeleccionadaId != null)  {
                         val categoria = Categoria(id = categoriaSeleccionadaId!!, nome = nameCategory, tipo = "")
                         db.categoriaDao().update(categoria)
                         Toast.makeText(context, "Categoría actualizada correctamente", Toast.LENGTH_SHORT).show()
@@ -131,7 +160,7 @@ fun CategoryScreen(
                         db.categoriaDao().insert(categoria)
                         Toast.makeText(context, "Categoría creada correctamente", Toast.LENGTH_SHORT).show()
                         nameCategory = ""
-                    }else {
+                    } else {
                         Toast.makeText(context, "El nombre de la categoría no puede estar vacío", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -139,7 +168,8 @@ fun CategoryScreen(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = 10.dp)
-                .width(250.dp).height(70.dp),
+                .width(250.dp)
+                .height(70.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = BackgroundBoxCategory,
                 contentColor = Color.Black
@@ -150,7 +180,10 @@ fun CategoryScreen(
                 text = "GUARDAR CATEGORIA",
             )
         }
+
         Spacer(modifier = Modifier.height(20.dp))
+
+        // BOTÓN PARA ELIMINAR UNA CATEGORÍA
         Button(
             onClick = {
                 if (categoriaSeleccionadaId != null) {
@@ -163,7 +196,8 @@ fun CategoryScreen(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = 10.dp)
-                .width(250.dp).height(70.dp),
+                .width(250.dp)
+                .height(70.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = BackgroundBoxColorRed,
                 contentColor = Color.Black

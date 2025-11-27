@@ -43,6 +43,22 @@ import com.arcaneia.spendwise.ui.theme.TitleTextLittle
 import com.arcaneia.spendwise.ui.theme.TittleTopBox
 import kotlinx.coroutines.launch
 
+/**
+ * Pantalla de configuración de la aplicación.
+ *
+ * Incluye:
+ * - Opciones de exportación e importación de datos mediante ZIP.
+ * - Control sobre el permiso de notificaciones persistido en DataStore.
+ * - Acceso directo a la página de permisos del sistema.
+ *
+ * Funciones principales:
+ * - La importación usa SAF (System Access Framework) con `OpenDocument`.
+ * - La exportación usa `CreateDocument` para generar un archivo ZIP.
+ * - El permiso de notificaciones se solicita con `RequestPermission`.
+ *
+ * @param navController Control de navegación, no utilizado directamente en esta pantalla
+ *                      pero necesario para mantener la coherencia del sistema de navegación.
+ */
 @Composable
 fun SettingScreen(
     navController: NavController
@@ -53,8 +69,11 @@ fun SettingScreen(
     val scope = rememberCoroutineScope()
     var status by remember { mutableStateOf<String?>(null) }
 
+    // DataStore para almacenar permiso de notificaciones
     val permissionsStore = remember {PermissionsDataStore(context)}
     val isEnabled by permissionsStore.isNotificationGranted.collectAsState(initial = false)
+
+    // Launcher de permiso de notificaciones
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted: Boolean ->
@@ -63,17 +82,19 @@ fun SettingScreen(
         }
     }
 
-
-    val exportLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.CreateDocument("application/zip"))
-    { uri ->
+    // Exportación de datos ZIP
+    val exportLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/zip")
+    ) { uri ->
         if (uri != null) {
             scope.launch {
-                val ok =
-                    backupManager.exportWriteToUri(uri)
+                val ok = backupManager.exportWriteToUri(uri)
                 status = if (ok) "Exportación completada" else "Error en exportación"
             }
         }
     }
+
+    // Importación de datos ZIP
     val importLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
@@ -93,6 +114,8 @@ fun SettingScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+
+        /** ---------- TÍTULO ---------- **/
         Text(
             text = "Configuración",
             style = TitleTextLittle,
@@ -100,13 +123,14 @@ fun SettingScreen(
             modifier = Modifier.padding(top = 50.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
+
+        /** ---------- SECCIÓN DE DATOS ---------- **/
         Text(
             text = "Datos",
             style = TittleTopBox,
             color = ColorTittleTopBox,
             modifier = Modifier.align(Alignment.Start)
         )
-
         Spacer(modifier = Modifier.height(10.dp))
 
         Row(
@@ -152,7 +176,10 @@ fun SettingScreen(
                 )
             }
         }
+
         Spacer(modifier = Modifier.height(20.dp))
+
+        /** ---------- SECCIÓN DE PERMISOS ---------- **/
         Text(
             text = "Permisos",
             style = TittleTopBox,
@@ -160,11 +187,14 @@ fun SettingScreen(
             modifier = Modifier.align(Alignment.Start)
         )
         Spacer(modifier = Modifier.height(10.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
+            // Etiqueta "Notificaciones"
             Text(
                 text = "Notificaciones",
                 style = TittleTopBox,
@@ -176,6 +206,8 @@ fun SettingScreen(
                     )
                     .padding(horizontal = 20.dp, vertical = 15.dp)
             )
+
+            // Switch para activar/desactivar permiso
             Switch(
                 checked = isEnabled,
                 onCheckedChange = { checked ->

@@ -19,11 +19,23 @@ import androidx.compose.ui.unit.dp
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 
+/**
+ * Muestra un cuadro de diálogo con opciones para **editar** o **eliminar**
+ * un elemento, junto con la posibilidad de **cerrar** el diálogo.
+ *
+ * Este componente utiliza `AlertDialog` de Jetpack Compose y presenta un título,
+ * un texto descriptivo y dos botones de acción principales.
+ *
+ * @param title Título que se mostrará en la parte superior del diálogo.
+ * @param onEdit Acción que se ejecutará cuando el usuario presione el botón **Editar**.
+ * @param onDelete Acción que se ejecutará cuando el usuario presione el botón **Eliminar**.
+ * @param onDismiss Acción que se invoca cuando el diálogo se cierra sin seleccionar ninguna acción.
+ */
 @Composable
 fun EditarEliminar(
     title: String,
-    onEditar: () -> Unit,
-    onEliminar: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
     onDismiss: () -> Unit
 ){
     AlertDialog(
@@ -50,7 +62,7 @@ fun EditarEliminar(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = onEditar,
+                    onClick = onEdit,
                     colors = ButtonDefaults.buttonColors(containerColor = BackgroundBoxColorGreen),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)
@@ -61,7 +73,7 @@ fun EditarEliminar(
                 Spacer(modifier = Modifier.width(20.dp))
 
                 Button(
-                    onClick = onEliminar,
+                    onClick = onDelete,
                     colors = ButtonDefaults.buttonColors(containerColor = BackgroundBoxColorRed),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)

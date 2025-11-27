@@ -1,6 +1,5 @@
 package com.arcaneia.spendwise.screens
 
-import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -62,6 +61,21 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+/**
+ * Pantalla para crear un nuevo movimiento recurrente.
+ *
+ * Esta pantalla permite al usuario:
+ * - Introducir importe, nombre, tipo y periodicidad.
+ * - Seleccionar la fecha inicial mediante un DatePicker.
+ * - Guardar el movimiento recurrente en la base de datos.
+ *
+ * Funcionalidad adicional:
+ * - Solicita el permiso de notificaciones usando [PermissionManager].
+ * - Calcula automáticamente la próxima fecha de renovación usando [calculateNextDate].
+ *
+ * @param navController Controlador de navegación para volver atrás tras guardar.
+ * @param movRecurViewModel ViewModel encargado de gestionar los movimientos recurrentes.
+ */
 @Composable
 fun NewMovRecurScreen(
     navController: NavController,

@@ -32,6 +32,21 @@ import java.time.ZoneId
 import java.time.Instant
 import java.util.Locale
 
+/**
+ * Pantalla que muestra la lista de movimientos recurrentes configurados por el usuario.
+ *
+ * Esta pantalla:
+ * - Observa el flujo de movimientos recurrentes mediante [MovRecurViewModel].
+ * - Muestra cada movimiento en una lista desplazable.
+ * - Permite editar o eliminar un movimiento mediante un diálogo contextual.
+ * - Permite crear nuevos movimientos recurrentes mediante un botón inferior.
+ *
+ * Navega hacia:
+ * - `newMovRecur_screen` → pantalla de creación de movimientos recurrentes.
+ *
+ * @param navController Controlador de navegación.
+ * @param movRecurViewModel ViewModel para gestionar los movimientos recurrentes.
+ */
 @Composable
 fun MovRecurHistoryScreen(
     navController: NavController,
@@ -83,8 +98,16 @@ fun MovRecurHistoryScreen(
     }
 }
 
-
-/*********** LISTA ***********/
+/**
+ * Lista de movimientos recurrentes con soporte para:
+ * - Mostrar lista o mensaje vacío.
+ * - Abrir menú para editar/eliminar.
+ * - Abrir diálogo de edición.
+ *
+ * @param movsRecur Lista de movimientos recurrentes.
+ * @param modifier Modificador opcional.
+ * @param viewModel ViewModel encargado de las operaciones sobre la lista.
+ */
 @Composable
 fun MovRecurList(
     movsRecur: List<MovRecur>,
@@ -122,11 +145,11 @@ fun MovRecurList(
     if (showOptions && selectedMov != null) {
         EditarEliminar(
             title = selectedMov!!.nombre,
-            onEditar = {
+            onEdit = {
                 showOptions = false
                 showEditDialog = true
             },
-            onEliminar = {
+            onDelete = {
                 viewModel.delete(selectedMov!!)
                 showOptions = false
             },
@@ -146,6 +169,19 @@ fun MovRecurList(
     }
 }
 
+/**
+ * Tarjeta que muestra la información principal de un movimiento recurrente.
+ *
+ * Muestra:
+ * - Nombre
+ * - Fecha de inicio
+ * - Fecha de renovación
+ * - Periodo (semanal/mensual/anual)
+ * - Importe con color según tipo
+ *
+ * @param mov Objeto del movimiento recurrente.
+ * @param onClick Acción al pulsar el elemento.
+ */
 @SuppressLint("DefaultLocale")
 @Composable
 fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
@@ -228,7 +264,22 @@ fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
     }
 }
 
-
+/**
+ * Diálogo completo para editar un movimiento recurrente.
+ *
+ * Permite modificar:
+ * - Nombre
+ * - Importe
+ * - Fecha de inicio (DatePicker)
+ * - Periodicidad (mediante [RecurrenceSpinner])
+ * - Tipo de movimiento (mediante [TypeMovSpinner])
+ *
+ * La fecha de renovación se actualiza usando [calculateNextDate].
+ *
+ * @param mov Movimiento recurrente a editar.
+ * @param onGuardar Acción que recibe el movimiento actualizado.
+ * @param onDismiss Acción al cerrar el diálogo sin guardar.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditarMovDialog(
@@ -238,7 +289,7 @@ fun EditarMovDialog(
 ) {
     var nombre by remember { mutableStateOf(mov.nombre) }
     var importe by remember { mutableStateOf(mov.importe.toString()) }
-    var fecha by remember { mutableStateOf(mov.data_ini) } // String yyyy-MM-dd
+    var fecha by remember { mutableStateOf(mov.data_ini) }
     var periodicidade by remember { mutableStateOf(mov.periodicidade) }
     var tipo by remember { mutableStateOf(mov.tipo) }
     var mostrarPicker by remember { mutableStateOf(false) }

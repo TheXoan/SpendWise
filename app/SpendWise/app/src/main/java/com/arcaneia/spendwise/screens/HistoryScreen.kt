@@ -1,7 +1,6 @@
 package com.arcaneia.spendwise.screens
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,33 +29,44 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.arcaneia.spendwise.components.EditarEliminar
-import com.arcaneia.spendwise.components.RecurrenceSpinner
 import com.arcaneia.spendwise.components.TypeMovSpinner
 import com.arcaneia.spendwise.data.entity.Mov
-import com.arcaneia.spendwise.data.entity.MovRecur
 import com.arcaneia.spendwise.data.entity.MovWithCategory
 import com.arcaneia.spendwise.data.model.CategoriaViewModel
 import com.arcaneia.spendwise.data.model.MovViewModel
-import com.arcaneia.spendwise.data.model.Recurrence
 import com.arcaneia.spendwise.data.model.TypeMov
-import com.arcaneia.spendwise.ui.theme.BackgroundBoxCategory
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxHistory
 import com.arcaneia.spendwise.ui.theme.TextBoxBold
 import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.ui.theme.TitleTextLittle
-import com.arcaneia.spendwise.ui.theme.TitleTextStyle
 import com.arcaneia.spendwise.utils.ComboBoxCategorias
 import com.arcaneia.spendwise.utils.ComboBoxHistory
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Pantalla que muestra el historial filtrado de movimientos económicos.
+ *
+ * Esta vista permite al usuario:
+ * - Seleccionar un año y mes para filtrar los movimientos.
+ * - Visualizar la lista de transacciones correspondientes.
+ * - Editar o eliminar movimientos mediante un menú contextual.
+ *
+ * La pantalla observa distintos estados expuestos por [MovViewModel],
+ * incluyendo la lista de años, meses y movimientos disponibles.
+ *
+ * @param navController Controlador de navegación.
+ * @param movViewModel ViewModel encargado de gestionar movimientos.
+ * @param categoriaViewModel ViewModel encargado de gestionar categorías.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
@@ -70,14 +80,12 @@ fun HistoryScreen(
     val selectedMonth by movViewModel.selectedMonthFlow.collectAsState()
     val movimientos by movViewModel.movements.collectAsState()
 
-
-    Scaffold(
-    ) { innerPadding ->
+    Scaffold {
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(it)
                 .padding(16.dp)
-                .fillMaxSize(),
+                .fillMaxSize()
         ) {
             Text(
                 text = "Resumen financiero",
@@ -85,15 +93,13 @@ fun HistoryScreen(
                 style = TitleTextLittle,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+
             Spacer(modifier = Modifier.height(30.dp))
-            // 🔹 Filtros Año / Mes
+
+            // Filtros de año / mes
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(
-                    space = 12.dp,
-                    alignment = Alignment.CenterHorizontally
-                )
-
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
             ) {
                 ComboBoxHistory(
                     label = "Año",
@@ -113,7 +119,6 @@ fun HistoryScreen(
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            // Lista de movimientos filtrados
             HistoryList(
                 transacciones = movimientos,
                 modifier = Modifier.fillMaxSize(),
@@ -124,6 +129,20 @@ fun HistoryScreen(
     }
 }
 
+/**
+ * Lista de movimientos filtrados según los parámetros seleccionados.
+ *
+ * Permite:
+ * - Mostrar un mensaje cuando no hay datos.
+ * - Mostrar cada transacción usando [TransaccionItem].
+ * - Abrir un menú contextual para editar o eliminar.
+ * - Mostrar un diálogo para editar la transacción seleccionada.
+ *
+ * @param transacciones Lista de movimientos con categoría.
+ * @param modifier Modificador para personalización externa.
+ * @param viewModel ViewModel para realizar operaciones CRUD sobre movimientos.
+ * @param categoriaViewModel ViewModel para gestionar categorías.
+ */
 @Composable
 fun HistoryList(
     transacciones: List<MovWithCategory>,
@@ -131,7 +150,6 @@ fun HistoryList(
     viewModel: MovViewModel,
     categoriaViewModel: CategoriaViewModel
 ) {
-
     var selectedMov by remember { mutableStateOf<MovWithCategory?>(null) }
     var showOptions by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
@@ -141,10 +159,7 @@ fun HistoryList(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "No hay movimientos en este periodo",
-                color = Color.Gray
-            )
+            Text("No hay movimientos en este periodo", color = Color.Gray)
         }
     } else {
         LazyColumn(
@@ -152,22 +167,23 @@ fun HistoryList(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(transacciones) { mov ->
-                TransaccionItem(mov){
+                TransaccionItem(mov) {
                     selectedMov = mov
                     showOptions = true
                 }
-                Spacer(modifier = Modifier.height( 5.dp ))
+                Spacer(modifier = Modifier.height(5.dp))
             }
         }
     }
-    if (showOptions && selectedMov != null && selectedMov!!.mov.descricion!= null ) {
+
+    if (showOptions && selectedMov != null && selectedMov!!.mov.descricion != null) {
         EditarEliminar(
             title = selectedMov!!.mov.descricion!!,
-            onEditar = {
+            onEdit = {
                 showOptions = false
                 showEditDialog = true
             },
-            onEliminar = {
+            onDelete = {
                 viewModel.delete(selectedMov!!.mov)
                 showOptions = false
             },
@@ -188,13 +204,23 @@ fun HistoryList(
     }
 }
 
-@SuppressLint(
-    "DefaultLocale"
-)
+/**
+ * Elemento visual que representa un movimiento dentro de la lista del historial.
+ *
+ * Muestra:
+ * - Descripción del movimiento
+ * - Fecha formateada
+ * - Categoría
+ * - Importe con color verde (ingreso) o rojo (gasto)
+ *
+ * @param movWithCategory Movimiento junto con el nombre de su categoría.
+ * @param onClick Acción al pulsar el elemento (abrir opciones).
+ */
+@SuppressLint("DefaultLocale")
 @Composable
 fun TransaccionItem(
     movWithCategory: MovWithCategory,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     val esIngreso = movWithCategory.mov.tipo == TypeMov.INGRESO
     val colorCantidad = if (esIngreso) BackgroundBoxColorGreen else BackgroundBoxColorRed
@@ -213,18 +239,18 @@ fun TransaccionItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = movWithCategory.mov.descricion ?: "Movimiento",
+                    movWithCategory.mov.descricion ?: "Movimiento",
                     color = Color.White,
                     style = TextBoxBold,
                     modifier = Modifier.padding(start = 10.dp)
                 )
+
                 Spacer(modifier = Modifier.height(3.dp))
+
                 Text(
-                    text = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                    SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                         .format(
                             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                                 .parse(movWithCategory.mov.data_mov)!!
@@ -233,17 +259,17 @@ fun TransaccionItem(
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 10.dp)
                 )
+
                 Spacer(modifier = Modifier.height(5.dp))
+
                 Text(
-                    text = movWithCategory.categoriaNome,
+                    movWithCategory.categoriaNome,
                     color = Color.Black,
                     style = TextBoxBold,
                     fontSize = 10.sp,
                     modifier = Modifier
                         .padding(start = 15.dp)
-                        .background(color = Color(
-                            0xA9FFD900
-                        ), shape = RoundedCornerShape(50.dp))
+                        .background(Color(0xA9FFD900), RoundedCornerShape(50.dp))
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 )
             }
@@ -252,15 +278,15 @@ fun TransaccionItem(
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                // Si la cifra es muy alta reduce el tamaño del texto
                 val importeTexto = String.format("%.2f€", movWithCategory.mov.importe)
                 val fontSize = when {
                     importeTexto.length > 15 -> 11.sp
                     importeTexto.length > 10 -> 12.sp
                     else -> 15.sp
                 }
+
                 Text(
-                    text = importeTexto,
+                    importeTexto,
                     color = colorCantidad,
                     style = TitleBox,
                     fontSize = fontSize,
@@ -268,20 +294,32 @@ fun TransaccionItem(
                 )
             }
         }
-
     }
 }
 
-@SuppressLint(
-    "SimpleDateFormat"
-)
+/**
+ * Diálogo que permite editar un movimiento existente.
+ *
+ * Puede modificarse:
+ * - Nombre del movimiento
+ * - Importe
+ * - Fecha (mediante DatePicker)
+ * - Tipo (Ingreso/Gasto)
+ * - Categoría
+ *
+ * @param mov Movimiento a editar.
+ * @param onGuardar Callback que se ejecuta al guardar cambios.
+ * @param onDismiss Acción al cerrar el diálogo sin guardar.
+ * @param categoriaViewModel ViewModel para cargar categorías.
+ */
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun EditMovDialog(
     mov: Mov,
     onGuardar: (Mov) -> Unit,
     onDismiss: () -> Unit,
     categoriaViewModel: CategoriaViewModel
-){
+) {
     var nameMov by remember { mutableStateOf(mov.descricion) }
     var amountMov by remember { mutableStateOf(mov.importe.toString()) }
 
@@ -294,7 +332,7 @@ fun EditMovDialog(
 
     val formato = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
 
-    // Date picker para seleccionar la  fecha
+    // DatePicker para modificar fecha
     if (mostrarPicker) {
         val pickerState = rememberDatePickerState(initialSelectedDateMillis = date.time)
         DatePickerDialog(
@@ -318,29 +356,26 @@ fun EditMovDialog(
         title = { Text("Editar: ${mov.descricion}") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                // Nombre
+
                 OutlinedTextField(
-                    value = nameMov?: "",
+                    value = nameMov ?: "",
                     onValueChange = { nameMov = it },
                     label = { Text("Nombre") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Importe
                 OutlinedTextField(
                     value = amountMov,
                     onValueChange = { amountMovMod ->
-                        // Solo permite números y decimales separados por punto
-                        if (amountMovMod.matches(
-                                Regex("^\\d*\\.?\\d*\$"))
-                        ) { amountMov = amountMovMod }
+                        if (amountMovMod.matches(Regex("^\\d*\\.?\\d*\$"))) {
+                            amountMov = amountMovMod
+                        }
                     },
                     label = { Text("Importe (€)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Fecha de inicio
                 OutlinedTextField(
                     value = formato.format(date),
                     onValueChange = {},
@@ -354,7 +389,6 @@ fun EditMovDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Tipo
                 TypeMovSpinner(
                     selectedTypeMov = tipo,
                     onSelectedTypeMov = { tipo = it }
@@ -362,12 +396,9 @@ fun EditMovDialog(
 
                 ComboBoxCategorias(
                     categoriaViewModel,
-                    onCategoriaSeleccionada = { id ->
-                        categoria = id
-                    },
+                    onCategoriaSeleccionada = { id -> categoria = id },
                     internalShape = RoundedCornerShape(12.dp)
                 )
-
             }
         },
         confirmButton = {
@@ -379,12 +410,9 @@ fun EditMovDialog(
             ) {
                 Button(
                     onClick = {
-
                         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date)
-
                         onGuardar(
                             mov.copy(
-                                id = mov.id,
                                 tipo = tipo,
                                 importe = amountMov.toDouble(),
                                 data_mov = dateFormat,
@@ -411,7 +439,6 @@ fun EditMovDialog(
                     Text("Cancelar", color = Color.White)
                 }
             }
-        },
-        dismissButton = {}
+        }
     )
 }

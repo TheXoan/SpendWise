@@ -1,6 +1,5 @@
 package com.arcaneia.spendwise.screens
 
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -58,6 +56,30 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Pantalla encargada de registrar un nuevo ingreso en la aplicación.
+ *
+ * Esta vista permite al usuario:
+ * - Introducir un importe numérico.
+ * - Seleccionar una categoría existente.
+ * - Añadir una descripción opcional.
+ * - Guardar el ingreso utilizando [MovViewModel].
+ *
+ * La pantalla aplica validaciones básicas:
+ * - Solo se permiten números y decimales en el importe.
+ * - La categoría es obligatoria.
+ *
+ * Una vez guardado el ingreso:
+ * - Se muestra un mensaje `Toast` confirmando la operación.
+ * - Se vuelve a la pantalla anterior usando `navController.popBackStack()`.
+ *
+ * Para evitar dobles inserciones accidentales, se usa la bandera `isSaving`
+ * que deshabilita múltiples pulsaciones del botón.
+ *
+ * @param navController Controlador de navegación para cambiar de pantallas.
+ * @param movViewModel ViewModel encargado de gestionar movimientos.
+ * @param categoriaViewModel ViewModel encargado de cargar las categorías existentes.
+ */
 @Composable
 fun IncomeScreen(
     navController: NavController,
@@ -66,54 +88,54 @@ fun IncomeScreen(
 ) {
     var isSaving by remember { mutableStateOf(false) }
 
-    var cantidadGasto by remember {mutableStateOf("")}
+    var cantidadGasto by remember { mutableStateOf("") }
     var expenseDescription by remember { mutableStateOf("") }
-
     var categoriaSeleccionadaId by remember { mutableStateOf<Int?>(null) }
 
     val context = LocalContext.current
     val db = AppDatabase.getDatabase(context)
     val scope = rememberCoroutineScope()
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                horizontal = 30.dp
-            ),
+            .padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
         Text(
             text = "Nuevo Gasto",
             style = TitleTopBar,
             fontSize = 30.sp,
             color = Color.White,
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         Text(
             text = "Agrega un nuevo ingreso",
             style = SubtitleTextStyle,
             color = SubtitleColor,
             fontSize = 15.sp,
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
 
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // -------- INPUT: CANTIDAD --------
         Text(
             text = "Cantidad",
-            modifier = Modifier.align(
-                Alignment.Start
-            ),
+            modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
+
         OutlinedTextField(
             value = cantidadGasto,
             onValueChange = { cantidadGastoMod ->
-                // Solo permite números y decimales separados por punto
-                if (cantidadGastoMod.matches(
-                        Regex("^\\d*\\.?\\d*\$"))
-                ) { cantidadGasto = cantidadGastoMod }
+                // Solo permite números y decimales con punto
+                if (cantidadGastoMod.matches(Regex("^\\d*\\.?\\d*\$"))) {
+                    cantidadGasto = cantidadGastoMod
+                }
             },
             placeholder = {
                 Row(
@@ -132,9 +154,7 @@ fun IncomeScreen(
                         style = TitleBox,
                         color = Color.Black,
                         fontSize = 30.sp,
-                        modifier = Modifier.padding(
-                            start = 4.dp
-                        )
+                        modifier = Modifier.padding(start = 4.dp)
                     )
                 }
             },
@@ -145,13 +165,14 @@ fun IncomeScreen(
             textStyle = TextStyle(
                 color = Color.Black,
                 fontSize = 30.sp,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             ),
-            shape = RoundedCornerShape(
-                12.dp
-            ),
+            shape = RoundedCornerShape(12.dp),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally).height(120.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
+                .height(120.dp),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = BackgroundBoxColorOne,
                 focusedContainerColor = BackgroundBoxColorOneSelected,
@@ -160,7 +181,10 @@ fun IncomeScreen(
                 unfocusedTextColor = Color.Black
             )
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // -------- INPUT: CATEGORÍA --------
         Text(
             text = "Categoría",
             modifier = Modifier.align(Alignment.Start),
@@ -169,18 +193,16 @@ fun IncomeScreen(
 
         ComboBoxCategorias(
             categoriaViewModel,
-            onCategoriaSeleccionada = { id ->
-                categoriaSeleccionadaId = id
-            },
+            onCategoriaSeleccionada = { id -> categoriaSeleccionadaId = id },
             internalShape = RoundedCornerShape(12.dp)
         )
-        Spacer(modifier = Modifier.height( 20.dp ))
 
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // -------- INPUT: DESCRIPCIÓN --------
         OutlinedTextField(
             value = expenseDescription,
-            onValueChange = { entradaUsuarip ->
-                expenseDescription = entradaUsuarip
-            },
+            onValueChange = { entradaUsuarip -> expenseDescription = entradaUsuarip },
             placeholder = { Text("Descripción", color = ColorHint, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -193,15 +215,21 @@ fun IncomeScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height( 35.dp ))
+        Spacer(modifier = Modifier.height(35.dp))
 
+        // -------- BOTÓN GUARDAR INGRESO --------
         Button(
             onClick = {
                 if (isSaving) return@Button
                 isSaving = true
 
                 if (categoriaSeleccionadaId != null) {
-                    val fechaActual = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+
+                    val fechaActual = SimpleDateFormat(
+                        "yyyy-MM-dd HH:mm:ss",
+                        Locale.getDefault()
+                    ).format(Date())
+
                     val mov = Mov(
                         tipo = TypeMov.INGRESO,
                         importe = cantidadGasto.toDoubleOrNull() ?: 0.0,
@@ -211,8 +239,7 @@ fun IncomeScreen(
                         mov_recur_id = null
                     )
 
-                    scope.launch(
-                        Dispatchers.IO) {
+                    scope.launch(Dispatchers.IO) {
                         movViewModel.insert(mov)
                         withContext(Dispatchers.Main) {
                             Toast.makeText(context, "Ingreso guardado correctamente", Toast.LENGTH_SHORT).show()
@@ -220,6 +247,7 @@ fun IncomeScreen(
                             navController.popBackStack()
                         }
                     }
+
                 } else {
                     Toast.makeText(context, "Debes seleccionar una categoría", Toast.LENGTH_SHORT).show()
                     isSaving = false
@@ -238,7 +266,5 @@ fun IncomeScreen(
         ) {
             Text("GUARDAR INGRESO", color = Color.White)
         }
-
     }
-
 }

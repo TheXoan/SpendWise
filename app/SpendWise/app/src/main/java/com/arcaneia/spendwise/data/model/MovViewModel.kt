@@ -1,11 +1,7 @@
 package com.arcaneia.spendwise.data.model
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arcaneia.spendwise.data.dao.MovDao
 import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.entity.MovWithCategory
 import com.arcaneia.spendwise.data.repository.MovRepository
