@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.arcaneia.spendwise.R
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorGreen
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorRed
 
@@ -49,7 +51,7 @@ fun EditarEliminar(
         },
         text = {
             Text(
-                text = "Selecciona una acción",
+                text = stringResource(id = R.string.choose_action),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -67,7 +69,7 @@ fun EditarEliminar(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text("Editar", color = Color.Black)
+                    Text(stringResource(id = R.string.edit), color = Color.Black)
                 }
 
                 Spacer(modifier = Modifier.width(20.dp))
@@ -78,7 +80,7 @@ fun EditarEliminar(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text("Eliminar", color = Color.Black)
+                    Text(stringResource(id = R.string.delete), color = Color.Black)
                 }
             }
         }

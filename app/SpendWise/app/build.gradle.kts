@@ -5,7 +5,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
     id("kotlin-kapt")
+
+    id("org.jetbrains.dokka")
 }
 
 android {
@@ -84,20 +87,21 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // ROOM (para base de datos local)
-    implementation("androidx.room:room-runtime:2.8.3")
-    kapt("androidx.room:room-compiler:2.8.3")
+    implementation(libs.androidx.room.runtime)
+    //noinspection KaptUsageInsteadOfKsp
+    kapt(libs.androidx.room.compiler)
 
     // ROOM + Kotlin Coroutines (para usar Flow y suspend)
-    implementation("androidx.room:room-ktx:2.8.3")
+    implementation(libs.androidx.room.ktx)
 
     // ViewModel + LiveData
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     // Material 3 themes e Bridge
-    implementation("com.google.android.material:material:1.12.0")
+    implementation(libs.material)
 
     // Datastore para gardado de permisos
-    implementation("androidx.datastore:datastore-preferences:1.2.0")
+    implementation(libs.androidx.datastore.preferences)
 
 }

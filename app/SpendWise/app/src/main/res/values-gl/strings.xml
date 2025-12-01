@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SpendWise</string>
+    <string name="choose_action">Escolle unha opci\u00F3n</string>
+    <string name="edit">Modificar</string>
+    <string name="delete">Borrar</string>
+</resources>
