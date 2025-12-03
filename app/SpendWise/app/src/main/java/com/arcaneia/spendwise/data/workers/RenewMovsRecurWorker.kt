@@ -122,8 +122,8 @@ class RenewMovsRecurWorker(
 
         // Enviar una notificación por cada movimiento renovado
         movs.forEach { mov ->
-            val title = "Nueva renovación"
-            val content = "${mov.descricion ?: "Movimiento"} - %.2f€".format(mov.importe)
+            val title = applicationContext.getString(R.string.new_renewal)
+            val content = "${mov.descricion ?: applicationContext.getString(R.string.activity)} - %.2f€".format(mov.importe)
 
             val notification = NotificationCompat.Builder(applicationContext, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher_spendwise)

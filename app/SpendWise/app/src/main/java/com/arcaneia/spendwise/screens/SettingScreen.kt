@@ -42,6 +42,7 @@ import com.arcaneia.spendwise.ui.theme.ColorTittleTopBox
 import com.arcaneia.spendwise.ui.theme.TitleTextLittle
 import com.arcaneia.spendwise.ui.theme.TittleTopBox
 import kotlinx.coroutines.launch
+import com.arcaneia.spendwise.R
 
 /**
  * Pantalla de configuración de la aplicación.
@@ -89,7 +90,7 @@ fun SettingScreen(
         if (uri != null) {
             scope.launch {
                 val ok = backupManager.exportWriteToUri(uri)
-                status = if (ok) "Exportación completada" else "Error en exportación"
+                status = if (ok) context.getString(R.string.export_ok) else context.getString(R.string.export_failed)
             }
         }
     }
@@ -101,7 +102,7 @@ fun SettingScreen(
         if (uri != null) {
             scope.launch {
                 val ok = backupManager.importFromUri(uri)
-                status = if (ok) "Importación completada" else "Error en importación"
+                status = if (ok) context.getString(R.string.import_ok) else context.getString(R.string.import_failed)
             }
         }
     }
@@ -117,7 +118,7 @@ fun SettingScreen(
 
         /** ---------- TÍTULO ---------- **/
         Text(
-            text = "Configuración",
+            text = context.getString(R.string.config),
             style = TitleTextLittle,
             color = Color.White,
             modifier = Modifier.padding(top = 50.dp)
@@ -126,7 +127,7 @@ fun SettingScreen(
 
         /** ---------- SECCIÓN DE DATOS ---------- **/
         Text(
-            text = "Datos",
+            text = context.getString(R.string.data),
             style = TittleTopBox,
             color = ColorTittleTopBox,
             modifier = Modifier.align(Alignment.Start)
@@ -151,7 +152,7 @@ fun SettingScreen(
                 shape = RoundedCornerShape(40.dp),
             ) {
                 Text(
-                    "Importar Datos",
+                    context.getString(R.string.import_data),
                     color = Color.White,
                     fontSize = 15.sp
                 )
@@ -170,7 +171,7 @@ fun SettingScreen(
                 shape = RoundedCornerShape(40.dp),
             ) {
                 Text(
-                    "Exportar Datos",
+                    context.getString(R.string.export_data),
                     color = Color.White,
                     fontSize = 15.sp
                 )
@@ -181,7 +182,7 @@ fun SettingScreen(
 
         /** ---------- SECCIÓN DE PERMISOS ---------- **/
         Text(
-            text = "Permisos",
+            text = context.getString(R.string.permissions),
             style = TittleTopBox,
             color = ColorTittleTopBox,
             modifier = Modifier.align(Alignment.Start)
@@ -196,7 +197,7 @@ fun SettingScreen(
 
             // Etiqueta "Notificaciones"
             Text(
-                text = "Notificaciones",
+                text = context.getString(R.string.notifications),
                 style = TittleTopBox,
                 color = Color.White,
                 modifier = Modifier

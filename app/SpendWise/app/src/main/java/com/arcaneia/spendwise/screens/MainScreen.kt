@@ -9,12 +9,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.arcaneia.spendwise.data.model.MovViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arcaneia.spendwise.ui.theme.*
+import com.arcaneia.spendwise.R
 
 /**
  * Pantalla principal de la aplicación, encargada de mostrar el balance del mes
@@ -65,7 +67,7 @@ fun MainScreen(
         ) {
 
             Text(
-                text = "Balance Ingresos/Gastos",
+                text = stringResource(id = R.string.balance),
                 style = SubtitleTextStyle,
                 color = SubtitleColor
             )
@@ -111,7 +113,7 @@ fun MainScreen(
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    "GASTO",
+                    stringResource(id = R.string.expense),
                     color = Color.Black
                 )
             }
@@ -134,7 +136,7 @@ fun MainScreen(
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("INGRESO")
+                Text(stringResource(id = R.string.income))
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }

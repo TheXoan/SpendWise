@@ -26,7 +26,7 @@ import com.arcaneia.spendwise.screens.NewMovRecurScreen
 import com.arcaneia.spendwise.screens.SettingScreen
 import com.arcaneia.spendwise.screens.SpendWiseBottomBar
 import com.arcaneia.spendwise.screens.SplashScreen
-import com.arcaneia.spendwise.viewmodel.AuthViewModel
+import com.arcaneia.spendwise.data.model.AuthViewModel
 
 /**
  * Función principal de navegación de la aplicación.

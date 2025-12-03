@@ -38,8 +38,10 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import com.arcaneia.spendwise.R
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.model.CategoriaViewModel
@@ -105,7 +107,7 @@ fun IncomeScreen(
     ) {
 
         Text(
-            text = "Nuevo Gasto",
+            text = stringResource(id = R.string.new_income),
             style = TitleTopBar,
             fontSize = 30.sp,
             color = Color.White,
@@ -114,7 +116,7 @@ fun IncomeScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Agrega un nuevo ingreso",
+            text = stringResource(id = R.string.add_new_income),
             style = SubtitleTextStyle,
             color = SubtitleColor,
             fontSize = 15.sp,
@@ -124,7 +126,7 @@ fun IncomeScreen(
 
         // -------- INPUT: CANTIDAD --------
         Text(
-            text = "Cantidad",
+            text = stringResource(id = R.string.amount),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
@@ -186,7 +188,7 @@ fun IncomeScreen(
 
         // -------- INPUT: CATEGORÍA --------
         Text(
-            text = "Categoría",
+            text = stringResource(id = R.string.category),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
@@ -203,7 +205,7 @@ fun IncomeScreen(
         OutlinedTextField(
             value = expenseDescription,
             onValueChange = { entradaUsuarip -> expenseDescription = entradaUsuarip },
-            placeholder = { Text("Descripción", color = ColorHint, style = TitleBox) },
+            placeholder = { Text(stringResource(id = R.string.description), color = ColorHint, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             colors = TextFieldDefaults.colors(
@@ -242,14 +244,14 @@ fun IncomeScreen(
                     scope.launch(Dispatchers.IO) {
                         movViewModel.insert(mov)
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(context, "Ingreso guardado correctamente", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.success_save_income), Toast.LENGTH_SHORT).show()
                             isSaving = false
                             navController.popBackStack()
                         }
                     }
 
                 } else {
-                    Toast.makeText(context, "Debes seleccionar una categoría", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.must_select_cat_first), Toast.LENGTH_SHORT).show()
                     isSaving = false
                 }
             },
@@ -264,7 +266,7 @@ fun IncomeScreen(
             ),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text("GUARDAR INGRESO", color = Color.White)
+            Text(stringResource(id = R.string.save_income), color = Color.White)
         }
     }
 }

@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +52,7 @@ import com.arcaneia.spendwise.utils.ComboBoxHistory
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.arcaneia.spendwise.R
 
 /**
  * Pantalla que muestra el historial filtrado de movimientos económicos.
@@ -88,7 +90,7 @@ fun HistoryScreen(
                 .fillMaxSize()
         ) {
             Text(
-                text = "Resumen financiero",
+                text = stringResource(id = R.string.financial_summary),
                 color = Color.White,
                 style = TitleTextLittle,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -102,14 +104,14 @@ fun HistoryScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
             ) {
                 ComboBoxHistory(
-                    label = "Año",
+                    label = stringResource(id = R.string.year),
                     options = years,
                     selected = selectedYear,
                     onSelected = { movViewModel.onYearSelected(it) },
                     modifier = Modifier.weight(1f)
                 )
                 ComboBoxHistory(
-                    label = "Mes",
+                    label = stringResource(id = R.string.month),
                     options = months,
                     selected = selectedMonth,
                     onSelected = { movViewModel.onMonthSelected(it) },
@@ -159,7 +161,7 @@ fun HistoryList(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text("No hay movimientos en este periodo", color = Color.Gray)
+            Text(stringResource(id = R.string.no_activity_found), color = Color.Gray)
         }
     } else {
         LazyColumn(
@@ -241,7 +243,7 @@ fun TransaccionItem(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    movWithCategory.mov.descricion ?: "Movimiento",
+                    movWithCategory.mov.descricion ?: stringResource(id = R.string.movement),
                     color = Color.White,
                     style = TextBoxBold,
                     modifier = Modifier.padding(start = 10.dp)
@@ -341,10 +343,10 @@ fun EditMovDialog(
                 TextButton(onClick = {
                     pickerState.selectedDateMillis?.let { date = Date(it) }
                     mostrarPicker = false
-                }) { Text("Aceptar") }
+                }) { Text(stringResource(id = R.string.accept)) }
             },
             dismissButton = {
-                TextButton(onClick = { mostrarPicker = false }) { Text("Cancelar") }
+                TextButton(onClick = { mostrarPicker = false }) { Text(stringResource(id = R.string.cancel)) }
             }
         ) {
             DatePicker(state = pickerState)
@@ -353,14 +355,14 @@ fun EditMovDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Editar: ${mov.descricion}") },
+        title = { Text(stringResource(id = R.string.edit) + ": " + "${mov.descricion}")},
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
                 OutlinedTextField(
                     value = nameMov ?: "",
                     onValueChange = { nameMov = it },
-                    label = { Text("Nombre") },
+                    label = { Text(stringResource(id = R.string.name)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -371,7 +373,7 @@ fun EditMovDialog(
                             amountMov = amountMovMod
                         }
                     },
-                    label = { Text("Importe (€)") },
+                    label = { Text(stringResource(id = R.string.value) + " (€)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -379,11 +381,11 @@ fun EditMovDialog(
                 OutlinedTextField(
                     value = formato.format(date),
                     onValueChange = {},
-                    label = { Text("Fecha del gasto") },
+                    label = { Text(stringResource(id = R.string.date_movement)) },
                     readOnly = true,
                     trailingIcon = {
                         IconButton(onClick = { mostrarPicker = true }) {
-                            Icon(Icons.Default.CalendarMonth, contentDescription = "Seleccionar fecha")
+                            Icon(Icons.Default.CalendarMonth, contentDescription = stringResource(id = R.string.choose_date))
                         }
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -425,7 +427,7 @@ fun EditMovDialog(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text("Guardar", color = Color.Black)
+                    Text(stringResource(id = R.string.save), color = Color.Black)
                 }
 
                 Spacer(modifier = Modifier.width(20.dp))
@@ -436,7 +438,7 @@ fun EditMovDialog(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text("Cancelar", color = Color.White)
+                    Text(stringResource(id = R.string.cancel_uppercase), color = Color.White)
                 }
             }
         }

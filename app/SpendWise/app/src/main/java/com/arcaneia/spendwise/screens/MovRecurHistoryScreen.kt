@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +32,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.Instant
 import java.util.Locale
+import com.arcaneia.spendwise.R
 
 /**
  * Pantalla que muestra la lista de movimientos recurrentes configurados por el usuario.
@@ -61,7 +63,7 @@ fun MovRecurHistoryScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Movimientos recurrentes",
+            text = stringResource(id = R.string.recur_movs),
             style = TitleTextLittle,
             color = Color.White,
             modifier = Modifier.fillMaxWidth().padding(top = 50.dp),
@@ -93,7 +95,7 @@ fun MovRecurHistoryScreen(
             ),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text(text = "Nuevo")
+            Text(text = stringResource(id = R.string.new_title))
         }
     }
 }
@@ -124,7 +126,7 @@ fun MovRecurList(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "No hay movimientos recurrentes configurados",
+                text = stringResource(id = R.string.empty_recur_movs),
                 color = Color.Gray
             )
         }
@@ -209,7 +211,7 @@ fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(3.dp))
 
                 Text(
-                    text = "Inicio: ${uiFormat(mov.data_ini)}",
+                    text = stringResource(id = R.string.start) + ": " + uiFormat(mov.data_ini),
                     color = Color.Gray,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 10.dp)
@@ -218,7 +220,7 @@ fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(3.dp))
 
                 Text(
-                    text = "Renovación: ${uiFormat(mov.data_rnv)}",
+                    text = stringResource(id = R.string.renew) + ": " + uiFormat(mov.data_rnv),
                     color = Color.Gray,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 10.dp)
@@ -313,10 +315,10 @@ fun EditarMovDialog(
                             .toString()
                     }
                     mostrarPicker = false
-                }) { Text("Aceptar") }
+                }) { Text(stringResource(id = R.string.accept)) }
             },
             dismissButton = {
-                TextButton(onClick = { mostrarPicker = false }) { Text("Cancelar") }
+                TextButton(onClick = { mostrarPicker = false }) { Text(stringResource(id = R.string.cancel)) }
             }
         ) {
             DatePicker(state = pickerState)
@@ -325,21 +327,21 @@ fun EditarMovDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Editar: ${mov.nombre}") },
+        title = { Text(stringResource(id = R.string.edit) + ": " + mov.nombre) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
-                    label = { Text("Nombre") },
+                    label = { Text(stringResource(id = R.string.name)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 OutlinedTextField(
                     value = importe,
                     onValueChange = { importe = it },
-                    label = { Text("Importe (€)") },
+                    label = { Text(stringResource(id = R.string.value)+ " (€)") },
                     keyboardOptions = KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -347,11 +349,11 @@ fun EditarMovDialog(
                 OutlinedTextField(
                     value = uiFormat(fecha),
                     onValueChange = {},
-                    label = { Text("Fecha de inicio") },
+                    label = { Text(stringResource(id = R.string.start_date)) },
                     readOnly = true,
                     trailingIcon = {
                         IconButton(onClick = { mostrarPicker = true }) {
-                            Icon(Icons.Default.CalendarMonth, contentDescription = "Seleccionar fecha")
+                            Icon(Icons.Default.CalendarMonth, contentDescription = stringResource(id = R.string.choose_date))
                         }
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -392,7 +394,7 @@ fun EditarMovDialog(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text("Guardar", color = Color.Black)
+                    Text(stringResource(id = R.string.save), color = Color.Black)
                 }
 
                 Spacer(modifier = Modifier.width(20.dp))
@@ -403,7 +405,7 @@ fun EditarMovDialog(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text("Cancelar", color = Color.White)
+                    Text(stringResource(id = R.string.cancel), color = Color.White)
                 }
             }
         },

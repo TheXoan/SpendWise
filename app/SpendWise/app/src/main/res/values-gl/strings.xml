@@ -4,4 +4,90 @@
     <string name="choose_action">Escolle unha opci\u00F3n</string>
     <string name="edit">Modificar</string>
     <string name="delete">Borrar</string>
+    <string name="choose_recurrence">Escoller periodicidade</string>
+    <string name="choose_type_mov">Escoller tipo de movemento</string>
+    <string name="new_renewal">Nova renovaci\u00F3n</string>
+    <string name="activity">Movemento</string>
+    <string name="categories">Categor\u00EDas</string>
+    <string name="category">Categor\u00EDa</string>
+    <string name="add_category">Engade unha nova categor\u00EDa</string>
+    <string name="category_name">Nome categor\u00EDa</string>
+    <string name="success_category_update">Categor\u00EDa actualizada correctamente</string>
+    <string name="success_category_created">Categor\u00EDa creada correctamente</string>
+    <string name="name_cat_cant_empty">O nome da categor\u00EDa non pode estar baleiro</string>
+    <string name="save_cat">GARDAR CATEGOR\u00CDA</string>
+    <string name="success_category_deleted">Categor\u00EDa eliminada correctamente</string>
+    <string name="must_select_cat_first">Debes seleccionar unha categorí\u00EDa primeiro</string>
+    <string name="delete_category">BORRAR CATEGOR\u00CDA</string>
+    <string name="new_expense">Novo gasto</string>
+    <string name="add_new_expense">Engade un novo gasto</string>
+    <string name="amount">Cantidade</string>
+    <string name="description">Descrici\u00F3n</string>
+    <string name="success_save_expense">Gasto gardado correctamente</string>
+    <string name="save_expense">GARDAR GASTO</string>
+    <string name="financial_summary">Resumo financieiro</string>
+    <string name="no_activity_found">Non hai movementos neste período</string>
+    <string name="movement">Movemento</string>
+    <string name="cancel">Cancelar</string>
+    <string name="accept">Aceptar</string>
+    <string name="name">Nome</string>
+    <string name="value">Importe</string>
+    <string name="date_movement">Data do movemento</string>
+    <string name="choose_date">Escoller data</string>
+    <string name="save">GARDAR</string>
+    <string name="cancel_uppercase">CANCELAR</string>
+    <string name="new_income">Novo ingreso</string>
+    <string name="add_new_income">Engade un novo ingreso</string>
+    <string name="success_save_income">Ingreso gardado correctamente</string>
+    <string name="save_income">GARDAR INGRESO</string>
+    <string name="balance">Balance de Ingresos/Gastos</string>
+    <string name="income">INGRESO</string>
+    <string name="expense">GASTO</string>
+    <string name="recur_movs">Movementos recorrentes</string>
+    <string name="new_title">Novo</string>
+    <string name="empty_recur_movs">Non hai movementos recurrentes configurados</string>
+    <string name="start">Comezo</string>
+    <string name="renew">Renovaci\u00F3n</string>
+    <string name="start_date">Data de comezo</string>
+    <string name="new_recur_mov">Novo movemento recurrente</string>
+    <string name="recur_mov_name">Nome movemento recurrente</string>
+    <string name="regularity">Periodicidade</string>
+    <string name="type">Tipo</string>
+    <string name="success_recur_mov_saved">Movemento recurrente gardado correctamente</string>
+    <string name="must_field_selected">Tes que completar todos os campos</string>
+    <string name="save_uppercase">GARDAR</string>
+    <string name="export_ok">Exportaci\u00F3n rematada</string>
+    <string name="export_failed">Erro na exportaci\u00F3n</string>
+    <string name="import_ok">Importaci\u00F3n rematada</string>
+    <string name="import_failed">Erro na importaci\u00F3n</string>
+    <string name="config">Configuraci\u00F3n</string>
+    <string name="data">Datos</string>
+    <string name="import_data">Importar datos</string>
+    <string name="export_data">Exportar datos</string>
+    <string name="permissions">Permisos</string>
+    <string name="notifications">Notificaci\u00F3ns</string>
+
+    <!-- Bottom Bar -->
+    <string name="home_bottombar">Inicio</string>
+    <string name="categories_bottombar">Categor\u00EDas</string>
+    <string name="history_bottombar">Historial</string>
+    <string name="movrecur_bottombar">Mov. Recur</string>
+    <string name="config_bottombar">Configuraci\u00F3n</string>
+
+    <!-- Splash Screen -->
+    <string name="identity_verification">Comprobando identidade</string>
+
+    <!-- History Screen -->
+    <string name="year">Ano</string>
+    <string name="month">Mes</string>
+
+    <!-- Main Activity -->
+    <string name="device_no_sensor">Este dispositivo non ten sensor biom\u00E9trico</string>
+    <string name="configure_system_authentication">Configura pegada, cara ou PIN no dispositivo</string>
+    <string name="sensor_not_available">Sensor biom\u00E9trico non dispoñible</string>
+    <string name="auth_error">Erro de autenticaci\u00F3n</string>
+    <string name="auth_success">Autenticaci\u00F3n correcta</string>
+    <string name="error">Erro</string>
+    <string name="auth_required">Autenticaci\u00F3n necesaria</string>
+    <string name="use_authenticated_method">Usa a pegada, cara ou PIN para acceder</string>
 </resources>

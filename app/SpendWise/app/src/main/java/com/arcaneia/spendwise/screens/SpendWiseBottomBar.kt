@@ -12,10 +12,12 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.arcaneia.spendwise.R
 import com.arcaneia.spendwise.navigation.AppScreens
 import com.arcaneia.spendwise.ui.theme.SelectedItemBottomBar
 
@@ -51,19 +53,19 @@ fun SpendWiseBottomBar(
 ){
     // Lista de ítems que se mostrarán en la barra inferior
     val items = listOf(
-        BottomItem(AppScreens.MainScreen.route, "Inicio") {
+        BottomItem(AppScreens.MainScreen.route, stringResource(id = R.string.home_bottombar)) {
             androidx.compose.material3.Icon(Icons.Filled.Home, null)
         },
-        BottomItem(AppScreens.CategoryScreen.route, "Categorías") {
+        BottomItem(AppScreens.CategoryScreen.route, stringResource(id = R.string.categories_bottombar)) {
             androidx.compose.material3.Icon(Icons.Filled.Category, null)
         },
-        BottomItem(AppScreens.HistoryScreen.route, "Historial") {
+        BottomItem(AppScreens.HistoryScreen.route, stringResource(id = R.string.history_bottombar)) {
             androidx.compose.material3.Icon(Icons.Filled.History, null)
         },
-        BottomItem(AppScreens.MovRecurHistoryScreen.route, "Mov. Recur") {
+        BottomItem(AppScreens.MovRecurHistoryScreen.route, stringResource(id = R.string.movrecur_bottombar)) {
             androidx.compose.material3.Icon(Icons.Filled.CalendarMonth, null)
         },
-        BottomItem(AppScreens.SettingScreen.route, "Ajustes") {
+        BottomItem(AppScreens.SettingScreen.route, stringResource(id = R.string.config_bottombar)) {
             androidx.compose.material3.Icon(Icons.Filled.Settings, null)
         },
     )

@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -43,7 +44,7 @@ import com.arcaneia.spendwise.ui.theme.TitleBox
 import com.arcaneia.spendwise.ui.theme.TitleTopBar
 import com.arcaneia.spendwise.utils.ComboBoxCategorias
 import kotlinx.coroutines.launch
-
+import com.arcaneia.spendwise.R
 
 /**
  * Pantalla encargada de gestionar las categorías de la aplicación.
@@ -72,7 +73,7 @@ fun CategoryScreen(
     categoriaViewModel: CategoriaViewModel
 ) {
 
-    var categoriaSeleccionadaId by remember { mutableStateOf<Int?>(null) }
+    var idSelectedCategory by remember { mutableStateOf<Int?>(null) }
     var nameCategory by remember { mutableStateOf("") }
 
     val context = LocalContext.current
@@ -87,7 +88,7 @@ fun CategoryScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Categorías",
+            text = stringResource(id = R.string.categories),
             style = TitleTopBar,
             fontSize = 50.sp,
             color = Color.White,
@@ -96,7 +97,7 @@ fun CategoryScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Agrega una nueva categoría",
+            text = stringResource(id = R.string.add_category),
             style = SubtitleTextStyle,
             color = SubtitleColor,
             fontSize = 15.sp,
@@ -105,7 +106,7 @@ fun CategoryScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Categorías",
+            text = stringResource(id = R.string.categories),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
@@ -113,7 +114,7 @@ fun CategoryScreen(
         ComboBoxCategorias(
             categoriaViewModel,
             onCategoriaSeleccionada = { id ->
-                categoriaSeleccionadaId = id
+                idSelectedCategory = id
             },
             internalShape = RoundedCornerShape(12.dp)
         )
@@ -121,7 +122,7 @@ fun CategoryScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Nombre Categoría",
+            text = stringResource(id = R.string.category_name),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
@@ -131,7 +132,7 @@ fun CategoryScreen(
             onValueChange = { entradaUsuario ->
                 nameCategory = entradaUsuario
             },
-            placeholder = { Text("Nombre Categoría", color = ColorHint, style = TitleBox) },
+            placeholder = { Text(stringResource(id = R.string.category_name), color = ColorHint, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             shape = RoundedCornerShape(12.dp),
@@ -150,18 +151,19 @@ fun CategoryScreen(
         Button(
             onClick = {
                 scope.launch {
-                    if (nameCategory != "" && categoriaSeleccionadaId != 0 && categoriaSeleccionadaId != null)  {
-                        val categoria = Categoria(id = categoriaSeleccionadaId!!, nome = nameCategory, tipo = "")
+                    if (nameCategory != "" && idSelectedCategory != 0 && idSelectedCategory != null)  {
+                        val categoria = Categoria(id = idSelectedCategory!!, nome = nameCategory, tipo = "")
                         db.categoriaDao().update(categoria)
-                        Toast.makeText(context, "Categoría actualizada correctamente", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.success_category_update), Toast.LENGTH_SHORT).show()
+//                        applicationContext.getString(R.string.new_renewal)
                         nameCategory = ""
                     } else if (nameCategory != "" ){
                         val categoria = Categoria(nome = nameCategory, tipo = "")
                         db.categoriaDao().insert(categoria)
-                        Toast.makeText(context, "Categoría creada correctamente", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.success_category_created), Toast.LENGTH_SHORT).show()
                         nameCategory = ""
                     } else {
-                        Toast.makeText(context, "El nombre de la categoría no puede estar vacío", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.name_cat_cant_empty), Toast.LENGTH_SHORT).show()
                     }
                 }
             },
@@ -177,7 +179,7 @@ fun CategoryScreen(
             shape = RoundedCornerShape(12.dp),
         ) {
             Text(
-                text = "GUARDAR CATEGORIA",
+                text = context.getString(R.string.save_cat),
             )
         }
 
@@ -186,11 +188,11 @@ fun CategoryScreen(
         // BOTÓN PARA ELIMINAR UNA CATEGORÍA
         Button(
             onClick = {
-                if (categoriaSeleccionadaId != null) {
-                    categoriaViewModel.deleteById(categoriaSeleccionadaId!!)
-                    Toast.makeText(context, "Categoría eliminada correctamente", Toast.LENGTH_SHORT).show()
+                if (idSelectedCategory != null) {
+                    categoriaViewModel.deleteById(idSelectedCategory!!)
+                    Toast.makeText(context, context.getString(R.string.success_category_deleted), Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "Selecciona una categoría primero", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.must_select_cat_first), Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier
@@ -205,7 +207,7 @@ fun CategoryScreen(
             shape = RoundedCornerShape(12.dp),
         ) {
             Text(
-                text = "BORRAR CATEGORIA",
+                text = context.getString(R.string.delete_category),
             )
         }
     }

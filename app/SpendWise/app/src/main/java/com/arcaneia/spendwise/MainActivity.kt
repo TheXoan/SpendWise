@@ -10,7 +10,7 @@ import com.arcaneia.spendwise.data.model.*
 import com.arcaneia.spendwise.data.repository.*
 import com.arcaneia.spendwise.navigation.AppNavigation
 import com.arcaneia.spendwise.ui.theme.SpendWiseTheme
-import com.arcaneia.spendwise.viewmodel.AuthViewModel
+import com.arcaneia.spendwise.data.model.AuthViewModel
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 
@@ -85,12 +85,12 @@ class MainActivity : AppCompatActivity() {
         if (canAuth != BiometricManager.BIOMETRIC_SUCCESS) {
             val msg = when (canAuth) {
                 BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-                    "Tu dispositivo no tiene sensor biométrico."
+                    applicationContext.getString(R.string.device_no_sensor)
                 BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-                    "Configura huella, rostro o PIN en tu dispositivo."
+                    applicationContext.getString(R.string.configure_system_authentication)
                 BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-                    "Sensor biométrico no disponible."
-                else -> "Fallo de autenticación."
+                    applicationContext.getString(R.string.sensor_not_available)
+                else -> applicationContext.getString(R.string.auth_error)
             }
             Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
             return
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                     authViewModel.setAuthenticated(true)
                     Toast.makeText(
                         applicationContext,
-                        "Autenticación correcta",
+                        applicationContext.getString(R.string.auth_success),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     Toast.makeText(
                         applicationContext,
-                        "Error: $errString",
+                        applicationContext.getString(R.string.error) + ": " + "$errString",
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onAuthenticationFailed() {
                     Toast.makeText(
                         applicationContext,
-                        "Fallo de autenticación",
+                        applicationContext.getString(R.string.auth_error),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -139,8 +139,8 @@ class MainActivity : AppCompatActivity() {
 
         // Configuración del prompt
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Autenticación requerida")
-            .setSubtitle("Usa tu huella, rostro o PIN para acceder")
+            .setTitle(applicationContext.getString(R.string.auth_required))
+            .setSubtitle(applicationContext.getString(R.string.use_authenticated_method))
             .setAllowedAuthenticators(
                 BiometricManager.Authenticators.BIOMETRIC_STRONG or
                         BiometricManager.Authenticators.DEVICE_CREDENTIAL

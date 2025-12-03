@@ -1,4 +1,4 @@
-package com.arcaneia.spendwise.viewmodel
+package com.arcaneia.spendwise.data.model
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -25,7 +25,10 @@ class AuthViewModel : ViewModel() {
      * Solo puede modificarse desde dentro del ViewModel, lo que expone un patrón
      * de encapsulación adecuado.
      */
-    var isAuthenticated = mutableStateOf(false)
+    var isAuthenticated =
+        mutableStateOf(
+            false
+        )
         private set
 
     /**

@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +26,7 @@ import com.arcaneia.spendwise.data.model.Recurrence
 import com.arcaneia.spendwise.data.model.TypeMov
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOne
 import com.arcaneia.spendwise.ui.theme.BackgroundBoxColorOneSelected
+import com.arcaneia.spendwise.R
 
 /**
  * Componente que muestra un selector desplegable (`Spinner`) para elegir una opción
@@ -71,7 +73,7 @@ fun RecurrenceSpinner(
             ) {
                 Text(
                     text = selectedRecurrence?.description
-                        ?: "Seleccionar periodicidad",
+                        ?: stringResource(id = R.string.choose_recurrence),
                     fontSize = 15.sp,
                     textAlign = TextAlign.Start
                 )
@@ -87,7 +89,7 @@ fun RecurrenceSpinner(
                         BackgroundBoxColorOneSelected
                     )
             ) {
-                Recurrence.values()
+                Recurrence.entries
                     .forEach { recurrence ->
                         DropdownMenuItem(
                             text = {
@@ -151,7 +153,7 @@ fun TypeMovSpinner(
             ) {
                 Text(
                     text = selectedTypeMov?.description
-                        ?: "Seleccionar tipo de movimiento",
+                        ?: stringResource(id = R.string.choose_type_mov),
                     fontSize = 15.sp,
                     textAlign = TextAlign.Start
                 )
@@ -167,8 +169,8 @@ fun TypeMovSpinner(
                         BackgroundBoxColorOneSelected
                     )
             ) {
-                TypeMov.values()
-                    .forEach { recurrence -> // "recurrence" es el nombre de la variable en tu código original
+                TypeMov.entries
+                    .forEach { recurrence ->
                         DropdownMenuItem(
                             text = {
                                 Text(recurrence.description,

@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.arcaneia.spendwise.R
 import com.arcaneia.spendwise.components.RecurrenceSpinner
 import com.arcaneia.spendwise.components.TypeMovSpinner
 import com.arcaneia.spendwise.data.entity.MovRecur
@@ -116,10 +118,10 @@ fun NewMovRecurScreen(
                             .format(formatter) // dd/MM/yyyy
                     }
                     mostrarPicker = false
-                }) { Text("Aceptar") }
+                }) { Text(stringResource(id = R.string.accept)) }
             },
             dismissButton = {
-                TextButton(onClick = { mostrarPicker = false }) { Text("Cancelar") }
+                TextButton(onClick = { mostrarPicker = false }) { Text(stringResource(id = R.string.cancel)) }
             }
         ) {
             DatePicker(state = pickerState)
@@ -142,7 +144,7 @@ fun NewMovRecurScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Nuevo movimiento recurrente",
+            text = stringResource(id = R.string.new_recur_mov),
             style = TitleTopBar,
             fontSize = 30.sp,
             color = Color.White,
@@ -152,7 +154,7 @@ fun NewMovRecurScreen(
         Spacer(modifier = Modifier.height( 30.dp ))
 
         Text(
-            text = "Importe",
+            text = stringResource(id = R.string.value),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2,
             style = TittleTopBox
@@ -212,7 +214,7 @@ fun NewMovRecurScreen(
         )
         Spacer(modifier = Modifier.height( 15.dp ))
         Text(
-            text = "Nombre",
+            text = stringResource(id = R.string.name),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2,
             style = TittleTopBox
@@ -222,7 +224,7 @@ fun NewMovRecurScreen(
             onValueChange = { userInput ->
                 name = userInput
             },
-            placeholder = { Text("Nombre gasto recurrente", color = Color.Black, style = TitleBox, fontSize = 15.sp) },
+            placeholder = { Text(stringResource(id = R.string.recur_mov_name), color = Color.Black, style = TitleBox, fontSize = 15.sp) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             colors = TextFieldDefaults.colors(
@@ -236,7 +238,7 @@ fun NewMovRecurScreen(
         )
         Spacer(modifier = Modifier.height( 15.dp ))
         Text(
-            text = "Fecha Inicio",
+            text = stringResource(id = R.string.start_date),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2,
             style = TittleTopBox
@@ -266,7 +268,7 @@ fun NewMovRecurScreen(
         }
         Spacer(modifier = Modifier.height( 15.dp ))
         Text(
-            text = "Periodicidad",
+            text = stringResource(id = R.string.regularity),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2,
             style = TittleTopBox
@@ -277,7 +279,7 @@ fun NewMovRecurScreen(
         )
         Spacer(modifier = Modifier.height( 15.dp ))
         Text(
-            text = "Tipo",
+            text = stringResource(id = R.string.type),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2,
             style = TittleTopBox
@@ -303,10 +305,10 @@ fun NewMovRecurScreen(
 
                 if (selectedRecurrence != null && selectedTypeMov != null && name != "" && amount != "") {
                     movRecurViewModel.insert(movRecur)
-                    Toast.makeText(context, "Movimiento recurrente guardado correctamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.success_recur_mov_saved), Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 } else {
-                    Toast.makeText(context, "Debes seleccionar todos los campos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.must_field_selected), Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier
@@ -319,7 +321,7 @@ fun NewMovRecurScreen(
             shape = RoundedCornerShape(12.dp),
         ) {
             Text(
-                text = "GUARDAR",
+                text = stringResource(id = R.string.save_uppercase),
             )
         }
     }

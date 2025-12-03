@@ -37,8 +37,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import com.arcaneia.spendwise.R
 import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.model.CategoriaViewModel
 import com.arcaneia.spendwise.data.model.TypeMov
@@ -93,7 +95,7 @@ fun ExpenseScreen(
     ) {
 
         Text(
-            text = "Nuevo Gasto",
+            text = stringResource(id = R.string.new_expense),
             style = TitleTopBar,
             fontSize = 30.sp,
             color = Color.White,
@@ -102,7 +104,7 @@ fun ExpenseScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Agrega un nuevo gasto",
+            text = stringResource(id = R.string.add_new_expense),
             style = SubtitleTextStyle,
             color = SubtitleColor,
             fontSize = 15.sp,
@@ -112,7 +114,7 @@ fun ExpenseScreen(
 
         // -------- INPUT: CANTIDAD --------
         Text(
-            text = "Cantidad",
+            text = stringResource(id = R.string.amount),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
@@ -174,7 +176,7 @@ fun ExpenseScreen(
 
         // -------- INPUT: CATEGORÍA --------
         Text(
-            text = "Categoría",
+            text = stringResource(id = R.string.category),
             modifier = Modifier.align(Alignment.Start),
             color = SubtitleColorn2
         )
@@ -195,7 +197,7 @@ fun ExpenseScreen(
             onValueChange = { entradaUsuario ->
                 expenseDescription = entradaUsuario
             },
-            placeholder = { Text("Descripción", color = ColorHint, style = TitleBox) },
+            placeholder = { Text(stringResource(id = R.string.description), color = ColorHint, style = TitleBox) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             colors = TextFieldDefaults.colors(
@@ -229,10 +231,10 @@ fun ExpenseScreen(
 
                 if (categoriaSeleccionadaId != null) {
                     movViewModel.insert(mov)
-                    Toast.makeText(context, "Gasto guardado correctamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.success_save_expense), Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 } else {
-                    Toast.makeText(context, "Debes seleccionar una categoría", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.must_select_cat_first), Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier
@@ -247,10 +249,9 @@ fun ExpenseScreen(
             shape = RoundedCornerShape(12.dp),
         ) {
             Text(
-                "GUARDAR GASTO",
+                context.getString(R.string.save_expense),
                 color = Color.White
             )
         }
-
     }
 }

@@ -29,22 +29,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.stringResource
+import com.arcaneia.spendwise.R
+import java.time.Month
+import java.time.format.TextStyle
+import java.util.Locale
 
 /**
- * ComboBox reutilizable para seleccionar **años y meses** en la pantalla de historial.
+ * ComboBox reutilizable para la selección de **años o meses** dentro de la pantalla de historial.
  *
- * Proporciona:
- * - Visual adaptada al tema de la app
- * - Conversión automática de números de mes a nombre en español
- * - Estado controlado internamente para expansión y selección
+ * Este componente es genérico y permite recibir una lista de valores de tipo `String`, que pueden
+ * representar tanto años (e.g., `"2023"`, `"2024"`) como meses numéricos (e.g., `"01"`, `"02"`).
  *
- * @param modifier Modificador opcional para el componente.
- * @param label Texto mostrado cuando no hay selección (placeholder).
- * @param options Lista de elementos disponibles (e.g. ["2024", "2025"] o ["01", "02"]).
- * @param selected Elemento actualmente seleccionado, puede ser nulo.
- * @param onSelected Callback que devuelve la opción seleccionada.
- * @param enabled Habilita o deshabilita el combo box.
+ * ## Características principales
+ * - Traducción automática de números de mes a su nombre correspondiente según el
+ *   **idioma del dispositivo** utilizando `Locale.getDefault()`.
+ * - Detección inteligente:
+ *   - Si el valor está entre **1 y 12**, se interpreta como mes y se traduce.
+ *   - Si el valor no representa un mes válido (e.g. un año), se muestra tal cual.
+ * - Componente visual estilizado según el tema de la aplicación.
+ * - Manejo interno del estado de expansión del menú desplegable.
+ * - Admite modo deshabilitado (`enabled = false`).
+ *
+ * ## Parámetros
+ * @param modifier Modificador opcional para personalizar la apariencia externa del componente.
+ * @param label Texto mostrado como placeholder cuando no hay selección.
+ * @param options Lista de elementos a mostrar en el menú desplegable. Pueden ser meses o años.
+ * @param selected Elemento actualmente seleccionado. Puede ser nulo.
+ * @param onSelected Callback invocado cuando el usuario selecciona un valor. Devuelve el valor elegido.
+ * @param enabled Permite habilitar o deshabilitar la interacción con el ComboBox.
  */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComboBoxHistory(
@@ -57,22 +72,25 @@ fun ComboBoxHistory(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    // Traducción de número de mes → nombre en español
-    val monthNames = mapOf(
-        "01" to "Enero", "02" to "Febrero", "03" to "Marzo",
-        "04" to "Abril", "05" to "Mayo", "06" to "Junio",
-        "07" to "Julio", "08" to "Agosto", "09" to "Septiembre",
-        "10" to "Octubre", "11" to "Noviembre", "12" to "Diciembre"
-    )
+    // Función que convierte mes → nombre traducido
+    fun translateMonth(value: String): String? {
+        val number = value.toIntOrNull() ?: return null
+        return if (number in 1..12) {
+            Month.of(number)
+                .getDisplayName(
+                    TextStyle.FULL, Locale.getDefault())
+                .replaceFirstChar { it.uppercase() }
+        } else null
+    }
 
-    val displayedSelected = monthNames[selected] ?: selected ?: label
+    val displayedSelected =
+        translateMonth(selected ?: "") ?: selected ?: label
 
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { if (enabled) expanded = !expanded },
         modifier = modifier
     ) {
-        // Campo principal
         OutlinedTextField(
             readOnly = true,
             value = displayedSelected,
@@ -103,13 +121,15 @@ fun ComboBoxHistory(
             )
         )
 
-        // Menú desplegable
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
             options.forEach { item ->
-                val itemLabel = monthNames[item] ?: item
+
+                val itemLabel =
+                    translateMonth(item) ?: item // <-- si no es mes, muestra el número
+
                 DropdownMenuItem(
                     text = { Text(itemLabel) },
                     onClick = {
@@ -123,18 +143,28 @@ fun ComboBoxHistory(
     }
 }
 
+
 /**
- * ComboBox para mostrar y seleccionar una **categoría** desde el ViewModel.
+ * ComboBox especializado para mostrar y seleccionar una **categoría** proveniente del
+ * `CategoriaViewModel`.
  *
- * Características:
- * - Lee automáticamente las categorías del `CategoriaViewModel`
- * - Devuelve el **ID** de la categoría seleccionada
- * - Mantiene el estado visual y de selección internamente
+ * Este componente observa automáticamente el flujo de categorías y muestra todas las disponibles.
+ * Al seleccionar una categoría, se devuelve su **ID**, permitiendo integrar fácilmente esta
+ * selección dentro de la lógica del ViewModel o de la capa de datos.
  *
- * @param viewModel ViewModel que expone el flujo de categorías.
- * @param onCategoriaSeleccionada Callback que devuelve el id seleccionado.
- * @param internalShape Permite personalizar la forma del campo (RoundedCornerShape, etc.)
+ * ## Características principales
+ * - Lectura automática de categorías desde un `StateFlow` del `CategoriaViewModel`.
+ * - Muestra el nombre de cada categoría y mantiene el estado de selección internamente.
+ * - Devuelve únicamente el **ID de la categoría** seleccionada.
+ * - Estilizado acorde al tema de la interfaz.
+ * - Permite personalizar la forma del campo mediante `internalShape`.
+ *
+ * ## Parámetros
+ * @param viewModel Instancia del `CategoriaViewModel` desde donde se obtienen las categorías.
+ * @param onCategoriaSeleccionada Callback invocado al seleccionar una categoría, devolviendo su ID.
+ * @param internalShape Forma personalizada (e.g., `RoundedCornerShape`) para el campo de texto.
  */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComboBoxCategorias(
@@ -161,7 +191,7 @@ fun ComboBoxCategorias(
             readOnly = true,
             value = selectedCategoria?.nome ?: "",
             onValueChange = {},
-            placeholder = { Text("Categoría", color = Color.Black, style = TitleBox) },
+            placeholder = { Text(stringResource(id = R.string.category), color = Color.Black, style = TitleBox) },
             shape = internalShape,
             trailingIcon = {
                 Icon(
