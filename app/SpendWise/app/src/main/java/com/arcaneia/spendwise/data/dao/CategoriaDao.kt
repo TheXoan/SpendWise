@@ -53,7 +53,7 @@ interface CategoriaDao {
      * @return Un flujo (`Flow`) que emite listas de [Categoria] cada vez que
      * la tabla cambia, permitiendo actualizaciones en tiempo real.
      */
-    @Query("SELECT * FROM categoria")
+    @Query("SELECT * FROM categoria WHERE id != 0")
     fun getAllCategories(): Flow<List<Categoria>>
 
     /**
