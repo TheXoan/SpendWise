@@ -295,7 +295,7 @@ fun NewMovRecurScreen(
                 val dateIni = formatDateForDB(selectedDate)
 
                 val movRecur = MovRecur(
-                    nombre = name,
+                    nome = name,
                     importe = amount.toDoubleOrNull() ?: 0.0,
                     periodicidade = selectedRecurrence,
                     data_ini = dateIni,

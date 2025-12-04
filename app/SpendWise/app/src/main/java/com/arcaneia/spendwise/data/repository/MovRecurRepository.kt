@@ -97,7 +97,7 @@ class MovRecurRepository(
                     tipo = renews.tipo,
                     importe = renews.importe,
                     data_mov = dateComplete,
-                    descricion = renews.nombre,
+                    descricion = renews.nome,
                     categoria_id = 1,
                     mov_recur_id = renews.id
                 )

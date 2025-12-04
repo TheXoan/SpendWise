@@ -18,7 +18,7 @@ import com.arcaneia.spendwise.data.model.TypeMov
  * @property id Identificador único del movimiento recurrente.
  * Se genera automáticamente mediante `autoGenerate = true`.
  *
- * @property nombre Nombre descriptivo del movimiento recurrente
+ * @property nome Nombre descriptivo del movimiento recurrente
  * (ej.: “Suscripción Netflix”, “Salario mensual”).
  *
  * @property importe Monto económico que se renovará periódicamente.
@@ -37,7 +37,7 @@ import com.arcaneia.spendwise.data.model.TypeMov
 data class MovRecur(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val nombre: String,
+    val nome: String,
     val importe: Double,
     val periodicidade: Recurrence?, // "MENSUAL", "ANUAL", "SEMANAL"
     val data_ini: String,

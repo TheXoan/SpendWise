@@ -146,7 +146,7 @@ fun MovRecurList(
 
     if (showOptions && selectedMov != null) {
         EditarEliminar(
-            title = selectedMov!!.nombre,
+            title = selectedMov!!.nome,
             onEdit = {
                 showOptions = false
                 showEditDialog = true
@@ -202,7 +202,7 @@ fun MovRecurItem(mov: MovRecur, onClick: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
 
                 Text(
-                    text = mov.nombre,
+                    text = mov.nome,
                     color = Color.White,
                     style = TextBoxBold,
                     modifier = Modifier.padding(start = 10.dp)
@@ -289,7 +289,7 @@ fun EditarMovDialog(
     onGuardar: (MovRecur) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var nombre by remember { mutableStateOf(mov.nombre) }
+    var nombre by remember { mutableStateOf(mov.nome) }
     var importe by remember { mutableStateOf(mov.importe.toString()) }
     var fecha by remember { mutableStateOf(mov.data_ini) }
     var periodicidade by remember { mutableStateOf(mov.periodicidade) }
@@ -327,7 +327,7 @@ fun EditarMovDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(id = R.string.edit) + ": " + mov.nombre) },
+        title = { Text(stringResource(id = R.string.edit) + ": " + mov.nome) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
@@ -381,7 +381,7 @@ fun EditarMovDialog(
                     onClick = {
                         onGuardar(
                             mov.copy(
-                                nombre = nombre,
+                                nome = nombre,
                                 importe = importe.toDoubleOrNull() ?: mov.importe,
                                 data_ini = fecha,
                                 data_rnv = calculateNextDate(fecha, periodicidade!!),
