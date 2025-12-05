@@ -27,6 +27,7 @@ import com.arcaneia.spendwise.screens.SettingScreen
 import com.arcaneia.spendwise.screens.SpendWiseBottomBar
 import com.arcaneia.spendwise.screens.SplashScreen
 import com.arcaneia.spendwise.data.model.AuthViewModel
+import com.arcaneia.spendwise.screens.LoginScreen
 
 /**
  * Función principal de navegación de la aplicación.
@@ -49,7 +50,8 @@ fun AppNavigation(
     authViewModel: AuthViewModel,
     movViewModel: MovViewModel,
     categoriaViewModel: CategoriaViewModel,
-    movRecurViewModel: MovRecurViewModel
+    movRecurViewModel: MovRecurViewModel,
+    loginViewModel: LoginViewModel
 ) {
 
     // Único controlador de navegación
@@ -92,7 +94,9 @@ fun AppNavigation(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = AppScreens.SplashScreen.route,
+//            startDestination = AppScreens.SplashScreen.route,
+            startDestination = AppScreens.LoginScreen.route,
+//            startDestination = AppScreens.MainScreen.route,
             modifier = Modifier.padding(
                 PaddingValues(
                     top = innerPadding.calculateTopPadding(),
@@ -129,6 +133,18 @@ fun AppNavigation(
             composable(AppScreens.NewMovRecurScreen.route) {
                 NewMovRecurScreen(navController, movRecurViewModel = movRecurViewModel)
             }
+            composable(AppScreens.LoginScreen.route) {
+                LoginScreen(
+                    navController = navController,
+                    loginViewModel = loginViewModel,
+                    onLoginSuccess = {
+                        navController.navigate(AppScreens.SplashScreen.route) {
+                            popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
+                        }
+                    }
+                )
+            }
+
 
             // Ejemplo de pantalla sin BottomBar:
             // composable(AppScreens.Detail.route) { DetailScreen(navController) }

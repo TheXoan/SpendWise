@@ -104,4 +104,11 @@ dependencies {
     // Datastore para gardado de permisos
     implementation(libs.androidx.datastore.preferences)
 
+    // Retrofit + Gson
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    // OkHttp
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 }

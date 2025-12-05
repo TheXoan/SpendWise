@@ -90,4 +90,10 @@
     <string name="error">Erro</string>
     <string name="auth_required">Autenticaci\u00F3n necesaria</string>
     <string name="use_authenticated_method">Usa a pegada, cara ou PIN para acceder</string>
+
+    <!-- Login Screen -->
+    <string name="sign_in">Iniciar sesi\u00F3n</string>
+    <string name="email">Correo</string>
+    <string name="password">Contrasinal</string>
+    <string name="wrong_password">Contrasinal incorrecto</string>
 </resources>

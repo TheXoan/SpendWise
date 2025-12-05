@@ -1,4 +1,4 @@
-package com.arcaneia.spendwise.data.database
+package com.arcaneia.spendwise.data.datastore
 
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences

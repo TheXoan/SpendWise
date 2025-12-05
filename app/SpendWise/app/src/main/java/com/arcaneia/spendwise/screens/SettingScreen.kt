@@ -36,7 +36,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import com.arcaneia.spendwise.data.backup.BackupManager
-import com.arcaneia.spendwise.data.database.PermissionsDataStore
+import com.arcaneia.spendwise.data.datastore.PermissionsDataStore
 import com.arcaneia.spendwise.permission.openNotificationSettings
 import com.arcaneia.spendwise.ui.theme.ColorTittleTopBox
 import com.arcaneia.spendwise.ui.theme.TitleTextLittle

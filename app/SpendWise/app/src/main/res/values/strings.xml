@@ -90,4 +90,10 @@
     <string name="error">Error</string>
     <string name="auth_required">Authentication required</string>
     <string name="use_authenticated_method">Use your fingerprint, face, or PIN to access</string>
+
+    <!-- Login Screen -->
+    <string name="sign_in">Sign in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="wrong_password">Wrong password</string>
 </resources>

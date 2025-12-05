@@ -40,4 +40,5 @@ sealed class AppScreens(val route: String) {
 
     /** Pantalla para crear un nuevo movimiento recurrente. */
     object NewMovRecurScreen : AppScreens("newMovRecur_screen")
+    object LoginScreen : AppScreens("login_screen")
 }

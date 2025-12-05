@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         val movViewModel = MovViewModel(movRepository)
         val categoriaViewModel = CategoriaViewModel(categoriaRepository)
         val movRecurViewModel = MovRecurViewModel(movRecurRepository)
+        val loginViewModel = LoginViewModel()
 
         // --- Renderizado de UI con Jetpack Compose ---
         setContent {
@@ -58,7 +59,8 @@ class MainActivity : AppCompatActivity() {
                     authViewModel = authViewModel,
                     movViewModel = movViewModel,
                     categoriaViewModel = categoriaViewModel,
-                    movRecurViewModel = movRecurViewModel
+                    movRecurViewModel = movRecurViewModel,
+                    loginViewModel = loginViewModel
                 )
             }
         }

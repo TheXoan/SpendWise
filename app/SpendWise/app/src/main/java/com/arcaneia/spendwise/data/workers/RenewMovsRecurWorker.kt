@@ -15,7 +15,7 @@ import androidx.work.WorkerParameters
 import com.arcaneia.spendwise.R
 import com.arcaneia.spendwise.data.di.ServiceLocator
 import com.arcaneia.spendwise.data.entity.Mov
-import com.arcaneia.spendwise.data.database.PermissionsDataStore
+import com.arcaneia.spendwise.data.datastore.PermissionsDataStore
 import kotlinx.coroutines.flow.first
 
 /**
