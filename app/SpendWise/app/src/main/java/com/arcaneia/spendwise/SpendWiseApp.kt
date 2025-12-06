@@ -5,6 +5,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.arcaneia.spendwise.data.workers.RenewMovsRecurWorker
+import com.arcaneia.spendwise.data.workers.SyncWorker
 import java.util.concurrent.TimeUnit
 
 /**
@@ -12,12 +13,13 @@ import java.util.concurrent.TimeUnit
  *
  * Se ejecuta antes que cualquier Activity y es ideal para inicializar
  * componentes globales como:
- * - Servicios de WorkManager
- * - Instancias singleton
- * - Configuración de librerías
+ * - Servicios de WorkManager.
+ * - Instancias singleton.
+ * - Configuración de librerías globales.
  *
- * En este caso inicializa un Worker periódico encargado de procesar
- * las renovaciones de movimientos recurrentes.
+ * En este caso inicializa dos Workers periódicos:
+ * 1. [RenewMovsRecurWorker] → encargado de renovar movimientos recurrentes.
+ * 2. [SyncWorker] → encargado de sincronizar datos locales con el servidor.
  */
 class SpendWiseApp : Application() {
 
@@ -27,9 +29,12 @@ class SpendWiseApp : Application() {
         val workManager = WorkManager.getInstance(this)
 
         /**
-         * WorkRequest periódico:
-         * - Ejecuta RenewMovsRecurWorker cada 15 minutos (mínimo permitido por Android).
-         * - Revisa si existen movimientos recurrentes que deben renovarse.
+         * WorkRequest periódico encargado de ejecutar [RenewMovsRecurWorker]
+         * cada 15 minutos (intervalo mínimo permitido por Android para trabajos periódicos).
+         *
+         * Este worker:
+         * - Revisa movimientos recurrentes.
+         * - Genera nuevos movimientos cuando corresponde.
          */
         val periodicWork = PeriodicWorkRequestBuilder<RenewMovsRecurWorker>(
             15,
@@ -37,16 +42,37 @@ class SpendWiseApp : Application() {
         ).build()
 
         /**
-         * Encolamos un único Worker con nombre fijo.
+         * Encola un único Worker usando un nombre fijo.
          *
-         * ExistingPeriodicWorkPolicy.KEEP:
-         *  - Si ya existe un worker con este nombre, NO lo reemplaza.
-         *  - Garantiza que no se creen múltiples workers duplicados.
+         * `ExistingPeriodicWorkPolicy.KEEP` asegura que:
+         * - Si ya existe un worker con ese nombre, NO será reemplazado.
+         * - Evita duplicados, garantizando un único proceso periódico.
          */
         workManager.enqueueUniquePeriodicWork(
             "renew_movs_recur_work",
             ExistingPeriodicWorkPolicy.KEEP,
             periodicWork
+        )
+
+        /**
+         * WorkRequest periódico encargado de ejecutar [SyncWorker].
+         *
+         * Su responsabilidad es:
+         * - Mantener sincronizados los datos locales y remotos.
+         * - Ejecutarse cada 15 minutos automáticamente.
+         */
+        val syncWork = PeriodicWorkRequestBuilder<SyncWorker>(
+            15,
+            TimeUnit.MINUTES
+        ).build()
+
+        /**
+         * Encola un único worker de sincronización con la misma política de conservación.
+         */
+        workManager.enqueueUniquePeriodicWork(
+            "sync_worker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            syncWork
         )
     }
 }
