@@ -17,6 +17,9 @@ import androidx.room.*
  *
  * @property tipo Tipo de categoría, que puede ser utilizado para diferenciar
  * categorías especiales o para marcar comportamientos específicos dentro de la app.
+ *
+ * @property remote_id Identificador remoto de la categoría en PocketBase.
+ * Si es null, significa que la categoría aún no ha sido sincronizada con el servidor.
  */
 @Entity(tableName = "categoria")
 data class Categoria(
@@ -26,6 +29,7 @@ data class Categoria(
 
     val nome: String,
 
-    val tipo: String
+    val tipo: String,
 
+    val remote_id: String? = null
 )

@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.arcaneia.spendwise.R
+import com.arcaneia.spendwise.apis.data.model.CategoriaSyncRepository
 import com.arcaneia.spendwise.navigation.AppScreens
 import com.arcaneia.spendwise.data.model.AuthViewModel
 import kotlinx.coroutines.delay
@@ -26,22 +27,32 @@ import kotlinx.coroutines.delay
  *
  * Esta pantalla:
  * - Se muestra al inicio de la app.
- * - Observa el estado de `isAuthenticated` desde [AuthViewModel].
- * - Espera 2 segundos para permitir carga inicial y transición visual.
- * - Navega automáticamente a [AppScreens.MainScreen] si la autenticación es válida.
+ * - Observa el estado de autenticación desde [AuthViewModel].
+ * - Ejecuta la sincronización de categorías mediante [categoriaSyncRepository] si el usuario está autenticado.
+ * - Espera 2 segundos para permitir carga inicial, sincronización y transición visual suave.
+ * - Redirige automáticamente a [AppScreens.MainScreen] eliminando el Splash del backstack.
  *
- * @param navController Controlador de navegación utilizado para redirigir a la pantalla principal.
+ * @param navController Controlador de navegación utilizado para mover al usuario a la pantalla principal.
  * @param authViewModel ViewModel encargado de gestionar la autenticación del usuario.
+ * @param categoriaSyncRepository Repositorio responsable de sincronizar las categorías locales con el servidor.
  */
 @Composable
-fun SplashScreen(navController: NavController, authViewModel: AuthViewModel) {
+fun SplashScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel,
+    categoriaSyncRepository: CategoriaSyncRepository
+) {
 
-    // Inicia navegación en cuanto isAuthenticated.value sea true
+    // Inicia navegación cuando el usuario está autenticado
     LaunchedEffect(authViewModel.isAuthenticated.value) {
         if (authViewModel.isAuthenticated.value) {
-            delay(2000) // Animación visual y tiempo para cargar datos sin afectar UX
 
-            // Navega a la pantalla principal y elimina la pantalla splash de la pila
+            // Sincronizar categorías antes de entrar a la app
+            categoriaSyncRepository.sync()
+
+            delay(2000) // Animación / carga inicial para mejorar UX
+
+            // Navega a la pantalla principal y elimina el Splash del backstack
             navController.navigate(AppScreens.MainScreen.route) {
                 popUpTo(AppScreens.SplashScreen.route) { inclusive = true }
             }
@@ -51,7 +62,7 @@ fun SplashScreen(navController: NavController, authViewModel: AuthViewModel) {
     // UI principal del Splash
     Column(
         modifier = Modifier
-            .fillMaxSize(), // ocupa toda la pantalla
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

@@ -31,7 +31,7 @@ import com.arcaneia.spendwise.data.entity.MovRecur
  */
 @Database(
     entities = [Categoria::class, Mov::class, MovRecur::class],
-    version = 9,
+    version = 1,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -65,6 +65,9 @@ abstract class AppDatabase : RoomDatabase() {
          * - `fallbackToDestructiveMigration(true)` para reconstruir la BD en caso
          *   de cambios de versión sin migraciones definidas.
          * - Un `DatabaseCallBack` para operaciones adicionales durante su creación.
+         *
+         * Esta función es segura para hilos múltiples gracias al uso de `synchronized`
+         * y la anotación `@Volatile` en [INSTANCE].
          *
          * @param context Contexto necesario para crear la base de datos.
          * @return La instancia única de [AppDatabase].

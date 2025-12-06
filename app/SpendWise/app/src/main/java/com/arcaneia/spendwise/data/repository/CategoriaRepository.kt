@@ -43,4 +43,12 @@ class CategoriaRepository(private val categoriaDao: CategoriaDao) {
      * @param id ID de la categoría que se desea eliminar.
      */
     suspend fun deleteById(id: Int) = categoriaDao.deleteById(id)
+
+    /**
+     * Obtiene una categoría según su ID local.
+     *
+     * @param id Identificador de la categoría.
+     * @return La categoría encontrada o `null` si no existe.
+     */
+    suspend fun getById(id: Int) = categoriaDao.getById(id)
 }

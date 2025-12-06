@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.arcaneia.spendwise.apis.data.model.CategoriaSyncRepository
 import com.arcaneia.spendwise.data.model.*
 import com.arcaneia.spendwise.screens.CategoryScreen
 import com.arcaneia.spendwise.screens.ExpenseScreen
@@ -30,20 +31,24 @@ import com.arcaneia.spendwise.data.model.AuthViewModel
 import com.arcaneia.spendwise.screens.LoginScreen
 
 /**
- * Función principal de navegación de la aplicación.
+ * Función principal que gestiona la navegación global de la aplicación.
  *
- * Gestiona el flujo de pantallas utilizando `NavHost` y controla qué pantallas deben
- * mostrar la BottomBar mediante un único `Scaffold`.
+ * Este Composable centraliza todo el flujo de pantallas mediante un `NavController`
+ * y un único `Scaffold` que envuelve al contenido. De esta forma:
  *
- * Este componente centraliza toda la navegación y garantiza que:
- * - Solo exista un `NavController` en el nivel raíz.
- * - La BottomBar se muestre únicamente en las pantallas definidas en [bottomBarRoutes].
- * - El padding interno del `Scaffold` se aplique correctamente a todas las pantallas.
+ * - Se mantiene *una sola instancia* de la BottomBar en toda la app.
+ * - Las pantallas que forman parte de [bottomBarRoutes] mostrarán la BottomBar automáticamente.
+ * - El padding del `Scaffold` se transmite correctamente a cada pantalla usando `Modifier.padding`.
  *
- * @param authViewModel ViewModel encargado de la autenticación.
- * @param movViewModel ViewModel encargado de los movimientos económicos.
- * @param categoriaViewModel ViewModel encargado de la gestión de categorías.
- * @param movRecurViewModel ViewModel encargado de los movimientos recurrentes.
+ * Además, maneja el flujo de pantallas inicial (Splash, Login o Main) y asegura una navegación coherente
+ * al borrar el backstack cuando es necesario (por ejemplo, tras iniciar sesión).
+ *
+ * @param authViewModel ViewModel encargado del estado de autenticación.
+ * @param movViewModel ViewModel principal para gestionar movimientos (ingresos y gastos).
+ * @param categoriaViewModel ViewModel encargado de gestionar categorías locales y remotas.
+ * @param movRecurViewModel ViewModel para la gestión de movimientos recurrentes.
+ * @param loginViewModel ViewModel encargado de la lógica del inicio de sesión.
+ * @param categoriaSyncRepository Repositorio que administra la sincronización local-remota de categorías.
  */
 @Composable
 fun AppNavigation(
@@ -51,7 +56,8 @@ fun AppNavigation(
     movViewModel: MovViewModel,
     categoriaViewModel: CategoriaViewModel,
     movRecurViewModel: MovRecurViewModel,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    categoriaSyncRepository: CategoriaSyncRepository
 ) {
 
     // Único controlador de navegación
@@ -94,9 +100,9 @@ fun AppNavigation(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-//            startDestination = AppScreens.SplashScreen.route,
+            //            startDestination = AppScreens.SplashScreen.route,
             startDestination = AppScreens.LoginScreen.route,
-//            startDestination = AppScreens.MainScreen.route,
+            //            startDestination = AppScreens.MainScreen.route,
             modifier = Modifier.padding(
                 PaddingValues(
                     top = innerPadding.calculateTopPadding(),
@@ -107,7 +113,7 @@ fun AppNavigation(
             )
         ) {
             composable(AppScreens.SplashScreen.route) {
-                SplashScreen(navController, authViewModel)
+                SplashScreen(navController, authViewModel, categoriaSyncRepository)
             }
             composable(AppScreens.MainScreen.route) {
                 MainScreen(navController = navController, movViewModel = movViewModel)
@@ -144,7 +150,6 @@ fun AppNavigation(
                     }
                 )
             }
-
 
             // Ejemplo de pantalla sin BottomBar:
             // composable(AppScreens.Detail.route) { DetailScreen(navController) }
