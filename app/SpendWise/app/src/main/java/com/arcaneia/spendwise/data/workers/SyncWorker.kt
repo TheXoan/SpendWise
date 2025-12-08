@@ -6,6 +6,8 @@ import androidx.work.WorkerParameters
 import com.arcaneia.spendwise.apis.data.model.CategoriaRemoteDataSource
 import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.apis.data.model.CategoriaSyncRepository
+import com.arcaneia.spendwise.apis.data.model.MovRemoteDataSource
+import com.arcaneia.spendwise.apis.data.model.MovSyncRepository
 
 /**
  * Worker encargado de sincronizar datos locales con PocketBase.
@@ -23,20 +25,42 @@ class SyncWorker(
         return try {
             val db = AppDatabase.getDatabase(context)
 
+            // Dependencias de Categoría
             val categoriaDao = db.categoriaDao()
             val remoteCategoria = CategoriaRemoteDataSource(context)
-
             val categoriaSyncRepository = CategoriaSyncRepository(
                 local = categoriaDao,
                 remote = remoteCategoria,
                 context = context
             )
 
-            // Sincronización de categorías
+            // Dependencias de Movimiento Simple
+            val movDao = db.movDao() // Suponiendo que ya lo definiste en AppDatabase
+            val remoteMov =
+                MovRemoteDataSource(
+                    context
+                )
+
+            // Requerimos el DAO de MovRecur para mapear si el Movimiento es recurrente
+            val movRecurDao = db.movRecurDao() // Suponiendo que ya lo definiste en AppDatabase
+
+            val movSyncRepository =
+                MovSyncRepository(
+                    local = movDao,
+                    remote = remoteMov,
+                    categoriaDao = categoriaDao,
+                    movRecurDao = movRecurDao,
+                    context = context
+                )
+
+
+            // Sincronización de categorías (debe ir primero para tener los IDs de categoría listos)
             categoriaSyncRepository.sync()
 
+            // Sincronización de movimientos simples
+            movSyncRepository.sync()
+
             // Aquí más adelante añadirás:
-            // movSyncRepository.sync()
             // movRecurSyncRepository.sync()
 
             Result.success()

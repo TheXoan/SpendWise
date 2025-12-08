@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import com.arcaneia.spendwise.data.model.TypeMov
 
 /**
- * Entidad que representa un movimiento económico dentro de la aplicación.
+ * Entidad que representa un movimiento económico (transacción) dentro de la aplicación.
  *
  * Los movimientos pueden ser ingresos o gastos, y están asociados a una categoría y,
  * opcionalmente, a un movimiento recurrente.
@@ -15,10 +15,10 @@ import com.arcaneia.spendwise.data.model.TypeMov
  * Esta entidad define dos claves foráneas:
  *
  * 1. **categoria_id** → Referencia a [Categoria], con eliminación en cascada
- *    (si se borra la categoría, se borran sus movimientos).
+ * (si se borra la categoría, se borran sus movimientos).
  *
  * 2. **mov_recur_id** → Referencia a [MovRecur], con acción `SET_NULL`
- *    (si se elimina el movimiento recurrente, el campo queda en `null`).
+ * (si se elimina el movimiento recurrente, el campo queda en `null`).
  *
  * Además, la entidad define **índices** sobre las columnas `categoria_id` y `mov_recur_id`.
  * Room recomienda indexar todas las columnas usadas como claves foráneas porque:
@@ -35,18 +35,21 @@ import com.arcaneia.spendwise.data.model.TypeMov
  * @property tipo Tipo de movimiento, representado por el enum [TypeMov]
  * (por ejemplo: *INGRESO* o *GASTO*). Puede ser `null` en casos especiales.
  *
- * @property importe Monto económico del movimiento.
+ * @property importe Monto económico del movimiento (e.g., 50.50).
  *
  * @property data_mov Fecha del movimiento en formato `"YYYY-MM-DD"`.
  *
  * @property descricion Descripción opcional del movimiento.
  *
  * @property categoria_id ID de la categoría asociada al movimiento.
- * También es una clave foránea con índice para mejorar rendimiento.
+ * Es una clave foránea (Int) que referencia a la tabla [Categoria].
  *
  * @property mov_recur_id ID de un movimiento recurrente, si aplica.
  * Puede ser `null` si el movimiento no proviene de una recurrencia.
- * También está indexado para optimizar consultas y validaciones.
+ * Es una clave foránea (Int) que referencia a la tabla [MovRecur].
+ *
+ * @property remote_id Identificador remoto (PocketBase ID) del registro.
+ * Es `null` si el movimiento aún no ha sido sincronizado con el servidor.
  */
 
 @Entity(
@@ -82,5 +85,6 @@ data class Mov(
     val data_mov: String,
     val descricion: String? = null,
     val categoria_id: Int,
-    val mov_recur_id: Int? = null
+    val mov_recur_id: Int? = null,
+    val remote_id: String? = null
 )

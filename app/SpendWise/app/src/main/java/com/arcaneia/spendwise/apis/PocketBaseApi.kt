@@ -1,6 +1,7 @@
 package com.arcaneia.spendwise.apis
 
 import com.arcaneia.spendwise.apis.data.model.CategoriaRecord
+import com.arcaneia.spendwise.apis.data.model.MovRecord
 import com.arcaneia.spendwise.apis.data.model.PocketBaseListResponse
 import com.arcaneia.spendwise.data.model.AuthRequest
 import com.arcaneia.spendwise.data.model.AuthResponse
@@ -80,6 +81,31 @@ interface PocketBaseApi {
      */
     @DELETE("api/collections/categoria/records/{id}")
     suspend fun deleteCategoria(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String
+    )
+
+    @GET("api/collections/mov/records")
+    suspend fun getMov(
+        @Header("Authorization") auth: String,
+        @Query("filter") filter: String? = null
+    ): PocketBaseListResponse<MovRecord>
+
+    @POST("api/collections/mov/records")
+    suspend fun createMov(
+        @Header("Authorization") auth: String,
+        @Body body: Map<String, @JvmSuppressWildcards Any?>
+    ): MovRecord
+
+    @PATCH("api/collections/mov/records/{id}")
+    suspend fun updateMov(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String,
+        @Body body: Map<String, @JvmSuppressWildcards Any?>
+    ): MovRecord
+
+    @DELETE("api/collections/mov/records/{id}")
+    suspend fun deleteMov(
         @Header("Authorization") auth: String,
         @Path("id") id: String
     )
