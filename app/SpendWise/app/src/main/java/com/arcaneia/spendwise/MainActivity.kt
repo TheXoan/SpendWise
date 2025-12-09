@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         val categoriaRepository = CategoriaRepository(db.categoriaDao())
         val movRecurRepository = MovRecurRepository(
             movRecurDao = db.movRecurDao(),
-            movDao = db.movDao()
+            movDao = db.movDao(), this
         )
 
         /**

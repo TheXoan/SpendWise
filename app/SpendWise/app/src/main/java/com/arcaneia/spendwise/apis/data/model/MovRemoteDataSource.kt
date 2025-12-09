@@ -1,32 +1,70 @@
 package com.arcaneia.spendwise.apis.data.model
 
+import MovRecord
 import android.content.Context
 import com.arcaneia.spendwise.apis.RetrofitClient
-import com.arcaneia.spendwise.data.datastore.TokenDataStore
 import com.arcaneia.spendwise.data.entity.Mov
+import com.arcaneia.spendwise.data.datastore.TokenDataStore
 import kotlinx.coroutines.flow.first
 
 /**
- * Data source encargado de gestionar las operaciones remotas relacionadas con los
- * movimientos simples (`mov`) en el servidor PocketBase.
+ * Fuente de datos remota encargada de gestionar la comunicación entre la aplicación
+ * y la colección `mov` de PocketBase.
  *
- * Esta clase actúa como la capa de acceso a la API REST para la colección de movimientos,
- * manejando la autenticación mediante tokens y traduciendo los datos locales ([Mov]) a
- * los formatos requeridos por el servidor.
+ * Esta clase encapsula todas las operaciones CRUD remotas relacionadas con movimientos
+ * simples, proporcionando un acceso seguro, tipado y centralizado a las llamadas HTTP.
+ * Utiliza Retrofit para interactuar con la API y DataStore para obtener el token de
+ * autenticación almacenado en el dispositivo.
  *
- * Requiere el ID remoto (PocketBase ID) de la categoría asociada para crear/actualizar
- * registros debido a las relaciones de base de datos en el backend.
+ * ---
  *
- * @property context El contexto de la aplicación, necesario para acceder al [TokenDataStore].
+ * ## 🔐 Autenticación
+ * Cada operación realiza una llamada al método privado [authHeader], el cual:
+ * - Recupera el token actual desde [TokenDataStore].
+ * - Lanza una excepción si el token no existe (evitando llamadas inválidas al servidor).
+ * - Devuelve el header `Bearer <token>` requerido por PocketBase.
+ *
+ * ---
+ *
+ * ## 🔄 Sincronización y compatibilidad
+ * Esta fuente de datos es totalmente compatible con:
+ * - **IDs remotos** (`categoriaPBId`, `movRecurPBId`), necesarios para el mapeo relacional.
+ * - **renew_hash**, usado para evitar duplicados cuando un movimiento se genera desde
+ *   una renovación recurrente.
+ *
+ * Las operaciones remotas se limitan a enviar y recibir datos; el mapeo hacia Room y
+ * el merge final se realiza en `MovSyncRepository`.
+ *
+ * ---
+ *
+ * ## Métodos principales
+ *
+ * ### fetchAll(userId)
+ * Obtiene todos los movimientos del usuario autenticado mediante un filtro en PocketBase.
+ *
+ * ### create(...)
+ * Envía un nuevo movimiento al servidor.
+ * Admite valores opcionales como `descricion` o `mov_recur_id`.
+ *
+ * ### update(...)
+ * Actualiza un movimiento existente en PocketBase utilizando su ID remoto.
+ *
+ * ### delete(movPBId)
+ * Elimina un movimiento remoto de forma definitiva.
+ *
+ * ---
+ *
+ * @property context Contexto necesario para acceder a DataStore y recursos del sistema.
  */
 class MovRemoteDataSource(private val context: Context) {
 
     /**
-     * Reutilizamos la función de autenticación ya existente. Obtiene el token de autenticación
-     * del DataStore y lo formatea como un encabezado Bearer.
+     * Construye el header de autenticación `Bearer <token>` requerido por PocketBase.
      *
-     * @return El encabezado de autorización como String ("Bearer <token>").
-     * @throws IllegalArgumentException si no hay un token disponible.
+     * Recupera el token de DataStore y lanza una excepción si está vacío.
+     *
+     * @return Cadena con el header de autorización.
+     * @throws IllegalArgumentException si no hay token disponible.
      */
     private suspend fun authHeader(): String {
         val token = TokenDataStore.getToken(context).first()
@@ -35,11 +73,15 @@ class MovRemoteDataSource(private val context: Context) {
     }
 
     /**
-     * Obtiene todos los movimientos asociados al usuario especificado mediante una consulta
-     * filtrada por el ID del usuario.
+     * Obtiene todos los movimientos remotos pertenecientes al usuario especificado.
      *
-     * @param userId El identificador remoto del usuario actual.
-     * @return Una lista de registros de movimientos [MovRecord] obtenidos del servidor.
+     * Esta llamada aplica un filtro en el servidor:
+     * ```
+     * user='<userId>'
+     * ```
+     *
+     * @param userId ID remoto del usuario autenticado.
+     * @return Lista de [MovRecord] correspondientes al usuario.
      */
     suspend fun fetchAll(userId: String): List<MovRecord> {
         val auth = authHeader()
@@ -51,72 +93,79 @@ class MovRemoteDataSource(private val context: Context) {
     }
 
     /**
-     * Crea un nuevo movimiento en el servidor PocketBase.
+     * Crea un nuevo movimiento remoto en PocketBase.
      *
-     * Este método mapea el objeto [Mov] local a un mapa de campos de PocketBase,
-     * incluyendo los IDs remotos de las relaciones (`categoriaPBId` y `movRecurPBId`).
+     * El cuerpo enviado incluye:
+     *  - tipo, importe, fecha y categoría.
+     *  - mov_recur_id (si proviene de una renovación).
+     *  - renew_hash para evitar duplicados.
      *
-     * @param userId El ID remoto del usuario propietario.
-     * @param mov El objeto [Mov] local a subir.
-     * @param categoriaPBId ID remoto (PocketBase ID) de la categoría a la que se asocia el movimiento.
-     * @param movRecurPBId ID remoto (PocketBase ID) del movimiento recurrente, si aplica (opcional).
-     * @return El [MovRecord] creado devuelto por el servidor.
+     * @param userId ID del usuario propietario.
+     * @param mov Objeto [Mov] local a sincronizar.
+     * @param categoriaPBId ID remoto de la categoría asociada.
+     * @param movRecurPBId ID remoto del movimiento recurrente (si lo hubiera).
+     *
+     * @return El movimiento remoto creado como [MovRecord].
      */
     suspend fun create(
         userId: String,
         mov: Mov,
         categoriaPBId: String,
-        movRecurPBId: String? = null
+        movRecurPBId: String?
     ): MovRecord {
         val auth = authHeader()
 
-        // PocketBase espera los IDs de las relaciones, no los IDs locales de Room.
         val body = mapOf(
-            "tipo" to mov.tipo?.name, // Usamos .name para obtener el String del enum TypeMov
+            "tipo" to mov.tipo!!.name,
             "importe" to mov.importe,
             "data_mov" to mov.data_mov,
             "descricion" to mov.descricion,
             "categoria_id" to categoriaPBId,
             "mov_recur_id" to movRecurPBId,
+            "renew_hash" to mov.renew_hash,
             "user" to userId
-        ).filterValues { it != null } // Eliminamos campos nulos (como mov_recur) si no se proporcionan
+        ).filterValues { it != null }
 
         return RetrofitClient.api.createMov(auth, body)
     }
 
     /**
-     * Actualiza un movimiento existente en el servidor.
+     * Actualiza un movimiento ya existente en PocketBase.
      *
-     * @param movPBId El ID remoto (PocketBase ID) del movimiento a actualizar.
-     * @param mov El objeto [Mov] local con los nuevos valores.
-     * @param categoriaPBId ID remoto de la nueva categoría asociada (o la misma si no cambia).
-     * @param movRecurPBId ID remoto del movimiento recurrente (opcional).
-     * @return El [MovRecord] actualizado devuelto por el servidor.
+     * Solo se envían los campos necesarios para mantener consistencia con el modelo local.
+     *
+     * @param movPBId ID remoto del movimiento a actualizar.
+     * @param mov Objeto [Mov] local con los valores actualizados.
+     * @param categoriaPBId ID remoto de la categoría asociada.
+     * @param movRecurPBId ID remoto del movimiento recurrente (si corresponde).
+     *
+     * @return Registro actualizado como [MovRecord].
      */
     suspend fun update(
         movPBId: String,
         mov: Mov,
         categoriaPBId: String,
-        movRecurPBId: String? = null
+        movRecurPBId: String?
     ): MovRecord {
         val auth = authHeader()
 
         val body = mapOf(
-            "tipo" to mov.tipo?.name,
+            "tipo" to mov.tipo!!.name,
             "importe" to mov.importe,
             "data_mov" to mov.data_mov,
             "descricion" to mov.descricion,
             "categoria_id" to categoriaPBId,
-            "mov_recur_id" to movRecurPBId
+            "mov_recur_id" to movRecurPBId,
+            "renew_hash" to mov.renew_hash
         ).filterValues { it != null }
 
         return RetrofitClient.api.updateMov(auth, movPBId, body)
     }
 
     /**
-     * Elimina el movimiento asociado al identificador remoto proporcionado.
+     * Elimina un movimiento remoto en PocketBase.
      *
-     * @param movPBId El ID remoto (PocketBase ID) del movimiento a eliminar.
+     * @param movPBId ID remoto del movimiento que se desea eliminar.
      */
     suspend fun delete(movPBId: String) {
         val auth = authHeader()

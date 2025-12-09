@@ -1,29 +1,67 @@
-package com.arcaneia.spendwise.apis.data.model
-
 /**
- * Representa un registro de movimiento tal como es devuelto por el servidor PocketBase.
- * Este DTO (Data Transfer Object) se utiliza para deserializar las respuestas JSON de la API.
+ * Representa un registro remoto de la colección `mov` en PocketBase.
  *
- * NOTA: Los campos `categoria_id` y `mov_recur_id` contendrán los **IDs remotos (strings)**
- * de las colecciones relacionadas en PocketBase. Es responsabilidad del SyncRepository mapear
- * estos IDs remotos a los IDs locales de Room.
+ * Esta clase actúa como un **DTO (Data Transfer Object)** utilizado para mapear
+ * las respuestas JSON provenientes del servidor. Cada instancia corresponde a
+ * un movimiento simple almacenado en PocketBase, incluyendo información básica,
+ * referencias a entidades relacionadas y metadatos útiles para sincronización.
  *
- * @property id Identificador único del registro en el servidor PocketBase.
- * @property tipo Tipo de movimiento (INGRESO/GASTO). Es un String y puede ser nulo si no está definido en el servidor.
- * @property importe Monto económico de la transacción.
- * @property data_mov Fecha en la que ocurrió el movimiento, típicamente en formato YYYY-MM-DD.
- * @property descricion Descripción opcional del movimiento.
- * @property categoria_id ID remoto de la categoría a la que pertenece este movimiento.
- * @property mov_recur_id ID remoto del movimiento recurrente que originó este registro (puede ser nulo si no es recurrente).
- * @property user Identificador del usuario propietario de este registro en PocketBase.
+ * ---
+ *
+ * ## 🔗 Relaciones y sincronización
+ *
+ * PocketBase almacena relaciones mediante **IDs remotos (String)**.
+ * Por ello, los campos `categoria_id` y `mov_recur_id` deben ser traducidos
+ * posteriormente por el `MovSyncRepository` a los IDs internos de Room.
+ *
+ * Además, este DTO incluye el campo `renew_hash`, un identificador único
+ * generado por las renovaciones automáticas, que permite:
+ * - Detectar duplicados en sincronizaciones entre dispositivos.
+ * - Evitar que un mismo movimiento recurrente genere múltiples copias.
+ *
+ * ---
+ *
+ * ## Propiedades
+ *
+ * @property id
+ * ID único generado por PocketBase para este movimiento.
+ *
+ * @property tipo
+ * Tipo de movimiento (`INGRESO` o `GASTO`) como String. Puede ser nulo si
+ * en el servidor no se estableció el campo.
+ *
+ * @property importe
+ * Cantidad económica asociada al movimiento.
+ *
+ * @property data_mov
+ * Fecha del movimiento en formato `"YYYY-MM-DD HH:mm:ss"` o `"YYYY-MM-DD"`
+ * según el origen del dato.
+ *
+ * @property descricion
+ * Texto descriptivo del movimiento. Puede ser nulo.
+ *
+ * @property categoria_id
+ * ID remoto de la categoría asociada. Debe mapearse al ID local en Room.
+ *
+ * @property mov_recur_id
+ * ID remoto de la entrada `mov_recur` que generó este movimiento.
+ * Es nulo si el movimiento no proviene de una recurrencia.
+ *
+ * @property user
+ * ID remoto del usuario propietario del registro.
+ *
+ * @property renew_hash
+ * Identificador único que permite detectar movimientos creados automáticamente
+ * por renovaciones recurrentes y evitar duplicados en la sincronización.
  */
 data class MovRecord(
     val id: String,
-    val tipo: String?, // En PocketBase, los enums suelen serializarse como Strings
+    val tipo: String?,
     val importe: Double,
     val data_mov: String,
     val descricion: String? = null,
-    val categoria_id: String, // ID remoto de Categoria
-    val mov_recur_id: String? = null, // ID remoto de MovRecur
-    val user: String
+    val categoria_id: String,
+    val mov_recur_id: String? = null,
+    val user: String,
+    val renew_hash: String?
 )

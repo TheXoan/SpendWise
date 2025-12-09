@@ -13,33 +13,79 @@ import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.arcaneia.spendwise.R
+import com.arcaneia.spendwise.apis.data.model.MovRemoteDataSource
+import com.arcaneia.spendwise.apis.data.model.MovSyncRepository
+import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.data.di.ServiceLocator
 import com.arcaneia.spendwise.data.entity.Mov
 import com.arcaneia.spendwise.data.datastore.PermissionsDataStore
 import kotlinx.coroutines.flow.first
 
 /**
- * Worker encargado de procesar la renovación automática de movimientos recurrentes
- * y emitir una notificación independiente por cada movimiento generado.
+ * Worker responsable de procesar renovaciones de movimientos recurrentes
+ * y gestionar sus notificaciones locales.
  *
- * Este Worker se ejecuta en segundo plano mediante WorkManager y realiza las
- * siguientes operaciones:
+ * Este Worker garantiza un flujo completo y seguro:
  *
- * 1. Lee desde DataStore si el usuario otorgó permiso interno para recibir notificaciones.
- * 2. Llama al repositorio [MovRecurRepository] para procesar las renovaciones pendientes,
- *    generando nuevos movimientos ([Mov]) según corresponda.
- * 3. Si se generaron movimientos y el permiso del sistema para notificaciones está concedido
- *    (en Android 13+), crea y muestra una notificación por cada movimiento renovado.
+ * ---
+ * ### 🔄 **1. Procesar renovaciones (MovRecur → Mov)**
  *
- * A diferencia de versiones anteriores, cada notificación utiliza un ID único generado
- * dinámicamente, evitando que las notificaciones se sobreescriban y garantizando que todas
- * se muestren de manera independiente.
+ * Ejecuta `MovRecurRepository.processRenewals()`:
+ * - Genera movimientos simples ([Mov]) cuando corresponde según `data_rnv`.
+ * - Cada movimiento creado incluye un `renew_hash` determinista para evitar duplicados.
+ * - Devuelve los movimientos generados en esta ejecución.
  *
- * Se utiliza `CoroutineWorker` para permitir la ejecución de funciones suspendidas sin
- * bloquear el hilo de trabajo.
+ * ---
+ * ### ☁ **2. Sube inmediatamente los movimientos generados a PocketBase**
  *
- * @param appContext Contexto global de la aplicación.
- * @param params Parámetros suministrados por WorkManager.
+ * Utiliza [MovSyncRepository] para:
+ * - Subir los nuevos movimientos
+ * - Resolver duplicados mediante `renew_hash`
+ * - Traer cambios remotos
+ * - Mantener el estado local consistente con PocketBase
+ *
+ * Esto asegura que:
+ * - Otros dispositivos verán las renovaciones
+ * - Ningún dispositivo genere la misma renovación dos veces
+ *
+ * ---
+ * ### 🔔 **3. Obtiene todos los movimientos con `notificado = 0`**
+ *
+ * El repositorio no marca como “notificado” durante su creación.
+ * Lo hace exclusivamente este Worker, permitiendo:
+ * - Mostrar notificaciones locales
+ * - No repetirlas nunca más
+ * - Notificar renovaciones creadas en *otro* dispositivo al sincronizar
+ *
+ * ---
+ * ### 📳 **4. Genera notificaciones locales**
+ *
+ * Solo se envían si:
+ * - El usuario dio permiso interno desde ajustes de la app
+ * - Y el sistema tiene permiso para mostrar notificaciones (Android 13+)
+ *
+ * Una notificación por cada movimiento pendiente.
+ *
+ * ---
+ * ### 🏁 **5. Marca todos los pendientes como notificados**
+ *
+ * Esto evita repetición infinita de notificaciones,
+ * incluso si el Worker se vuelve a ejecutar varias veces.
+ *
+ * ---
+ * ### ✔ Garantías del sistema
+ *
+ * - ❌ No duplica renovaciones
+ *   (gracias al `renew_hash` determinista)
+ *
+ * - ❌ No duplica notificaciones
+ *   (se notifican solo los `notificado = 0`)
+ *
+ * - ✔ Funciona en todos los dispositivos sincronizados
+ *   (cada móvil genera notificaciones de los Mov que existan en *su* base local)
+ *
+ * ---
+ * @constructor Recibe el contexto y parámetros del Worker.
  */
 class RenewMovsRecurWorker(
     appContext: Context,
@@ -47,35 +93,50 @@ class RenewMovsRecurWorker(
 ) : CoroutineWorker(appContext, params) {
 
     /**
-     * Ejecuta el proceso principal del Worker.
-     *
-     * - Verifica si el usuario otorgó permiso interno para notificaciones.
-     * - Procesa las renovaciones de movimientos recurrentes.
-     * - Notifica individualmente cada movimiento generado si el sistema lo permite.
-     *
-     * No retorna [Result.retry] ni [Result.failure], ya que el repositorio gestiona
-     * internamente sus excepciones.
-     *
-     * @return [Result.success] si el proceso se ejecutó correctamente, incluso si no hubo renovaciones.
+     * Ejecuta el flujo completo:
+     * 1. Renovar movimientos recurrentes
+     * 2. Subir renovaciones generadas
+     * 3. Obtener pendientes de notificar
+     * 4. Notificar (si procede)
+     * 5. Marcar como notificados
      */
     override suspend fun doWork(): Result {
-        val permissionsStore = PermissionsDataStore(applicationContext)
 
-        // Permiso interno almacenado en DataStore
+        val permissionsStore = PermissionsDataStore(applicationContext)
         val grantedInDataStore = permissionsStore.isNotificationGranted.first()
 
-        // Procesa renovaciones y obtiene lista de nuevos movimientos creados
+        // DAOs
+        val db = AppDatabase.getDatabase(applicationContext)
+        val movDao = db.movDao()
+        val movRecurDao = db.movRecurDao()
+        val categoriaDao = db.categoriaDao()
+
+        // 1) Generar renovaciones locales
         val repo = ServiceLocator.getMovRecurRepository(applicationContext)
-        val createdMovs: List<Mov> = repo.processRenewals()
+        val createdMovs = repo.processRenewals()
 
-        // No hay movimientos generados → no se envían notificaciones
-        if (createdMovs.isEmpty()) {
-            return Result.success()
-        }
+        // Si no ha generado nada → terminar
+        if (createdMovs.isEmpty()) return Result.success()
 
+        // 2) Subir las renovaciones a PocketBase
+        val movSyncRepository =
+            MovSyncRepository(
+                local = movDao,
+                remote = MovRemoteDataSource(applicationContext),
+                categoriaDao = categoriaDao,
+                movRecurDao = movRecurDao,
+                context = applicationContext
+            )
+        movSyncRepository.sync()
+
+        // 3) Obtener movimientos aún no notificados
+        val pending = movDao.getPendingNotifications()
+
+        if (pending.isEmpty()) return Result.success()
+
+        // 4) Notificar solo si está permitido
         if (grantedInDataStore) {
 
-            // Verificación del permiso del sistema para notificaciones (solo Android 13+)
             val systemPermissionGranted =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     ContextCompat.checkSelfPermission(
@@ -84,9 +145,11 @@ class RenewMovsRecurWorker(
                     ) == PackageManager.PERMISSION_GRANTED
                 } else true
 
-            // Si ambos permisos están concedidos → se muestran notificaciones
             if (systemPermissionGranted) {
-                showNotifications(createdMovs)
+                showNotifications(pending)
+
+                // 5) Marcar todos como notificados
+                pending.forEach { movDao.markAsNotified(it.id) }
             }
         }
 
@@ -94,22 +157,19 @@ class RenewMovsRecurWorker(
     }
 
     /**
-     * Genera y muestra una notificación para cada movimiento renovado.
+     * Muestra una notificación local para cada movimiento de la lista.
      *
-     * Componentes clave:
-     * - Crea un canal de notificaciones en Android O+ si aún no existe.
-     * - Construye una notificación con título, descripción y valor del movimiento.
-     * - Genera un ID único para cada notificación mediante `System.currentTimeMillis()`,
-     *   evitando sobrescribir notificaciones previas.
+     * - Crea el canal si es necesario (Android O+)
+     * - Genera un ID único por notificación mediante timestamp
+     * - Formatea adecuadamente el importe
      *
-     * @param movs Lista de movimientos renovados que deben ser notificados.
+     * @param movs Lista de movimientos a notificar.
      */
-    @SuppressLint("MissingPermission", "DefaultLocale")
+    @SuppressLint("DefaultLocale")
     private fun showNotifications(movs: List<Mov>) {
-
         val channelId = "mov_recur_channel"
 
-        // Crea el canal en Android O+
+        // Crear canal en Android 8+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
@@ -124,21 +184,12 @@ class RenewMovsRecurWorker(
         val manager = NotificationManagerCompat.from(applicationContext)
 
         movs.forEach { mov ->
-
-            val title = applicationContext.getString(R.string.new_renewal)
-            val content = String.format(
-                "%s - %.2f€",
-                mov.descricion ?: applicationContext.getString(R.string.activity),
-                mov.importe
-            )
-
-            // Genera un ID único para cada notificación
-            val notificationId = System.currentTimeMillis().toInt()
+            val notificationId = (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
 
             val notification = NotificationCompat.Builder(applicationContext, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher_spendwise)
-                .setContentTitle(title)
-                .setContentText(content)
+                .setContentTitle(applicationContext.getString(R.string.new_renewal))
+                .setContentText("${mov.descricion} - ${String.format("%.2f", mov.importe)}€")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .build()

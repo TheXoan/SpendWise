@@ -2,35 +2,76 @@ package com.arcaneia.spendwise.data.di
 
 import android.content.Context
 import com.arcaneia.spendwise.data.database.AppDatabase
+import com.arcaneia.spendwise.data.dao.MovDao
+import com.arcaneia.spendwise.data.dao.MovRecurDao
 import com.arcaneia.spendwise.data.repository.MovRecurRepository
 
 /**
- * Objeto responsable de proporcionar dependencias de forma centralizada,
- * actuando como un Service Locator simple dentro de la aplicación.
+ * Proveedor centralizado de dependencias para la capa de datos.
  *
- * Su propósito es facilitar la obtención de repositorios y otros componentes
- * relacionados con la capa de datos sin necesidad de un contenedor completo
- * de inyección de dependencias como Hilt o Koin.
+ * Este objeto funciona como un **Service Locator**, permitiendo obtener instancias
+ * de repositorios y DAOs sin necesidad de un framework de inyección de dependencias
+ * como Hilt o Koin.
+ *
+ * El principal objetivo de este componente es:
+ * - Simplificar la creación de repositorios.
+ * - Garantizar el acceso coherente a DAOs de Room.
+ * - Evitar duplicación de código en distintas capas de la aplicación.
+ *
+ * Todas las dependencias provistas aquí utilizan la instancia única de la base
+ * de datos generada por [AppDatabase.getDatabase].
  */
 object ServiceLocator {
 
     /**
-     * Obtiene una instancia de [MovRecurRepository] utilizando los DAOs necesarios
-     * desde la base de datos Room.
+     * Obtiene una instancia funcional de [MovRecurRepository].
      *
-     * Crea (o reutiliza) la instancia de [AppDatabase] a través del método
-     * `getDatabase(context)` y luego recupera:
-     * - `movRecurDao()` para operaciones sobre movimientos recurrentes.
-     * - `movDao()` para operaciones sobre movimientos normales.
+     * Este repositorio requiere dos DAOs:
+     * - [MovRecurDao] para gestionar movimientos recurrentes.
+     * - [MovDao] para generar movimientos derivados de renovaciones.
      *
-     * @param context Contexto requerido para inicializar la base de datos.
-     * @return Una instancia funcional de [MovRecurRepository] lista para usar.
+     * Además se pasa el `context` como `appContext` para permitir la subida remota
+     * desde el propio repositorio cuando se realizan renovaciones automáticas.
+     *
+     * @param context Contexto utilizado para obtener la base de datos.
+     * @return Instancia lista para usar de [MovRecurRepository].
      */
     fun getMovRecurRepository(context: Context): MovRecurRepository {
         val db = AppDatabase.getDatabase(context)
         return MovRecurRepository(
             movRecurDao = db.movRecurDao(),
-            movDao = db.movDao()
+            movDao = db.movDao(),
+            appContext = context
         )
+    }
+
+    /**
+     * Obtiene el DAO encargado de los movimientos simples ([MovDao]).
+     *
+     * Útil en procesos como:
+     * - sincronización,
+     * - generación de notificaciones,
+     * - manipulación directa de movimientos.
+     *
+     * @param context Contexto necesario para resolver la base de datos.
+     * @return Instancia de [MovDao].
+     */
+    fun getMovDao(context: Context): MovDao {
+        return AppDatabase.getDatabase(context).movDao()
+    }
+
+    /**
+     * Obtiene el DAO para movimientos recurrentes ([MovRecurDao]).
+     *
+     * Este DAO se utiliza para:
+     * - gestionar las reglas de recurrencia,
+     * - calcular renovaciones,
+     * - actualizar fechas de próxima ejecución.
+     *
+     * @param context Contexto necesario para obtener la instancia de Room.
+     * @return Instancia de [MovRecurDao].
+     */
+    fun getMovRecurDao(context: Context): MovRecurDao {
+        return AppDatabase.getDatabase(context).movRecurDao()
     }
 }

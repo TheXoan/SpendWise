@@ -113,7 +113,7 @@ fun AppNavigation(
             )
         ) {
             composable(AppScreens.SplashScreen.route) {
-                SplashScreen(navController, authViewModel, categoriaSyncRepository)
+                SplashScreen(navController, authViewModel)
             }
             composable(AppScreens.MainScreen.route) {
                 MainScreen(navController = navController, movViewModel = movViewModel)

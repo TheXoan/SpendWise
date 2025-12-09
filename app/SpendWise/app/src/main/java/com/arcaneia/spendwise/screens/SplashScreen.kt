@@ -34,21 +34,16 @@ import kotlinx.coroutines.delay
  *
  * @param navController Controlador de navegación utilizado para mover al usuario a la pantalla principal.
  * @param authViewModel ViewModel encargado de gestionar la autenticación del usuario.
- * @param categoriaSyncRepository Repositorio responsable de sincronizar las categorías locales con el servidor.
  */
 @Composable
 fun SplashScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
-    categoriaSyncRepository: CategoriaSyncRepository
 ) {
 
     // Inicia navegación cuando el usuario está autenticado
     LaunchedEffect(authViewModel.isAuthenticated.value) {
         if (authViewModel.isAuthenticated.value) {
-
-            // Sincronizar categorías antes de entrar a la app
-            categoriaSyncRepository.sync()
 
             delay(2000) // Animación / carga inicial para mejorar UX
 

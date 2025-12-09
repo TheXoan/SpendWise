@@ -10,45 +10,75 @@ import com.arcaneia.spendwise.data.model.TypeMov
 import kotlinx.coroutines.flow.first
 
 /**
- * Repositorio encargado de sincronizar los **movimientos simples** (`mov`) entre la base de datos
- * local (Room) y el backend PocketBase.
+ * Repositorio encargado de sincronizar la colección de **movimientos simples (mov)** entre
+ * la base de datos local (Room) y la base de datos remota en PocketBase.
  *
- * Este repositorio implementa un proceso completo de sincronización bidireccional,
- * permitiendo mantener coherencia entre los datos locales y los datos remotos.
+ * Esta clase constituye el núcleo del sistema de sincronización de movimientos, manteniendo
+ * la integridad y consistencia entre múltiples dispositivos y evitando duplicados mediante
+ * el campo `renew_hash`, utilizado especialmente para movimientos generados desde
+ * renovaciones recurrentes.
  *
- * ## Funciones principales
+ * ---
  *
- * ### 1. **Subida de movimientos locales pendientes**
- * Sube todos los movimientos cuyo `remote_id` es `null`, creando su equivalente en PocketBase
- * y vinculando el ID remoto resultante.
+ * ## 🔄 Funciones principales del sincronizador
  *
- * ### 2. **Descarga de movimientos remotos**
- * Descarga todos los movimientos pertenecientes al usuario autenticado, mapeando sus relaciones
- * a IDs locales.
+ * La función [sync] implementa el flujo completo de sincronización:
  *
- * ### 3. **Merge remoto → local**
- * - Si el movimiento remoto no existe localmente → se **inserta**.
- * - Si ya existe → se **actualiza**, conservando el `remote_id`.
+ * ### **1. Subida de movimientos locales pendientes**
+ * Todos los movimientos cuyo `remote_id` es `null` se consideran pendientes de subir.
+ * Estos incluyen:
+ * - Movimientos creados manualmente por el usuario.
+ * - Movimientos generados automáticamente por renovaciones recurrentes.
  *
- * ### 4. **Detección de borrados**
- * Todo movimiento que exista en local pero no en el servidor se elimina localmente.
+ * Para cada uno:
+ * - Se mapean sus relaciones (categoría y movimiento recurrente) a IDs remotos.
+ * - Se envía el movimiento a PocketBase vía [MovRemoteDataSource.create].
+ * - Se adjunta el `remote_id` recibido del servidor mediante `attachRemoteId`.
  *
- * ## Dependencias requeridas
+ * ---
  *
- * - **MovDao** para CRUD local y funciones auxiliares de sincronización.
- * - **CategoriaDao** para mapear `categoria_id` remoto ↔ local.
- * - **MovRecurDao** para mapear `mov_recur_id` remoto ↔ local.
- * - **MovRemoteDataSource** para realizar peticiones a PocketBase.
+ * ### **2. Descarga de movimientos remotos**
+ * Se recuperan todos los registros remotos pertenecientes al usuario autenticado.
  *
- * Este repositorio garantiza la integridad referencial durante todo el proceso,
- * asegurando que los IDs remotos y locales de categorías y movimientos recurrentes
- * estén correctamente enlazados.
+ * ---
  *
- * @property local DAO para movimientos simples ([Mov]).
- * @property remote Data source remoto para la colección de movimientos en PocketBase.
- * @property categoriaDao DAO para categorías, necesario para resolver referencias remotas.
- * @property movRecurDao DAO para movimientos recurrentes, necesario para mapear relaciones.
- * @property context Contexto para obtener el token del usuario mediante [TokenDataStore].
+ * ### **3. Merge remoto → local**
+ * Por cada movimiento remoto se realiza:
+ *
+ * - Registro del ID remoto en la lista `remoteIds`.
+ * - Si el movimiento tiene `renew_hash`:
+ *   - Se detecta si ya existe el movimiento local correspondiente.
+ *   - Se evita crear duplicados.
+ * - Si existe localmente → se actualiza.
+ * - Si no existe → se inserta un nuevo registro local.
+ *
+ * Todas las relaciones remotas (`categoria_id`, `mov_recur_id`) se convierten
+ * a sus IDs locales mediante `CategoriaDao` y `MovRecurDao`.
+ *
+ * ---
+ *
+ * ### **4. Eliminación de movimientos locales borrados en PocketBase**
+ * Cualquier movimiento local que posea un `remote_id` que ya no existe en PocketBase
+ * será eliminado automáticamente del dispositivo.
+ *
+ * Esto garantiza la coherencia entre dispositivos y respeta eliminaciones remotas.
+ *
+ * ---
+ *
+ * ## 🧩 Consideraciones importantes
+ *
+ * - Esta clase no interactúa directamente con la capa de UI.
+ * - No procesa renovaciones recurrentes (esa responsabilidad pertenece a `MovRecurRepository`).
+ * - No muestra notificaciones (esto lo realiza `RenewMovsRecurWorker`).
+ * - Supone que todos los DAOs están correctamente configurados para soportar sincronización.
+ *
+ * ---
+ *
+ * @property local DAO de Room para acceder y modificar movimientos locales.
+ * @property remote Fuente de datos remota para interactuar con PocketBase.
+ * @property categoriaDao DAO usado para mapear IDs remotos/locales de categorías.
+ * @property movRecurDao DAO usado para mapear IDs remotos/locales de movimientos recurrentes.
+ * @property context Contexto para acceder a DataStore y recuperar el `userId`.
  */
 class MovSyncRepository(
     private val local: MovDao,
@@ -59,166 +89,109 @@ class MovSyncRepository(
 ) {
 
     /**
-     * Obtiene todos los movimientos locales que aún no han sido subidos al servidor,
-     * es decir, aquellos cuyo `remote_id` es `null`.
+     * Ejecuta la sincronización completa de movimientos simples.
      *
-     * @return Lista de movimientos pendientes.
-     */
-    suspend fun getPendingToUpload(): List<Mov> =
-        local.getPendingToUpload()
-
-    /**
-     * Busca un movimiento local usando su ID remoto.
+     * El proceso se realiza secuencialmente:
      *
-     * @param remoteId ID remoto del movimiento en PocketBase.
-     * @return Movimiento local correspondiente o `null` si no existe.
-     */
-    suspend fun getByRemoteId(
-        remoteId: String
-    ): Mov? =
-        local.getByRemoteId(remoteId)
-
-    /**
-     * Obtiene todos los movimientos locales que se encuentran sincronizados,
-     * es decir, aquellos con un `remote_id` no nulo.
+     * 1. **Subida local → remoto**
+     *    Se envían todos los movimientos pendientes (`remote_id == null`).
      *
-     * @return Lista de movimientos sincronizados.
-     */
-    suspend fun getAllWithRemoteId(): List<Mov> =
-        local.getAllWithRemoteId()
-
-    /**
-     * Asocia un ID remoto a un movimiento local tras su creación en PocketBase.
+     * 2. **Descarga remoto → dispositivo**
+     *    Se obtienen todos los movimientos del usuario desde PocketBase.
      *
-     * @param localId ID interno de Room.
-     * @param remoteId ID generado por PocketBase.
-     */
-    suspend fun attachRemoteId(
-        localId: Int,
-        remoteId: String
-    ) =
-        local.attachRemoteId(localId, remoteId)
-
-    // ---------------------------------------------------------------------------------
-
-    /**
-     * Ejecuta el proceso completo de sincronización de movimientos simples.
+     * 3. **Fusión remoto/local (merge)**
+     *    - Se actualizan registros existentes.
+     *    - Se insertan los nuevos.
+     *    - Se detectan duplicados mediante `renew_hash`.
      *
-     * ### Flujo de sincronización
-     * 1. Obtiene el `userId` actual.
-     * 2. Sube todos los movimientos locales sin `remote_id`.
-     * 3. Descarga todos los movimientos remotos del usuario.
-     * 4. Fusiona cada movimiento remoto en la base de datos local.
-     * 5. Elimina localmente los movimientos que fueron borrados en el servidor.
+     * 4. **Eliminación local**
+     *    Cualquier movimiento local cuyo `remote_id` ya no exista en PocketBase
+     *    se elimina del dispositivo.
      *
-     * El proceso asegura la consistencia total entre local y remoto manteniendo
-     * la integridad referencial de categorías y movimientos recurrentes.
+     * Esta operación garantiza consistencia total entre dispositivos sin duplicar
+     * movimientos generados automáticamente por renovaciones recurrentes.
      */
     suspend fun sync() {
-        // 1) Obtener userId
-        val userId =
-            TokenDataStore.getUserId(context).first()
-        if (userId.isNullOrBlank()) return
+        val userId = TokenDataStore.getUserId(context).first() ?: return
 
-        // ----------------------------
-        // 2) SUBIR movimientos locales sin remote_id
-        // ----------------------------
-        val pendingLocal = getPendingToUpload()
-        for (mov in pendingLocal) {
+        // ---------- 1. Subir movimientos locales ----------
+        val pending = local.getPendingToUpload()
+        for (mov in pending) {
 
-            // Mapear categoría local → remoto
-            val catLocal = categoriaDao.getById(mov.categoria_id)
-            val categoriaPBId = catLocal?.remote_id ?: continue
+            val catPB = categoriaDao.getById(mov.categoria_id)?.remote_id ?: continue
+            val recurPB = mov.mov_recur_id?.let { movRecurDao.getById(it)?.remote_id }
 
-            // Mapear movimiento recurrente local → remoto
-            var movRecurPBId: String? = null
-            if (mov.mov_recur_id != null) {
-                val movRecurLocal = movRecurDao.getById(mov.mov_recur_id)
-                movRecurPBId = movRecurLocal?.remote_id
-            }
+            val created = remote.create(
+                userId = userId,
+                mov = mov,
+                categoriaPBId = catPB,
+                movRecurPBId = recurPB
+            )
 
-            try {
-                val created = remote.create(
-                    userId,
-                    mov,
-                    categoriaPBId,
-                    movRecurPBId
-                )
-                attachRemoteId(mov.id, created.id)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            local.attachRemoteId(mov.id, created.id)
         }
 
-        // ----------------------------
-        // 3) DESCARGAR movimientos remotos
-        // ----------------------------
+        // ---------- 2. Descargar movimientos ----------
         val remoteMovs = remote.fetchAll(userId)
 
-        // ----------------------------
-        // 4) MERGE remoto → local
-        // ----------------------------
+        val remoteIds = mutableSetOf<String>()
+
         for (rem in remoteMovs) {
+            remoteIds.add(rem.id)
 
-            // Mapear categoría remota → local
-            val catLocal = categoriaDao.getByRemoteId(rem.categoria_id) ?: continue
-            val categoriaLocalId = catLocal.id
+            // Detectar duplicados por renew_hash
+            rem.renew_hash?.let { hash ->
+                val localDup = local.getByRenewHash(hash)
+                if (localDup != null) {
+                    // Actualizar remote_id si no estaba
+                    if (localDup.remote_id == null)
+                        local.attachRemoteId(localDup.id, rem.id)
 
-            // Mapear movimiento recurrente remoto → local
-            var movRecurLocalId: Int? = null
-            if (rem.mov_recur_id != null) {
-                movRecurLocalId =
-                    movRecurDao.getByRemoteId(rem.mov_recur_id)?.id
+                    continue
+                }
             }
 
-            // Convertir tipo de movimiento
-            val tipoEnum =
-                TypeMov.valueOf((rem.tipo ?: "ERR").uppercase())
+            val localExisting = local.getByRemoteId(rem.id)
 
-            // Verificar si existe localmente
-            val localMatch = getByRemoteId(rem.id)
+            val tipoEnum = TypeMov.valueOf(rem.tipo!!.uppercase())
+            val catLocal = categoriaDao.getByRemoteId(rem.categoria_id) ?: continue
+            val recurLocal = rem.mov_recur_id?.let { movRecurDao.getByRemoteId(it) }?.id
 
-            if (localMatch == null) {
-                // Insertar nuevo
-                val nuevo = Mov(
-                    tipo = tipoEnum,
-                    importe = rem.importe,
-                    data_mov = rem.data_mov,
-                    descricion = rem.descricion,
-                    categoria_id = categoriaLocalId,
-                    mov_recur_id = movRecurLocalId,
-                    remote_id = rem.id
+            if (localExisting == null) {
+                local.insert(
+                    Mov(
+                        tipo = tipoEnum,
+                        importe = rem.importe,
+                        data_mov = rem.data_mov,
+                        descricion = rem.descricion,
+                        categoria_id = catLocal.id,
+                        mov_recur_id = recurLocal,
+                        renew_hash = rem.renew_hash,
+                        remote_id = rem.id
+                    )
                 )
-                local.insert(nuevo)
             } else {
-                // Actualizar existente
-                val actualizado = localMatch.copy(
-                    tipo = tipoEnum,
-                    importe = rem.importe,
-                    data_mov = rem.data_mov,
-                    descricion = rem.descricion,
-                    categoria_id = categoriaLocalId,
-                    mov_recur_id = movRecurLocalId
+                local.update(
+                    localExisting.copy(
+                        tipo = tipoEnum,
+                        importe = rem.importe,
+                        data_mov = rem.data_mov,
+                        descricion = rem.descricion,
+                        categoria_id = catLocal.id,
+                        mov_recur_id = recurLocal,
+                        renew_hash = rem.renew_hash
+                    )
                 )
-                local.update(actualizado)
             }
         }
 
-        // ----------------------------
-        // 5) BORRADOS remotos → eliminación local
-        // ----------------------------
-
-        val remoteIds = remoteMovs.map { it.id }.toSet()
-        val localWithRemote = getAllWithRemoteId()
-
+        // ---------- 3. Eliminar movimientos borrados ----------
+        val localWithRemote = local.getAllWithRemoteId()
         for (mov in localWithRemote) {
-
             if (mov.remote_id !in remoteIds) {
-
-                mov.remote_id?.let {
-                    local.deleteByRemoteId(it)
-                }
+                local.deleteByRemoteId(mov.remote_id!!)
             }
         }
     }
+
 }

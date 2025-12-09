@@ -6,80 +6,83 @@ import com.arcaneia.spendwise.data.entity.MovWithCategory
 import kotlinx.coroutines.flow.Flow
 
 /**
- * DAO (Data Access Object) encargado de gestionar las operaciones sobre la entidad [Mov]
- * y sus consultas relacionadas.
+ * DAO (Data Access Object) responsable de gestionar todas las operaciones
+ * relacionadas con la entidad [Mov], incluyendo:
  *
- * Esta interfaz define las operaciones CRUD básicas para los movimientos simples,
- * así como consultas avanzadas orientadas a:
+ * - Operaciones CRUD básicas.
+ * - Consultas avanzadas orientadas a estadísticas.
+ * - Integración completa con PocketBase para sincronización remota.
+ * - Soporte para notificaciones de movimientos recurrentes.
  *
- * - estadísticas (balance mensual)
- * - filtros por año y mes
- * - acceso reactivo mediante `Flow`
- * - soporte para sincronización con PocketBase
- *
- * Las consultas que exponen `Flow` permiten que la UI reaccione automáticamente
- * ante cualquier cambio en la tabla `mov`, mientras que las funciones marcadas
- * como `suspend` están pensadas para operaciones de sincronización o trabajo
- * en segundo plano.
+ * Este DAO constituye la principal capa de acceso a datos de los movimientos
+ * simples dentro de la base de datos local Room.
  */
 @Dao
 interface MovDao {
 
+    // ============================================================================
+    // CRUD BASE
+    // ============================================================================
+
     /**
-     * Inserta un nuevo movimiento en la base de datos.
+     * Inserta un nuevo movimiento en la base de datos local.
      *
-     * @param mov Instancia del movimiento a insertar.
-     * @return ID autogenerado por Room.
+     * @param mov Instancia a insertar.
+     * @return El ID autogenerado por Room.
      */
     @Insert
     suspend fun insert(mov: Mov): Long
 
     /**
-     * Actualiza los datos de un movimiento existente.
+     * Actualiza un movimiento existente.
      *
-     * @param mov Objeto [Mov] con los datos actualizados.
+     * @param mov Movimiento modificado.
      */
     @Update
     suspend fun update(mov: Mov)
 
     /**
-     * Elimina un movimiento de la base de datos.
+     * Elimina un movimiento.
      *
-     * @param mov Movimiento que se desea eliminar.
+     * @param mov Instancia a eliminar.
      */
     @Delete
     suspend fun delete(mov: Mov)
 
+    // ============================================================================
+    // ESTADÍSTICAS Y CONSULTAS PARA LA UI
+    // ============================================================================
+
     /**
-     * Obtiene el balance del mes actual (ingresos − gastos).
+     * Calcula el balance total del mes actual:
      *
-     * Se filtran los movimientos usando `strftime('%Y-%m', data_mov)` para limitar
-     * el cálculo al mes actual según la hora local del dispositivo.
+     * **Ingresos − Gastos**, considerando únicamente movimientos cuyo
+     * `data_mov` pertenezca al mes corriente.
      *
-     * @return Un [Flow] que emite automáticamente el balance actualizado.
+     * @return Un [Flow] con el valor del balance actualizado en tiempo real.
      */
     @Query("""
-    SELECT 
-        (IFNULL(SUM(CASE WHEN tipo = 'INGRESO' THEN importe END), 0) -
-         IFNULL(SUM(CASE WHEN tipo = 'GASTO' THEN importe END), 0))
-    FROM mov
-    WHERE strftime('%Y-%m', data_mov) = strftime('%Y-%m', 'now', 'localtime')
+        SELECT 
+            (IFNULL(SUM(CASE WHEN tipo = 'INGRESO' THEN importe END), 0) -
+             IFNULL(SUM(CASE WHEN tipo = 'GASTO' THEN importe END), 0))
+        FROM mov
+        WHERE strftime('%Y-%m', data_mov) = strftime('%Y-%m', 'now', 'localtime')
     """)
     fun getBalanceMesActual(): Flow<Double>
 
     /**
-     * Recupera todos los **años** en los que existen movimientos.
+     * Obtiene la lista de años en los que existen movimientos registrados.
      *
-     * @return Un [Flow] con los años ordenados de forma descendente.
+     * @return Un [Flow] con años únicos ordenados de forma descendente.
      */
     @Query("SELECT DISTINCT strftime('%Y', data_mov) AS year FROM mov ORDER BY year DESC")
     fun getYearsWithValues(): Flow<List<String>>
 
     /**
-     * Recupera todos los **meses** (formato MM) que contienen movimientos dentro de un año.
+     * Obtiene los meses que contienen movimientos para un año específico.
      *
-     * @param year Año (YYYY).
-     * @return Un [Flow] con los meses ordenados ascendentemente.
+     * @param year Año en formato YYYY.
+     * @return Un [Flow] con meses únicos ordenados ascendentemente.
      */
     @Query("""
         SELECT DISTINCT strftime('%m', data_mov) AS month
@@ -90,97 +93,124 @@ interface MovDao {
     fun getMonthsFromYear(year: String): Flow<List<String>>
 
     /**
-     * Obtiene los movimientos pertenecientes a un año y mes específicos,
-     * junto con el nombre de su categoría asociada (JOIN con tabla `categoria`).
+     * Obtiene todos los movimientos del año y mes especificados,
+     * acompañados del nombre de su categoría mediante JOIN.
      *
-     * Los resultados se devuelven ordenados por fecha descendente.
-     *
-     * @param year Año a filtrar.
-     * @param month Mes a filtrar.
-     * @return Un [Flow] con la lista de movimientos enriquecidos.
+     * @param year Año objetivo.
+     * @param month Mes objetivo.
+     * @return [Flow] con movimientos enriquecidos con su categoría.
      */
     @Query("""
-    SELECT mov.*, categoria.nome AS categoriaNome
-    FROM mov
-    INNER JOIN categoria ON mov.categoria_id = categoria.id
-    WHERE strftime('%Y', mov.data_mov) = :year
-      AND strftime('%m', mov.data_mov) = :month
-    ORDER BY mov.data_mov DESC
+        SELECT mov.*, categoria.nome AS categoriaNome
+        FROM mov
+        INNER JOIN categoria ON mov.categoria_id = categoria.id
+        WHERE strftime('%Y', mov.data_mov) = :year
+          AND strftime('%m', mov.data_mov) = :month
+        ORDER BY mov.data_mov DESC
     """)
-    fun getMovementsForYearMonth(year: String, month: String): Flow<List<MovWithCategory>>
+    fun getMovementsForYearMonth(
+        year: String,
+        month: String
+    ): Flow<List<MovWithCategory>>
 
-    // -------------------------------------------------------------------------
-    // 🔥 FUNCIONES ESPECIALIZADAS PARA SINCRONIZACIÓN (PocketBase)
-    // -------------------------------------------------------------------------
+    // ============================================================================
+    // SINCRONIZACIÓN POCKETBASE
+    // ============================================================================
 
     /**
-     * Devuelve todos los movimientos locales aún no sincronizados con el servidor,
-     * es decir, aquellos cuyo `remote_id` es null.
+     * Devuelve todos los movimientos que aún no han sido subidos al servidor,
+     * es decir, aquellos cuyo `remote_id` es `NULL`.
      *
-     * @return Lista de movimientos pendientes de sincronización.
+     * @return Lista de movimientos pendientes de sincronizar.
      */
     @Query("SELECT * FROM mov WHERE remote_id IS NULL")
     suspend fun getPendingToUpload(): List<Mov>
 
     /**
-     * Asocia un ID remoto obtenido del servidor al movimiento local correspondiente.
+     * Asocia un ID remoto asignado por PocketBase a un movimiento local.
      *
      * @param localId ID local del movimiento.
-     * @param remoteId ID remoto asignado por PocketBase.
+     * @param remoteId ID remoto generado en el servidor.
      */
     @Query("UPDATE mov SET remote_id = :remoteId WHERE id = :localId")
     suspend fun attachRemoteId(localId: Int, remoteId: String)
 
     /**
-     * Busca un movimiento local por su `remote_id`.
+     * Obtiene un movimiento local usando su ID remoto.
      *
-     * @param remoteId Identificador remoto.
+     * @param remoteId Identificador remoto del movimiento.
      * @return El movimiento encontrado o `null`.
      */
     @Query("SELECT * FROM mov WHERE remote_id = :remoteId LIMIT 1")
     suspend fun getByRemoteId(remoteId: String): Mov?
 
     /**
-     * Devuelve todos los movimientos que ya tienen asignado un `remote_id`,
-     * es decir, aquellos que han sido previamente sincronizados.
+     * Obtiene todos los movimientos que ya han sido sincronizados,
+     * es decir, aquellos que tienen un `remote_id` asignado.
      *
-     * @return Lista de movimientos sincronizados.
+     * @return Lista completa de movimientos sincronizados.
      */
     @Query("SELECT * FROM mov WHERE remote_id IS NOT NULL")
     suspend fun getAllWithRemoteId(): List<Mov>
 
     /**
-     * Recupera todos los movimientos locales sin filtrar.
+     * Devuelve todos los movimientos locales sin filtros.
      *
-     * Útil para depuración, exportaciones o sincronización completa.
+     * Usado en sincronización y exportación.
      */
     @Query("SELECT * FROM mov")
     suspend fun getAll(): List<Mov>
 
     /**
-     * Elimina un movimiento local usando su ID remoto.
+     * Elimina un movimiento local cuyo `remote_id` coincide
+     * con un registro eliminado en PocketBase.
      *
-     * Usado para reflejar borrados remotos en PocketBase.
-     *
-     * @param remoteId ID remoto del movimiento a eliminar.
+     * @param remoteId ID remoto a eliminar.
      */
     @Query("DELETE FROM mov WHERE remote_id = :remoteId")
     suspend fun deleteByRemoteId(remoteId: String)
 
     /**
-     * Recupera un movimiento por su ID local.
-     *
-     * @param id Identificador local del movimiento.
-     * @return El movimiento encontrado o `null`.
+     * Obtiene un movimiento por su ID local.
      */
     @Query("SELECT * FROM mov WHERE id = :id LIMIT 1")
     suspend fun getById(id: Int): Mov?
 
     /**
-     * Recupera *todos* los movimientos en un flujo reactivo.
-     *
-     * @return Un [Flow] que emite la lista completa al cambiar la tabla.
+     * Devuelve todos los movimientos como flujo reactivo.
      */
     @Query("SELECT * FROM mov")
     fun getAllFlow(): Flow<List<Mov>>
+
+    // ============================================================================
+    // NOTIFICACIONES DE MOVIMIENTOS RECURRENTES
+    // ============================================================================
+
+    /**
+     * Obtiene todos los movimientos que aún no han sido notificados.
+     *
+     * Usado por [RenewMovsRecurWorker] para mostrar notificaciones locales.
+     *
+     * @return Lista de movimientos sin notificar.
+     */
+    @Query("SELECT * FROM mov WHERE notificado = 0 ORDER BY data_mov ASC")
+    suspend fun getPendingNotifications(): List<Mov>
+
+    /**
+     * Marca un movimiento como notificado.
+     *
+     * @param id ID local del movimiento.
+     */
+    @Query("UPDATE mov SET notificado = 1 WHERE id = :id")
+    suspend fun markAsNotified(id: Int)
+
+    /**
+     * Busca un movimiento por su `renew_hash`, usado para detectar duplicados
+     * durante la sincronización de renovaciones recurrentes.
+     *
+     * @param hash Valor del hash único generado en la renovación.
+     * @return Movimiento encontrado o `null`.
+     */
+    @Query("SELECT * FROM mov WHERE renew_hash = :hash LIMIT 1")
+    suspend fun getByRenewHash(hash: String): Mov?
 }

@@ -2,44 +2,71 @@ package com.arcaneia.spendwise.data.workers
 
 import android.content.Context
 import androidx.work.CoroutineWorker
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.arcaneia.spendwise.apis.data.model.CategoriaRemoteDataSource
-import com.arcaneia.spendwise.data.database.AppDatabase
 import com.arcaneia.spendwise.apis.data.model.CategoriaSyncRepository
-import com.arcaneia.spendwise.apis.data.model.MovRemoteDataSource
-import com.arcaneia.spendwise.apis.data.model.MovSyncRepository
 import com.arcaneia.spendwise.apis.data.model.MovRecurRemoteDataSource
 import com.arcaneia.spendwise.apis.data.model.MovRecurSyncRepository
+import com.arcaneia.spendwise.apis.data.model.MovRemoteDataSource
+import com.arcaneia.spendwise.apis.data.model.MovSyncRepository
+import com.arcaneia.spendwise.data.database.AppDatabase
 
 /**
- * Worker encargado de ejecutar el proceso completo de sincronización entre la base de datos local
- * (Room) y el backend PocketBase.
+ * Worker encargado de realizar la **sincronización completa** de la aplicación con PocketBase.
  *
- * Este worker se ejecuta en segundo plano mediante WorkManager y realiza la sincronización en el
- * orden correcto para mantener la integridad referencial:
+ * Su misión es mantener la base de datos local perfectamente alineada con el servidor,
+ * siguiendo un orden estricto para evitar inconsistencias y errores de integridad.
  *
- * ### Orden de sincronización:
- * 1. **Categorías**
- *    Deben sincronizarse primero ya que los movimientos simples y recurrentes dependen de ellas.
+ * ---
+ * ## 🔄 Flujo completo de sincronización
  *
- * 2. **Movimientos Recurrentes**
- *    No dependen de categorías sincronizadas pero sí deben estar listas antes de los movimientos simples,
- *    ya que estos pueden enlazar con movimientos recurrentes mediante `mov_recur_id`.
+ * La sincronización se ejecuta siempre en el siguiente orden:
  *
- * 3. **Movimientos Simples**
- *    Requieren que tanto las categorías como los movimientos recurrentes ya estén sincronizados,
- *    puesto que deben convertir IDs locales en IDs remotos.
+ * ### **1. Categorías**
+ * Es obligatorio empezar por aquí, ya que:
+ * - Los movimientos simples y recurrentes dependen de las categorías.
+ * - Se asegura que las claves foráneas apunten a registros válidos.
  *
- * Cada fase utiliza su respectivo repositorio de sincronización, que encapsula la lógica de:
- * - Subida de registros locales sin `remote_id`.
- * - Descarga y fusión de registros remotos.
- * - Eliminación de registros locales obsoletos.
+ * ### **2. Movimientos Recurrentes**
+ * - Descarga y actualiza movimientos recurrentes desde PocketBase.
+ * - Subida de cambios locales pendientes.
+ * - Refleja eliminaciones remotas.
  *
- * Si ocurre un error durante el proceso, el worker devuelve `Result.retry()` para que WorkManager
- * reintente automáticamente según la política configurada.
+ * ### **3. Movimientos Simples**
+ * - Sincroniza todos los movimientos normales.
+ * - Soporta duplicados mediante `renew_hash`.
+ * - Mantiene relación con categorías y mov_recur correctamente.
  *
- * @property context Contexto de la aplicación.
- * @property workerParams Parámetros proporcionados por WorkManager.
+ * ---
+ * ## 🔔 Lanzar renovaciones automáticas
+ *
+ * Una vez finalizada la sincronización principal, el Worker:
+ *
+ * 1. **Ejecuta `RenewMovsRecurWorker` en segundo plano**, que se encarga de:
+ *    - Detectar renovaciones pendientes
+ *    - Crear movimientos recurrentes (si toca)
+ *    - Subirlos al servidor
+ *    - Notificar al usuario
+ *    - Marcar como notificados
+ *
+ * 2. Esto garantiza que **cada dispositivo** reciba sus notificaciones locales,
+ * incluso si las renovaciones fueron creadas en otro móvil.
+ *
+ * ---
+ * ## ✔ Garantías del SyncWorker
+ *
+ * - Mantiene el orden correcto entre colecciones dependientes.
+ * - Evita fallos de claves foráneas.
+ * - Asegura paridad entre local y remoto.
+ * - Mantiene lógica de negocio aislada en repositorios de sincronización.
+ * - Tras sincronizar, dispara el Worker de renovaciones sin bloquear la UI.
+ *
+ * ---
+ *
+ * @constructor Recibe el contexto y parámetros del Worker.
+ * @see RenewMovsRecurWorker Worker que procesa renovaciones y notificaciones.
  */
 class SyncWorker(
     private val context: Context,
@@ -47,16 +74,16 @@ class SyncWorker(
 ) : CoroutineWorker(context, workerParams) {
 
     /**
-     * Ejecuta el proceso completo de sincronización dentro de un entorno basado en corrutinas.
+     * Ejecuta la sincronización completa con PocketBase.
      *
-     * @return [Result.success] si la sincronización finaliza correctamente,
-     *         [Result.retry] si ocurre una excepción durante el proceso.
+     * Si ocurre un error en cualquier punto, se retorna `Result.retry()` para que
+     * WorkManager vuelva a intentarlo más tarde de manera automática.
      */
     override suspend fun doWork(): Result {
         return try {
             val db = AppDatabase.getDatabase(context)
 
-            // 1. Dependencias de Categoría
+            // --- Dependencias de Categoría ---
             val categoriaDao = db.categoriaDao()
             val remoteCategoria = CategoriaRemoteDataSource(context)
             val categoriaSyncRepository = CategoriaSyncRepository(
@@ -65,7 +92,7 @@ class SyncWorker(
                 context = context
             )
 
-            // 2. Dependencias de Movimiento Recurrente
+            // --- Dependencias Mov. Recurrentes ---
             val movRecurDao = db.movRecurDao()
             val remoteMovRecur = MovRecurRemoteDataSource(context)
             val movRecurSyncRepository = MovRecurSyncRepository(
@@ -74,28 +101,49 @@ class SyncWorker(
                 context = context
             )
 
-            // 3. Dependencias de Movimiento Simple
+            // --- Dependencias Mov. Simples ---
             val movDao = db.movDao()
             val remoteMov = MovRemoteDataSource(context)
-            val movSyncRepository =
-                MovSyncRepository(
-                    local = movDao,
-                    remote = remoteMov,
-                    categoriaDao = categoriaDao,
-                    movRecurDao = movRecurDao,
-                    context = context
-                )
+            val movSyncRepository = MovSyncRepository(
+                local = movDao,
+                remote = remoteMov,
+                categoriaDao = categoriaDao,
+                movRecurDao = movRecurDao,
+                context = context
+            )
 
-            // --- EJECUCIÓN SECUENCIAL DE LA SINCRONIZACIÓN ---
+            // ======================================================
+            // =============== EJECUCIÓN DE SYNC ====================
+            // ======================================================
 
-            // A. Sincronización de categorías (DEBE ir primero)
+            // A) Categorías primero (necesaria para todo lo demás)
             categoriaSyncRepository.sync()
 
-            // B. Sincronización de movimientos recurrentes
+            // B) Movimientos recurrentes
             movRecurSyncRepository.sync()
 
-            // C. Sincronización de movimientos simples (depende de categorías y recurrentes)
+            // C) Movimientos simples
             movSyncRepository.sync()
+
+
+            // ======================================================
+            // =========== EJECUTAR AUTO-RENOVACIÓN =================
+            // ======================================================
+            // Este Worker procesará:
+            //   - Renovaciones rezagadas
+            //   - Notificaciones en ESTE dispositivo
+            //
+            // Garantiza que:
+            //   ✔ No se dupliquen renovaciones (el Worker verifica fechas)
+            //   ✔ Todos los dispositivos notifiquen localmente
+            //   ✔ Las renovaciones creadas en otro móvil se notifiquen aquí también
+            // ======================================================
+
+            val renewWorker =
+                OneTimeWorkRequestBuilder<RenewMovsRecurWorker>().build()
+
+            WorkManager.getInstance(context)
+                .enqueue(renewWorker)
 
             Result.success()
 
