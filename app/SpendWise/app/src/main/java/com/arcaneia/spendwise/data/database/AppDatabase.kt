@@ -31,7 +31,7 @@ import com.arcaneia.spendwise.data.entity.MovRecur
  */
 @Database(
     entities = [Categoria::class, Mov::class, MovRecur::class],
-    version = 4,
+    version = 1,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

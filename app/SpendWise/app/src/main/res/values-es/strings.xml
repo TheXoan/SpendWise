@@ -34,7 +34,7 @@
     <string name="value">Importe</string>
     <string name="date_movement">Fecha del movimiento</string>
     <string name="choose_date">Seleccionar fecha</string>
-    <string name="save">GUARDAR</string>
+    <string name="save">Guardar</string>
     <string name="cancel_uppercase">CANCELAR</string>
     <string name="new_income">Nuevo ingreso</string>
     <string name="add_new_income">Añade un nuevo ingreso</string>

@@ -15,24 +15,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import com.arcaneia.spendwise.apis.data.model.CategoriaRemoteDataSource
 import com.arcaneia.spendwise.apis.data.model.CategoriaSyncRepository
+import com.arcaneia.spendwise.apis.data.model.MovRecurRemoteDataSource
+import com.arcaneia.spendwise.apis.data.model.MovRemoteDataSource
 
 /**
- * Actividad principal de la aplicación.
+ * Actividad principal de la aplicación y punto de entrada del sistema.
  *
- * Se encarga de:
- * - Inicializar la base de datos y los repositorios.
- * - Crear manualmente los ViewModels utilizados globalmente por la app.
- * - Configurar y mostrar la UI de Jetpack Compose.
- * - Ejecutar autenticación biométrica previa antes de mostrar contenido sensible.
+ * Esta clase es responsable de:
  *
- * Es el punto de entrada de toda la navegación y el contenedor raíz del ciclo de vida.
+ * - Inicializar la base de datos local (Room) y los repositorios asociados.
+ * - Crear manualmente los ViewModels globales utilizados por toda la app.
+ * - Configurar y renderizar la interfaz mediante Jetpack Compose.
+ * - Ejecutar autenticación biométrica previa para proteger los datos sensibles.
+ * - Activar la navegación principal una vez superada la autenticación.
+ *
+ * `MainActivity` funciona como contenedor raíz del ciclo de vida y coordina
+ * todos los componentes necesarios para iniciar la aplicación en un estado seguro.
  */
 class MainActivity : AppCompatActivity() {
 
     /**
-     * ViewModel que controla el estado de autenticación entre SplashScreen y MainScreen.
+     * ViewModel encargado de gestionar el estado de autenticación de la aplicación.
      *
-     * Se inicializa en `onCreate()` antes de montar la UI.
+     * Se inicializa manualmente en `onCreate()` ya que se usa antes de montar la UI.
      */
     private lateinit var authViewModel: AuthViewModel
 
@@ -40,18 +45,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         /**
-         * Se inicializa el ViewModel encargado del estado de autenticación.
+         * Inicialización del ViewModel que maneja el estado de autenticación.
          */
         authViewModel = AuthViewModel()
 
         // --- Inicialización de base de datos y repositorios ---
+
         /**
-         * Instancia principal de la base de datos Room utilizada en toda la app.
+         * Instancia de la base de datos Room utilizada globalmente.
          */
         val db = AppDatabase.getDatabase(application)
 
         /**
-         * Repositorios responsables de gestionar las operaciones con Mov, Categoria y movimientos recurrentes.
+         * Repositorios para gestionar Movimientos, Categorías y Movimientos Recurrentes.
          */
         val movRepository = MovRepository(db.movDao())
         val categoriaRepository = CategoriaRepository(db.categoriaDao())
@@ -61,34 +67,50 @@ class MainActivity : AppCompatActivity() {
         )
 
         /**
-         * DataSource remoto encargado de comunicarse con PocketBase.
+         * DataSources remotos conectados con PocketBase.
          */
         val categoriaRemoteDataSource = CategoriaRemoteDataSource(this)
-
-        // --- ViewModels principales usados en la app ---
-        /**
-         * Inicialización manual de ViewModels necesarios para las pantallas principales.
-         * (Se realiza sin ViewModelProvider porque no dependen del ciclo de vida del Activity).
-         */
-        val movViewModel = MovViewModel(movRepository)
-        val categoriaViewModel = CategoriaViewModel(categoriaRepository, categoriaRemoteDataSource)
-        val movRecurViewModel = MovRecurViewModel(movRecurRepository)
-        val loginViewModel = LoginViewModel()
+        val movRemoteDataSource = MovRemoteDataSource(this)
+        val movRecurRemoteDataSource = MovRecurRemoteDataSource(this)
 
         /**
-         * Repositorio que sincroniza categorías entre la base local y PocketBase.
+         * Repositorio dedicado exclusivamente a sincronizar categorías
+         * entre la base de datos local y PocketBase.
          */
         val categoriaSyncRepository = CategoriaSyncRepository(
             local = db.categoriaDao(),
-            remote = CategoriaRemoteDataSource(
-                this
-            ),
+            remote = CategoriaRemoteDataSource(this),
             context = this
         )
 
-        // --- Renderizado de UI con Jetpack Compose ---
+        // --- Inicialización manual de ViewModels ---
+
         /**
-         * Monta el contenido de la aplicación aplicando el tema visual y la navegación principal.
+         * ViewModels usados en las principales pantallas de la aplicación.
+         *
+         * Se crean manualmente ya que no dependen del ciclo de vida del Activity,
+         * sino de la base de datos y la sincronización remota.
+         */
+        val movViewModel = MovViewModel(
+            movRepository,
+            movRemoteDataSource,
+            db.categoriaDao(),
+            db.movRecurDao(),
+            this
+        )
+        val categoriaViewModel = CategoriaViewModel(categoriaRepository, categoriaRemoteDataSource, this)
+        val movRecurViewModel = MovRecurViewModel(
+            movRecurRepository,
+            movRecurRemoteDataSource,
+            db.movRecurDao(),
+            this
+        )
+        val loginViewModel = LoginViewModel()
+
+        // --- Renderizado de la UI mediante Jetpack Compose ---
+
+        /**
+         * Renderiza la UI inicial usando el tema definido y activa la navegación de la app.
          */
         setContent {
             SpendWiseTheme(darkTheme = true) {
@@ -103,21 +125,24 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Lanzamos autenticación biométrica antes de dar acceso
+        // Autenticación biométrica obligatoria
         authenticateUser()
     }
 
     /**
-     * Inicia el proceso de autenticación biométrica o mediante PIN/credenciales del dispositivo.
+     * Ejecuta el proceso de autenticación biométrica o credenciales del dispositivo.
      *
-     * Flujo:
-     * 1. Verifica si el dispositivo puede usar biometría o credenciales locales.
-     * 2. Si no puede, muestra un mensaje y no continúa con la autenticación.
-     * 3. Si es posible, configura un `BiometricPrompt` para iniciar la autenticación.
-     * 4. Gestiona los callbacks para éxito, error o fallos.
+     * ### Flujo interno:
+     * 1. Verifica si el dispositivo soporta biometría o seguridad por PIN/patrón/contraseña.
+     * 2. En caso de no estar disponible, muestra un mensaje apropiado.
+     * 3. Si está disponible, configura un `BiometricPrompt`.
+     * 4. Maneja callbacks de éxito, error y fallo.
      *
-     * Si la autenticación es correcta → activa la navegación normal.
-     * Si falla → la app se cierra inmediatamente por seguridad.
+     * Si la autenticación es exitosa:
+     * - Se permite la navegación normal de la app.
+     *
+     * Si falla o el usuario cancela:
+     * - La aplicación se cierra inmediatamente por seguridad.
      */
     private fun authenticateUser() {
         val biometricManager = BiometricManager.from(this)
@@ -127,7 +152,6 @@ class MainActivity : AppCompatActivity() {
                     BiometricManager.Authenticators.DEVICE_CREDENTIAL
         )
 
-        // Validación del hardware biométrico o credenciales del dispositivo
         if (canAuth != BiometricManager.BIOMETRIC_SUCCESS) {
             val msg = when (canAuth) {
                 BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
@@ -142,11 +166,14 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        // Executor para callbacks biométricos
+        // Executor para los callbacks biométricos
         val executor = ContextCompat.getMainExecutor(this)
 
         /**
-         * Configuración del prompt biométrico y manejo de callbacks.
+         * Objeto encargado de manejar los eventos de la autenticación biométrica:
+         * - Éxito
+         * - Error crítico
+         * - Fallo puntual (huella mal colocada, etc.)
          */
         val prompt = BiometricPrompt(
             this,
@@ -154,10 +181,9 @@ class MainActivity : AppCompatActivity() {
             object : BiometricPrompt.AuthenticationCallback() {
 
                 /**
-                 * Callback cuando la autenticación es exitosa.
+                 * Invocado cuando la autenticación se ha completado correctamente.
                  *
-                 * - Marca al usuario como autenticado.
-                 * - Muestra un mensaje de éxito.
+                 * Se asigna el estado de autenticación en el ViewModel y se muestra un mensaje.
                  */
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     authViewModel.setAuthenticated(true)
@@ -169,29 +195,27 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 /**
-                 * Callback cuando ocurre un error en la autenticación.
+                 * Se ejecuta cuando la autenticación arroja un error no recuperable.
                  *
-                 * - Muestra el mensaje de error.
-                 * - Termina completamente la aplicación si la autenticación no se completa.
+                 * Finaliza completamente la aplicación para evitar acceso indebido.
                  */
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     Toast.makeText(
                         applicationContext,
-                        applicationContext.getString(R.string.error) + ": " + "$errString",
+                        applicationContext.getString(R.string.error) + ": $errString",
                         Toast.LENGTH_SHORT
                     ).show()
 
                     authViewModel.setAuthenticated(false)
 
-                    // Cerrar la app si el usuario aborta la autenticación
                     finishAndRemoveTask()
                     kotlin.system.exitProcess(0)
                 }
 
                 /**
-                 * Callback cuando la autenticación falla pero sin error crítico.
+                 * Se llama cuando la autenticación falla pero sin errores graves.
                  *
-                 * Se muestra un mensaje, pero la autenticación continúa activa.
+                 * Se avisa al usuario sin cerrar el prompt.
                  */
                 override fun onAuthenticationFailed() {
                     Toast.makeText(
@@ -203,7 +227,7 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        // Configuración del prompt
+        // Configuración visual del diálogo biométrico
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(applicationContext.getString(R.string.auth_required))
             .setSubtitle(applicationContext.getString(R.string.use_authenticated_method))

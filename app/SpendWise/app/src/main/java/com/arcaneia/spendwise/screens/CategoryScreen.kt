@@ -147,19 +147,17 @@ fun CategoryScreen(
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // BOTÓN PARA CREAR O ACTUALIZAR CATEGORÍAS
         Button(
             onClick = {
                 scope.launch {
                     if (nameCategory != "" && idSelectedCategory != 0 && idSelectedCategory != null)  {
                         val categoria = Categoria(id = idSelectedCategory!!, nome = nameCategory, tipo = "")
-                        db.categoriaDao().update(categoria)
+                        categoriaViewModel.update(categoria) // 🔹 usar ViewModel
                         Toast.makeText(context, context.getString(R.string.success_category_update), Toast.LENGTH_SHORT).show()
-//                        applicationContext.getString(R.string.new_renewal)
                         nameCategory = ""
                     } else if (nameCategory != "" ){
                         val categoria = Categoria(nome = nameCategory, tipo = "")
-                        db.categoriaDao().insert(categoria)
+                        categoriaViewModel.insert(categoria) // 🔹 usar ViewModel
                         Toast.makeText(context, context.getString(R.string.success_category_created), Toast.LENGTH_SHORT).show()
                         nameCategory = ""
                     } else {

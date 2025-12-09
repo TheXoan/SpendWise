@@ -1,76 +1,169 @@
 package com.arcaneia.spendwise.data.model
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arcaneia.spendwise.apis.data.model.MovRecurRemoteDataSource
+import com.arcaneia.spendwise.data.dao.MovRecurDao
 import com.arcaneia.spendwise.data.entity.MovRecur
 import com.arcaneia.spendwise.data.repository.MovRecurRepository
-import kotlinx.coroutines.flow.SharingStarted
+import com.arcaneia.spendwise.data.datastore.TokenDataStore
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel responsable de gestionar las operaciones relacionadas con los
- * movimientos recurrentes ([MovRecur]) dentro de la aplicación.
+ * ViewModel encargado de gestionar los **movimientos recurrentes** (`MovRecur`)
+ * aplicando un enfoque **offline-first con sincronización instantánea**.
  *
- * Esta clase actúa como capa intermedia entre la interfaz de usuario y el repositorio
- * ([MovRecurRepository]), permitiendo realizar operaciones de inserción,
- * actualización y eliminación sin exponer la lógica interna.
+ * La lógica principal del ViewModel es:
  *
- * Además, mantiene un flujo observable con la lista de movimientos recurrentes
- * ordenados por ID descendente, utilizando `StateFlow` para aportar un estado
- * reactivo y orientado a la UI.
+ * - Aplicar todos los cambios inmediatamente en la base de datos local (Room).
+ * - Sincronizar la operación con PocketBase en segundo plano.
+ * - Mantener un `StateFlow` con la lista de movimientos recurrentes para la UI.
  *
- * @property repository Instancia del repositorio encargado de acceder y gestionar
- * los datos persistidos de movimientos recurrentes.
+ * De este modo, la interfaz se mantiene fluida y consistente incluso en modo offline.
+ *
+ * ### Flujo de sincronización aplicado:
+ * - **Insert:** local → remoto → actualización con `remote_id`.
+ * - **Update:** local → remoto (solo si tiene `remote_id`).
+ * - **Delete:** remoto → local.
+ *
+ * @property repository Repositorio que expone consultas reactivas (`Flow`) para movimientos recurrentes.
+ * @property remoteDataSource Cliente remoto encargado de comunicarse con PocketBase.
+ * @property dao DAO directo para operaciones puntuales sobre Room.
+ * @property appContext Contexto necesario para obtener el `userId` desde `TokenDataStore`.
  */
-class MovRecurViewModel(private val repository: MovRecurRepository) : ViewModel() {
+class MovRecurViewModel(
+    private val repository: MovRecurRepository,
+    private val remoteDataSource: MovRecurRemoteDataSource,
+    private val dao: MovRecurDao,
+    private val appContext: Context
+) : ViewModel() {
 
     /**
-     * Inserta un nuevo movimiento recurrente en la base de datos.
-     *
-     * La operación se ejecuta dentro de `viewModelScope` para asegurar que se
-     * respete el ciclo de vida del ViewModel y evitar fugas de memoria.
-     *
-     * @param m Objeto [MovRecur] que se desea insertar.
+     * Flujo interno con la lista de movimientos recurrentes almacenados en Room.
      */
-    fun insert(m: MovRecur) = viewModelScope.launch { repository.insert(m) }
+    private val _movRecur = MutableStateFlow<List<MovRecur>>(emptyList())
 
     /**
-     * Elimina un movimiento recurrente de la base de datos.
-     *
-     * La operación se ejecuta de forma asíncrona a través de `viewModelScope`.
-     *
-     * @param m Movimiento recurrente a eliminar.
+     * Flujo observable por la UI que expone la lista de movimientos recurrentes.
      */
-    fun delete(m: MovRecur) = viewModelScope.launch { repository.delete(m) }
+    val movRecur: StateFlow<List<MovRecur>> = _movRecur
+
+    init {
+        // Observación continua de los movimientos recurrentes en Room
+        viewModelScope.launch {
+            repository.getAllMovRecur().collect {
+                _movRecur.value = it
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // INSERT (local → remoto) offline-first
+    // -------------------------------------------------------------------------
 
     /**
-     * Actualiza los datos de un movimiento recurrente existente en la base de datos.
+     * Inserta un movimiento recurrente **localmente de forma inmediata**
+     * y luego intenta sincronizarlo con el servidor PocketBase.
      *
-     * Se utiliza una corrutina ligada al ciclo de vida del ViewModel para
-     * realizar la operación de manera segura.
+     * Flujo:
+     * 1. Se inserta en Room.
+     * 2. Se crea el registro en PocketBase.
+     * 3. Se actualiza el registro local con su `remote_id`.
      *
-     * @param m Movimiento recurrente con los nuevos valores a actualizar.
+     * @param m Movimiento recurrente a insertar.
      */
-    fun update(m: MovRecur) = viewModelScope.launch { repository.update(m) }
+    fun insert(m: MovRecur) = viewModelScope.launch {
+
+        // 1) INSERT LOCAL
+        val localId = dao.insert(m).toInt()
+
+        try {
+            val userId = TokenDataStore.getUserId(appContext).first()!!
+
+            // 2) Crear en remoto
+            val created = remoteDataSource.create(userId, m)
+
+            // 3) Guardar remote_id en local
+            dao.getById(localId)?.let { saved ->
+                dao.update(saved.copy(remote_id = created.id))
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // UPDATE (local → remoto)
+    // -------------------------------------------------------------------------
 
     /**
-     * Flujo observable que emite la lista completa de movimientos recurrentes.
+     * Actualiza un movimiento recurrente tanto en la base de datos local como en PocketBase.
      *
-     * Los valores se obtienen desde el repositorio mediante `getAllMovRecur()`,
-     * y se convierten en un `StateFlow` utilizando `stateIn` para asegurar que:
+     * - Primero se obtiene el registro actual para preservar el `remote_id`.
+     * - Se actualiza en Room.
+     * - Si ya estaba sincronizado, se aplica la actualización en el servidor.
      *
-     * - Se mantenga siempre un valor inicial.
-     * - La UI pueda suscribirse sin riesgo de recibir `null`.
-     * - Se comparta el estado mientras existan suscriptores activos.
-     *
-     * La lista está ordenada por *id* en orden descendente.
+     * @param m Movimiento recurrente con los valores actualizados.
      */
-    val movRecurList: StateFlow<List<MovRecur>> = repository.getAllMovRecur()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
+    fun update(m: MovRecur) = viewModelScope.launch {
+
+        // Obtener original (preservar remote_id)
+        val saved = dao.getById(m.id) ?: return@launch
+
+        val toSave = saved.copy(
+            nome = m.nome,
+            importe = m.importe,
+            periodicidade = m.periodicidade,
+            data_ini = m.data_ini,
+            data_rnv = m.data_rnv,
+            tipo = m.tipo
         )
+
+        try {
+            // 1) UPDATE LOCAL
+            dao.update(toSave)
+
+            // 2) UPDATE REMOTO
+            toSave.remote_id?.let { remoteId ->
+                remoteDataSource.update(remoteId, toSave)
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // DELETE (local → remoto)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Elimina un movimiento recurrente tanto local como remotamente.
+     *
+     * Flujo:
+     * - Si el movimiento tiene `remote_id`, se elimina en PocketBase.
+     * - Luego se elimina de Room.
+     *
+     * @param m Movimiento recurrente que se desea eliminar.
+     */
+    fun delete(m: MovRecur) = viewModelScope.launch {
+
+        try {
+            // 1) DELETE REMOTO (si corresponde)
+            m.remote_id?.let { remoteId ->
+                remoteDataSource.delete(remoteId)
+            }
+
+            // 2) DELETE LOCAL
+            dao.delete(m)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }

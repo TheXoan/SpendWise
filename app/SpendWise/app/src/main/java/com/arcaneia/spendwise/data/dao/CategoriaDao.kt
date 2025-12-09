@@ -13,10 +13,14 @@ import kotlinx.coroutines.flow.Flow
  * DAO (Data Access Object) para gestionar todas las operaciones relacionadas
  * con la entidad [Categoria] dentro de la base de datos Room.
  *
- * Proporciona métodos para insertar, actualizar, eliminar y consultar categorías.
- * Algunos métodos son `suspend` ya que realizan operaciones de escritura en la base
- * de datos, mientras que las consultas que devuelven flujos usan `Flow` para
- * observar cambios en tiempo real.
+ * Incluye operaciones CRUD básicas y un conjunto de métodos especializados
+ * para la sincronización con el backend PocketBase, permitiendo mapear
+ * categorías locales con sus equivalentes remotos mediante `remote_id`.
+ *
+ * Este DAO está optimizado para funcionar en entornos offline-first,
+ * garantizando que cada categoría pueda ser insertada, actualizada,
+ * consultada o marcada como sincronizada dependiendo del estado
+ * de la base de datos local y remota.
  */
 @Dao
 interface CategoriaDao {
@@ -24,7 +28,8 @@ interface CategoriaDao {
     /**
      * Inserta una nueva categoría en la base de datos.
      *
-     * Si ocurre un conflicto (por ejemplo, IDs repetidos), se reemplaza el registro existente.
+     * Si ocurre un conflicto (por ejemplo, IDs repetidos),
+     * el registro se reemplaza usando `OnConflictStrategy.REPLACE`.
      *
      * @param categoria Entidad a insertar.
      * @return El ID autogenerado de la fila insertada.
@@ -49,11 +54,12 @@ interface CategoriaDao {
     suspend fun delete(categoria: Categoria)
 
     /**
-     * Recupera todas las categorías excepto la de ID 1.
+     * Recupera todas las categorías excepto la de ID 1,
+     * que corresponde a la categoría reservada **"Recurrente"**.
      *
-     * @return Un flujo con la lista de categorías actualizada en tiempo real.
+     * @return Un flujo reactivo con la lista de categorías.
      */
-    @Query("SELECT * FROM categoria WHERE id != 1")
+    @Query("SELECT * FROM categoria WHERE id != 1 ORDER BY id ASC")
     fun getAllCategories(): Flow<List<Categoria>>
 
     /**
@@ -65,22 +71,24 @@ interface CategoriaDao {
     suspend fun deleteById(categoriaId: Int)
 
     /**
-     * Busca una categoría por su ID.
+     * Busca una categoría por su ID local.
      *
-     * @param id Identificador local.
-     * @return La categoría encontrada o null si no existe.
+     * @param id Identificador autogenerado por Room.
+     * @return Categoría encontrada, o `null` si no existe.
      */
     @Query("SELECT * FROM categoria WHERE id = :id LIMIT 1")
     suspend fun getById(id: Int): Categoria?
 
 
-    // --------------------------
-    // 🔥 FUNCIONES PARA SYNC
-    // --------------------------
+    // -------------------------------------------------------------------------
+    // 🔥 FUNCIONES PARA SINCRONIZACIÓN (PocketBase)
+    // -------------------------------------------------------------------------
 
     /**
-     * Obtiene todas las categorías locales que aún no fueron subidas al servidor,
+     * Devuelve todas las categorías locales que aún no se han subido al servidor,
      * es decir, aquellas cuyo `remote_id` es null.
+     *
+     * Esta lista se utiliza durante la fase de *subida* en procesos de sincronización.
      *
      * @return Lista de categorías pendientes de sincronización.
      */
@@ -88,27 +96,36 @@ interface CategoriaDao {
     suspend fun getPendingToUpload(): List<Categoria>
 
     /**
-     * Busca una categoría local usando su ID remoto.
+     * Busca una categoría local mediante su identificador remoto (`remote_id`).
      *
-     * @param remoteId Identificador asignado por el servidor (PocketBase).
-     * @return La categoría correspondiente o null si no existe.
+     * Se usa durante el proceso de fusión (merge) entre los datos remotos
+     * y locales para evitar duplicados.
+     *
+     * @param remoteId ID asignado por PocketBase.
+     * @return La categoría local correspondiente o `null` si no existe.
      */
     @Query("SELECT * FROM categoria WHERE remote_id = :remoteId LIMIT 1")
     suspend fun getByRemoteId(remoteId: String): Categoria?
 
     /**
-     * Obtiene todas las categorías que ya tienen un ID remoto asignado.
+     * Obtiene todas las categorías que ya tienen asignado un `remote_id`,
+     * lo cual indica que ya han sido sincronizadas con el servidor.
      *
-     * @return Lista de categorías sincronizadas con PocketBase.
+     * Esta lista es fundamental para detectar eliminaciones remotas.
+     *
+     * @return Lista de categorías sincronizadas.
      */
     @Query("SELECT * FROM categoria WHERE remote_id IS NOT NULL")
     suspend fun getAllWithRemoteId(): List<Categoria>
 
     /**
-     * Asigna un `remote_id` a una categoría previamente insertada en la base de datos local.
+     * Asigna un `remote_id` a una categoría almacenada en la base de datos local.
      *
-     * @param localId ID local de la categoría.
-     * @param remoteId ID remoto obtenido del servidor.
+     * Este método se usa tras insertar la categoría en PocketBase,
+     * permitiendo enlazar la fila local con su identificación remota.
+     *
+     * @param localId ID autogenerado en Room.
+     * @param remoteId ID remoto asignado por PocketBase.
      */
     @Query("UPDATE categoria SET remote_id = :remoteId WHERE id = :localId")
     suspend fun attachRemoteId(localId: Int, remoteId: String)

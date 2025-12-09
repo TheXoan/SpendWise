@@ -436,9 +436,9 @@ fun EditMovDialog(
                     onClick = onDismiss,
                     colors = ButtonDefaults.buttonColors(containerColor = BackgroundBoxColorRed),
                     shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.width(120.dp)
+                    modifier = Modifier.width(140.dp)
                 ) {
-                    Text(stringResource(id = R.string.cancel_uppercase), color = Color.White)
+                    Text(stringResource(id = R.string.cancel_uppercase), color = Color.Black)
                 }
             }
         }

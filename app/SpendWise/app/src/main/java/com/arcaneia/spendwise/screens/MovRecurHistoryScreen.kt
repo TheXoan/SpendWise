@@ -54,7 +54,7 @@ fun MovRecurHistoryScreen(
     navController: NavController,
     movRecurViewModel: MovRecurViewModel
 ) {
-    val movsRecur by movRecurViewModel.movRecurList.collectAsState()
+    val movsRecur by movRecurViewModel.movRecur.collectAsState()
 
     Column(
         modifier = Modifier
@@ -163,7 +163,7 @@ fun MovRecurList(
         EditarMovDialog(
             mov = selectedMov!!,
             onGuardar = {
-                viewModel.insert(it)
+                viewModel.update(it)
                 showEditDialog = false
             },
             onDismiss = { showEditDialog = false }
@@ -405,7 +405,7 @@ fun EditarMovDialog(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text(stringResource(id = R.string.cancel), color = Color.White)
+                    Text(stringResource(id = R.string.cancel), color = Color.Black)
                 }
             }
         },
