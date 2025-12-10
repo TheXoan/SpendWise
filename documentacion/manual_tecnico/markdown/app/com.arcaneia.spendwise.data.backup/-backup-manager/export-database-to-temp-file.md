@@ -3,7 +3,7 @@
 # exportDatabaseToTempFile
 
 [androidJvm]\
-suspend fun [exportDatabaseToTempFile](export-database-to-temp-file.md)(): [File](https://docs.oracle.com/javase/8/docs/api/java/io/File.html)
+suspend fun [exportDatabaseToTempFile](export-database-to-temp-file.md)(): [File](https://developer.android.com/reference/kotlin/java/io/File.html)
 
 Exporta los archivos de la base de datos (DB, SHM y WAL) hacia un archivo ZIP temporal.
 
