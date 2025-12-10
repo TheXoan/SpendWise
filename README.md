@@ -48,7 +48,7 @@ juanbuenovazquez@gmail.com
 
 2. [Proxecto](/)
 > *TODO*: Simplemente indexa ordenadamente, e cunha estrutura de directorios lóxica, os ficheiros do teu proxecto no directorio raíz.
--  [apis](app\SpendWise\app\src\main\java\com\arcaneia\spendwise)
+-  [apis](app/SpendWise/app/src/main/java/com/arcaneia/spendwise)
 
 
 ## Instalación/Posta en marcha
