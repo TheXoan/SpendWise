@@ -28,6 +28,6 @@ Esta clase opera en **corrutinas** utilizando `Dispatchers.IO`, ya que se realiz
 
 | Name | Summary |
 |---|---|
-| [exportDatabaseToTempFile](export-database-to-temp-file.md) | [androidJvm]<br>suspend fun [exportDatabaseToTempFile](export-database-to-temp-file.md)(): [File](https://developer.android.com/reference/kotlin/java/io/File.html)<br>Exporta los archivos de la base de datos (DB, SHM y WAL) hacia un archivo ZIP temporal. |
+| [exportDatabaseToTempFile](export-database-to-temp-file.md) | [androidJvm]<br>suspend fun [exportDatabaseToTempFile](export-database-to-temp-file.md)(): [File](https://docs.oracle.com/javase/8/docs/api/java/io/File.html)<br>Exporta los archivos de la base de datos (DB, SHM y WAL) hacia un archivo ZIP temporal. |
 | [exportWriteToUri](export-write-to-uri.md) | [androidJvm]<br>suspend fun [exportWriteToUri](export-write-to-uri.md)(uri: [Uri](https://developer.android.com/reference/kotlin/android/net/Uri.html)): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)<br>Escribe la copia de seguridad temporal en una ubicación elegida por el usuario utilizando el **Storage Access Framework (SAF)**. |
 | [importFromUri](import-from-uri.md) | [androidJvm]<br>suspend fun [importFromUri](import-from-uri.md)(uri: [Uri](https://developer.android.com/reference/kotlin/android/net/Uri.html)): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)<br>Importa y restaura la base de datos desde un archivo ZIP. |

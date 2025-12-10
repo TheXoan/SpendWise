@@ -4,8 +4,6 @@ IMPORTANTE: [Información e documentos de axuda para a elaboración do proxecto 
 
 ## Sobre o autor
 
-> *TODO*: Realiza unha breve descrición de quen eres (perfil profesional), os teus puntos fortes, as tecnoloxías que máis dominas... e o porqué te decantaches por este proxecto. **Non máis de 200 palabras**. Indica unha forma fiable de contactar contigo no presente e no futuro.
-
 Son Juan Vázquez Bueno, administrador de sistemas e programador. Ademáis deso teño certificacións como __LPIC-1__, __Docker__, __Git-GitHub__ e 4 anos de experiencia como SysAdmin donde obtiven diversos coñecementos en administración de Firewalls como Fortinet, en switch managment, Active Directory entre outras.  
 
 Como developer o meu recorrido é máis corto, actualmente formo parte do equipo de Desenvolvemento dunha aplicación que forma parte da AMTEGA. Os meus coñecementos máis amplios están en linguaxes como Java, Kotlin e Python. Tamén teño coñecementos en ThymeLeaf, Spring Boot, Android Studio e experiencia en BBDD MySql, Oracle e PostgreSQL.  
@@ -22,6 +20,15 @@ juanbuenovazquez@gmail.com
 > *TODO*: Nste apartado describe brevemente cómo se usará o software que proxectas. Si tin unha interface de terminal, describe aquí a súa sintaxe. Se ten unha interface gráfica de usuario, describe aquí **sólo o uso** (a modo de sumario) **dos aspectos máis relevantes do seu funcionamento** (máxima brevidade, como se fose un anuncio ou reclamo comercial).
 
 > Se o teu proxecto é documental, realiza unha especificación de cómo formulas estas interfaces, con exemplos incluso ou esquemas de deseño. Noutras palabras, realiza este apartado independientemente que non haxa implantación.
+
+- A aplicación SpendWise é unha aplicación android, dispoñible mediante APK, podendo ser descargada utilizando F-DROID, co seguinte enlace:
+  
+### Principais características
+  - Visualización do balance de ingresos/gastos mensual
+  - Creación de gastos
+  - Creación de ingresos
+  - Creación de movementos recurrentes ingresos/gastos (semanal-mensual-anual)
+  - 
 
 
 ## Índice: Estrutura do proxecto (plantillas de apoio)

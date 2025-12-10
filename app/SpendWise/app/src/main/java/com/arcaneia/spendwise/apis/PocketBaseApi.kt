@@ -1,8 +1,8 @@
 package com.arcaneia.spendwise.apis
 
+import MovRecord
 import com.arcaneia.spendwise.apis.data.model.CategoriaRecord
-import com.arcaneia.spendwise.apis.data.model.MovRecord
-import com.arcaneia.spendwise.apis.data.model.MovRecurRecord // <-- NUEVO IMPORT
+import com.arcaneia.spendwise.apis.data.model.MovRecurRecord
 import com.arcaneia.spendwise.apis.data.model.PocketBaseListResponse
 import com.arcaneia.spendwise.data.model.AuthRequest
 import com.arcaneia.spendwise.data.model.AuthResponse

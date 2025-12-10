@@ -23,4 +23,4 @@ androidJvm
 
 | | |
 |---|---|
-| [Exception](https://developer.android.com/reference/kotlin/java/lang/Exception.html) | si el formato de entrada no es válido. |
+| [Exception](https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) | si el formato de entrada no es válido. |
