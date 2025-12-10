@@ -72,7 +72,7 @@
     <string name="categories_bottombar">Categories</string>
     <string name="history_bottombar">History</string>
     <string name="movrecur_bottombar">Mov. Recur</string>
-    <string name="config_bottombar">Configuration</string>
+    <string name="config_bottombar">Config</string>
 
     <!-- Splash Screen -->
     <string name="identity_verification">Identity verification</string>

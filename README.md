@@ -1,7 +1,5 @@
 # PROXECTO FIN DE CICLO
 
-IMPORTANTE: [Información e documentos de axuda para a elaboración do proxecto ](informacion/)
-
 ## Sobre o autor
 
 Son Juan Vázquez Bueno, administrador de sistemas e programador. Ademáis deso teño certificacións como __LPIC-1__, __Docker__, __Git-GitHub__ e 4 anos de experiencia como SysAdmin donde obtiven diversos coñecementos en administración de Firewalls como Fortinet, en switch managment, Active Directory entre outras.  
@@ -14,39 +12,43 @@ Escollin este proxecto porque vin unha necesidade nunha gran parte da sociedade,
 Se tes algunha dúbida ou proposta, podes contactarme no seguinte correo:
 juanbuenovazquez@gmail.com
 
+🔗 [Linkedin]([documentacion/](https://www.linkedin.com/in/juan-v%C3%A1zquez-bueno-65b9581b1/?locale=es_ES))
 
 ## Uso
-
-> *TODO*: Nste apartado describe brevemente cómo se usará o software que proxectas. Si tin unha interface de terminal, describe aquí a súa sintaxe. Se ten unha interface gráfica de usuario, describe aquí **sólo o uso** (a modo de sumario) **dos aspectos máis relevantes do seu funcionamento** (máxima brevidade, como se fose un anuncio ou reclamo comercial).
-
-> Se o teu proxecto é documental, realiza unha especificación de cómo formulas estas interfaces, con exemplos incluso ou esquemas de deseño. Noutras palabras, realiza este apartado independientemente que non haxa implantación.
-
-- A aplicación SpendWise é unha aplicación android, dispoñible mediante APK, podendo ser descargada utilizando F-DROID, co seguinte enlace:
   
-### Principais características
+#### Principais características
   - Visualización do balance de ingresos/gastos mensual
   - Creación de gastos
   - Creación de ingresos
   - Creación de movementos recurrentes ingresos/gastos (semanal-mensual-anual)
-  - 
+  - Visualización do histórico de movementos e visualización dos mesmos (ingresos-gastos-movementos recurrentes)
+  - Visualización dos movementos recurrentes e edición dos mesmos
+  - Filtrado dos movementos por ano e mes con movementos dispoñibles
+  - Xestión de permisos de notificacións
+  - Posibilidade de activar/desactivar as notificacións dende a pantalla de Configuración
+  - Posibilidade de importar ou exportar datos dende a pantalla de Configuración
+  - Acceso mediante método biométrico/patrón/PIN
+  - Acceso mediante login correo-contrasinal
+  - Notificación de creación de movementos recurrentes creados automáticamente según data de inicio e data de renovación
+  - Gardado remoto de datos con posibilidade de multidispositivo
+  - Xestión de pantallas mediante un menú de accesos inferior
 
 
 ## Índice: Estrutura do proxecto (plantillas de apoio)
 
-> *TODO*: Neste apartado describe con precisión a estructura de ficheiros e directorios do teu proxecto, co fin de facilitar a navegación polo mesmo.
-
 1. [Documentación](documentacion/)
-> *TODO*: Simplemente redacta a documentación do teu proxecto e os artefactos necesarios para o seu seguimento e defensa.
 
    - [Proposta inicial](documentacion/1_proposta)
    - [Anteproxecto](documentacion/2_anteproxecto)
    - [Seguimento/prototipos](documentacion/3_prototipos)
    - [Documentación final](documentacion/4_documentacion_final)
-   - [Defensa](documentacion/5_defensa)
+   - [Manual Técnico](documentacion/manual_tecnico/markdown/index.md)
+   - [Manual Usuario](documentacion/7_manual_usuario)
 
 
 2. [Proxecto](/)
 > *TODO*: Simplemente indexa ordenadamente, e cunha estrutura de directorios lóxica, os ficheiros do teu proxecto no directorio raíz.
+-  [apis](app\SpendWise\app\src\main\java\com\arcaneia\spendwise)
 
 
 ## Instalación/Posta en marcha
@@ -55,7 +57,4 @@ juanbuenovazquez@gmail.com
 
 
 ## Licenza
-
-> *TODO*: É un requisito INDISPENSABLE o licenciar explícitamente o proxecto software. Recoméndase licenciar con *GNU Free Documentation License Version 1.3*. Crar un fichero `LICENSE` na raíz do repositorio, co tue ficheiro de licenza. Recorda que si empregas unha licenza de *software* libre estás autorizando a derivación da túa obra baixo a misma licenza que elizas, podendo dar continuidade, por exemplo a outro alumno, para continuar o teu proxecto noutro curso.
-
-> Se o teu proxecto é documental, recomendamos os térmos de *GNU Free Documentation License Version 1.3*, crea igualmente o fichero `LICENSE`. Será especialmente valorado neste caso, a claridade da especificación para que o proxecto poida ser executado partindo do formulado.
+   - [GNU GPL v3](LICENSE.md)
