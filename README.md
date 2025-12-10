@@ -48,13 +48,15 @@ juanbuenovazquez@gmail.com
 
 2. [Proxecto](/)
 > *TODO*: Simplemente indexa ordenadamente, e cunha estrutura de directorios lóxica, os ficheiros do teu proxecto no directorio raíz.
--  [apis](app/SpendWise/app/src/main/java/com/arcaneia/spendwise)
+-  [apis](app/SpendWise/app/src/main/java/com/arcaneia/spendwise/apis/)
 
 
 ## Instalación/Posta en marcha
 
-> *TODO*: Neste apartado describe con toda precisión e a poder ser coa maior simplicidade/facilidade posible, cómo poñer en marcha a túa aplicación para probala (nun contexto local). Valorarase moi positivamente que este proceso sexa o máis doado posible, como unha simple instrución (por exemplo un *script* de instalación).
-
+- Para poder despregar a aplicación en local e poder utilizala simplemente se deberá [descargar](apk/SpendWise.apk) e instalar a aplicación nun dispositivo Android que dispoña das seguintes características mínimas:
+    - Débese dispor de un método de autenticación biométrica ou PIN/Patrón  __configurado__ no dispositivo
+    - A versión mínima de Android para utilizar a app é: __Android 14__ Upside Down Cake (2023)
+    - Para poder dispor da mellor experiencia de usuario recoméndase utilizar un dispositivo con mínimo 6.3" de pantalla
 
 ## Licenza
    - [GNU GPL v3](LICENSE.md)
