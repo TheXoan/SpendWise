@@ -42,7 +42,7 @@ juanbuenovazquez@gmail.com
    - [Anteproxecto](documentacion/2_anteproxecto)
    - [Seguimento/prototipos](documentacion/3_prototipos)
    - [Documentación final](documentacion/4_documentacion_final)
-   - [Manual Técnico](documentacion/manual_tecnico/markdown/index.md)
+   - [Manual Técnico](documentacion/6_manual_tecnico.md)
    - [Manual Usuario](documentacion/7_manual_usuario)
 
 
