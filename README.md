@@ -12,7 +12,7 @@ Escollin este proxecto porque vin unha necesidade nunha gran parte da sociedade,
 Se tes algunha dúbida ou proposta, podes contactarme no seguinte correo:
 juanbuenovazquez@gmail.com
 
-🔗 [Linkedin]([documentacion/](https://www.linkedin.com/in/juan-v%C3%A1zquez-bueno-65b9581b1/?locale=es_ES))
+🔗 [Linkedin](https://www.linkedin.com/in/juan-v%C3%A1zquez-bueno-65b9581b1/?locale=es_ES)
 
 ## Uso
   
