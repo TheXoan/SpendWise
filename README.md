@@ -62,7 +62,7 @@ juanbuenovazquez@gmail.com
 
 ## Instalación/Posta en marcha
 
-- Para poder despregar a aplicación en local e poder utilizala simplemente se deberá [descargar](apk/SpendWise.apk) e instalar a aplicación nun dispositivo Android que dispoña das seguintes características mínimas:
+- Para poder despregar a aplicación en local e poder utilizala simplemente se deberá [descargar](bin/SpendWise.apk) e instalar a aplicación nun dispositivo Android que dispoña das seguintes características mínimas:
     - Débese dispor de un método de autenticación biométrica ou PIN/Patrón  __configurado__ no dispositivo
     - A versión mínima de Android para utilizar a app é: __Android 14__ Upside Down Cake (2023)
     - Para poder dispor da mellor experiencia de usuario recoméndase utilizar un dispositivo con mínimo 6.3" de pantalla
