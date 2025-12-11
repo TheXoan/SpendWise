@@ -36,7 +36,7 @@ juanbuenovazquez@gmail.com
 
 ## Índice: Estrutura do proxecto (plantillas de apoio)
 
-1. [Documentación](documentacion/)
+1. [Documentación](doc/)
 
    - [Proposta inicial](doc/1_proposta.md)
    - [Anteproxecto](doc/2_anteproxecto.md)
@@ -45,22 +45,20 @@ juanbuenovazquez@gmail.com
    - [Manual Técnico](doc/6_manual_tecnico.md)
    - [Manual Usuario](doc/7_manual_usuario)
 
-
 2. [Proxecto](/)
+- [bin](bin/) → Contén os ficheiros APK xerados ou publicados da aplicación.
+- [app](app/) → Código fonte principal da aplicación Android (Java/Kotlin + recursos).
+- [documentacion](doc/) → Documentación do proxecto (manuais, diagramas, especificacións…).
+- [gradle](gradle/) → Ficheiros internos utilizados polo sistema de construción Gradle.
 
-[bin](bin/) → Contén os ficheiros APK xerados ou publicados da aplicación.
-[app](app/) → Código fonte principal da aplicación Android (Java/Kotlin + recursos).
-[documentacion](doc/) → Documentación do proxecto (manuais, diagramas, especificacións…).
-[gradle](gradle/) → Ficheiros internos utilizados polo sistema de construción Gradle.
-
-.gitignore              → Indica que ficheiros deben ser ignorados polo control de versións Git.
-LICENSE.md              → Licenza oficial do proxecto.
-README.md               → Descrición xeral do proxecto e do autor.
-build.gradle.kts        → Configuración principal do proxecto Gradle en formato Kotlin Script.
-gradle.properties       → Axustes globais de Gradle (rendemento, opcións de compilación…).
-gradlew                 → Script para executar Gradle en Linux/macOS sen instalalo no sistema.
-gradlew.bat             → Script para executar Gradle en Windows.
-settings.gradle.kts     → Define os módulos incluídos no proxecto e configuración inicial.
+- .gitignore              → Indica que ficheiros deben ser ignorados polo control de versións Git.
+- LICENSE.md              → Licenza oficial do proxecto.
+- README.md               → Descrición xeral do proxecto e do autor.
+- build.gradle.kts        → Configuración principal do proxecto Gradle en formato Kotlin Script.
+- gradle.properties       → Axustes globais de Gradle (rendemento, opcións de compilación…).
+- gradlew                 → Script para executar Gradle en Linux/macOS sen instalalo no sistema.
+- gradlew.bat             → Script para executar Gradle en Windows.
+- settings.gradle.kts     → Define os módulos incluídos no proxecto e configuración inicial.
 
 ## Instalación/Posta en marcha
 
@@ -68,6 +66,7 @@ settings.gradle.kts     → Define os módulos incluídos no proxecto e configur
     - Débese dispor de un método de autenticación biométrica ou PIN/Patrón  __configurado__ no dispositivo
     - A versión mínima de Android para utilizar a app é: __Android 14__ Upside Down Cake (2023)
     - Para poder dispor da mellor experiencia de usuario recoméndase utilizar un dispositivo con mínimo 6.3" de pantalla
+- Para máis información consultar o manual de despregue da aplicación no [manual técnico](doc/6_manual_tecnico.md)
 
 ## Licenza
    - [GNU GPL v3](LICENSE.md)
