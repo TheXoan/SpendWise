@@ -31,3 +31,7 @@ gradle/wrapper/gradle-wrapper.jar
 # CONFIGURACIÓN LOCAL
 # ======================
 local.properties
+
+.gradle/
+.idea/
+.kotlin/

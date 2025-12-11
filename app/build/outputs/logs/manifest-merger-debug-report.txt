@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:2:1-30:12
-INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:2:1-30:12
-INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:2:1-30:12
-INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:2:1-30:12
+ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:2:1-31:12
 MERGED from [androidx.biometric:biometric:1.2.0-alpha05] C:\Users\juanb\.gradle\caches\8.13\transforms\83b7516b5e3030c3c80f57a5934d25b9\transformed\biometric-1.2.0-alpha05\AndroidManifest.xml:17:1-27:12
 MERGED from [com.google.android.material:material:1.13.0] C:\Users\juanb\.gradle\caches\8.13\transforms\1cd1f32b35f63989d263054ce44ddad6\transformed\material-1.13.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.7.1] C:\Users\juanb\.gradle\caches\8.13\transforms\79a5ff6c467c2fff55d91cb51e751f25\transformed\appcompat-resources-1.7.1\AndroidManifest.xml:2:1-7:12
@@ -97,6 +97,7 @@ MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\juanb\.gradle\cache
 MERGED from [androidx.sqlite:sqlite-framework-android:2.6.2] C:\Users\juanb\.gradle\caches\8.13\transforms\7053c9c40ac814231750c409950d522e\transformed\sqlite-framework\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.sqlite:sqlite-android:2.6.2] C:\Users\juanb\.gradle\caches\8.13\transforms\c9a9853c36d5bcdaf3eb1bf4506d89d2\transformed\sqlite\AndroidManifest.xml:17:1-22:12
 	package
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:4:5-37
 		INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml
@@ -107,12 +108,12 @@ MERGED from [androidx.sqlite:sqlite-android:2.6.2] C:\Users\juanb\.gradle\caches
 	xmlns:android
 		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:2:11-69
 uses-permission#android.permission.POST_NOTIFICATIONS
-ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:5:5-77
+ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:6:5-77
 	android:name
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:5:22-74
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:6:22-74
 application
-ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:7:5-28:19
-INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:7:5-28:19
+ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:8:5-29:19
+INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:8:5-29:19
 MERGED from [com.google.android.material:material:1.13.0] C:\Users\juanb\.gradle\caches\8.13\transforms\1cd1f32b35f63989d263054ce44ddad6\transformed\material-1.13.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.13.0] C:\Users\juanb\.gradle\caches\8.13\transforms\1cd1f32b35f63989d263054ce44ddad6\transformed\material-1.13.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.0] C:\Users\juanb\.gradle\caches\8.13\transforms\581924c098008e45c2b82735f8200c25\transformed\constraintlayout-2.1.0\AndroidManifest.xml:9:5-20
@@ -144,43 +145,43 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\ju
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.17.0] C:\Users\juanb\.gradle\caches\8.13\transforms\e0f1b6ffe98e193aa715c1fb3f34ac8f\transformed\core-1.17.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:15:9-35
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:16:9-35
 	android:label
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:13:9-41
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:14:9-41
 	android:fullBackupContent
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:11:9-54
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:12:9-54
 	android:roundIcon
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:14:9-64
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:15:9-64
 	android:icon
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:12:9-53
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:13:9-53
 	android:allowBackup
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:9:9-35
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:10:9-35
 	android:theme
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:16:9-47
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:17:9-47
 	android:dataExtractionRules
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:10:9-65
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:11:9-65
 	android:name
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:8:9-37
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:9:9-37
 activity#com.arcaneia.spendwise.MainActivity
-ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:17:9-27:20
+ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:18:9-28:20
 	android:label
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:20:13-45
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:21:13-45
 	android:exported
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:19:13-36
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:20:13-36
 	android:theme
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:21:13-51
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:22:13-51
 	android:name
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:18:13-41
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:19:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:22:13-26:29
+ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:23:13-27:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:23:17-69
+ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:24:17-69
 	android:name
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:23:25-66
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:24:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:25:17-77
+ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:26:17-77
 	android:name
-		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:25:27-74
+		ADDED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml:26:27-74
 uses-sdk
 INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\juanb\Documents\01_GitHub\a23juanvb\app\src\main\AndroidManifest.xml

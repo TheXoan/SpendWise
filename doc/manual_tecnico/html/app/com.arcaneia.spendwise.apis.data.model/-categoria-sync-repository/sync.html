@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>sync</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            app
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":app:dokkaHtml/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="member" id="content" pageIds="app::com.arcaneia.spendwise.apis.data.model/CategoriaSyncRepository/sync/#/PointingToDeclaration//492899073">
+  <div class="breadcrumbs"><a href="../../../index.html">app</a><span class="delimiter">/</span><a href="../index.html">com.arcaneia.spendwise.apis.data.model</a><span class="delimiter">/</span><a href="index.html">CategoriaSyncRepository</a><span class="delimiter">/</span><span class="current">sync</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>sync</span></span></h1>
+  </div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="sync.html"><span class="token function">sync</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><p class="paragraph">Ejecuta el proceso completo de sincronización entre la base de datos local y remota.</p><p class="paragraph">La sincronización se ejecuta en <strong>cuatro fases</strong>:</p><h3 class="">1) Descarga inicial desde PocketBase</h3><ul><li><p class="paragraph">Se obtienen todas las categorías remotas del usuario.</p></li><li><p class="paragraph">Se detecta la existencia de la categoría especial <code class="lang-kotlin">&quot;Recurrente&quot;</code>.</p></li><li><p class="paragraph">Si existe en remoto, se vincula al registro local de ID fijo <code class="lang-kotlin">1</code> (creado por el callback de Room).</p></li></ul><h3 class="">2) Subida de categorías locales pendientes</h3><ul><li><p class="paragraph">Se obtienen todas las categorías locales con <code class="lang-kotlin">remote_id = null</code>.</p></li><li><p class="paragraph">Se suben al servidor una por una.</p></li><li><p class="paragraph"><strong>Excepción:</strong> si la categoría se llama <code class="lang-kotlin">&quot;Recurrente&quot;</code> y ya existe en remoto, no se sube.</p></li></ul><h3 class="">3) Fusión de categorías remotas → locales</h3><ul><li><p class="paragraph">Si una categoría remota no existe localmente, se inserta.</p></li><li><p class="paragraph">Si existe pero cambió algún campo, se actualiza.</p></li><li><p class="paragraph"><code class="lang-kotlin">&quot;Recurrente&quot;</code> se omite aquí para evitar duplicados.</p></li></ul><h3 class="">4) Eliminación de categorías locales borradas en el servidor</h3><ul><li><p class="paragraph">Se borran localmente las categorías cuyo <code class="lang-kotlin">remote_id</code> ya no existe en remoto.</p></li><li><p class="paragraph"><strong>Excepción:</strong> <code class="lang-kotlin">&quot;Recurrente&quot;</code> nunca se elimina localmente.</p></li></ul><p class="paragraph">Esta función garantiza la integridad de datos y evita duplicaciones incluso cuando se inicia sesión en múltiples dispositivos.</p></div></div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

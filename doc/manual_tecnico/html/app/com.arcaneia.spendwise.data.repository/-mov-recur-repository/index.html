@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MovRecurRepository</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            app
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":app:dokkaHtml/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="app::com.arcaneia.spendwise.data.repository/MovRecurRepository///PointingToDeclaration//492899073">
+  <div class="breadcrumbs"><a href="../../../index.html">app</a><span class="delimiter">/</span><a href="../index.html">com.arcaneia.spendwise.data.repository</a><span class="delimiter">/</span><span class="current">MovRecurRepository</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mov</span><wbr></wbr><span>Recur</span><wbr></wbr><span><span>Repository</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">MovRecurRepository</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">movRecurDao<span class="token operator">: </span><a href="../../com.arcaneia.spendwise.data.dao/-mov-recur-dao/index.html">MovRecurDao</a><span class="token punctuation">, </span></span><span class="parameter ">movDao<span class="token operator">: </span><a href="../../com.arcaneia.spendwise.data.dao/-mov-dao/index.html">MovDao</a><span class="token punctuation">, </span></span><span class="parameter ">appContext<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Repositorio encargado de gestionar los <strong>movimientos recurrentes</strong> y su conversión automática a movimientos simples.</p><p class="paragraph">Este componente centraliza:</p><h3 class="">🔄 <strong>Renovación automática de movimientos recurrentes</strong></h3><p class="paragraph">Para cada registro de <a href="../../com.arcaneia.spendwise.data.entity/-mov-recur/index.html">MovRecur</a> cuya fecha <code class="lang-kotlin">data_rnv</code> sea menor o igual a la fecha actual:</p><ol><li><p class="paragraph">Se generan uno o varios <a href="../../com.arcaneia.spendwise.data.entity/-mov/index.html">Mov</a> locales según corresponda.</p></li><li><p class="paragraph">Los movimientos generan un <strong>renew_hash determinista</strong>, lo cual permite:</p></li><ul><li><p class="paragraph">Evitar duplicados entre dispositivos durante la sincronización.</p></li><li><p class="paragraph">Garantizar que cada renovación sea única y rastreable.</p></li></ul><li><p class="paragraph">Se actualiza <code class="lang-kotlin">data_rnv</code> avanzando tantas veces como sea necesario mediante <code class="lang-kotlin">calculateNextDate()</code>.</p></li><li><p class="paragraph">Se actualiza el movimiento recurrente tanto <strong>localmente</strong> como en <strong>PocketBase</strong> (si tiene <code class="lang-kotlin">remote_id</code>).</p></li></ol><h3 class="">🌐 <strong>Sincronización remota</strong></h3><p class="paragraph">Tras actualizar la fecha de renovación, si el movimiento recurrente tiene un ID remoto, se envía la actualización a PocketBase mediante <a href="../../com.arcaneia.spendwise.apis.data.model/-mov-recur-remote-data-source/index.html">MovRecurRemoteDataSource</a>.</p><p class="paragraph">Si la actualización remota falla (por ejemplo, sin conexión), el estado local quedará corregido y la próxima sincronización lo alineará con el servidor.</p><h3 class="">🧩 Dependencias</h3></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-400590980%2FConstructors%2F492899073" anchor-label="MovRecurRepository" id="-400590980%2FConstructors%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-mov-recur-repository.html"><span>Mov</span><wbr></wbr><span>Recur</span><wbr></wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-400590980%2FConstructors%2F492899073"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">movRecurDao<span class="token operator">: </span><a href="../../com.arcaneia.spendwise.data.dao/-mov-recur-dao/index.html">MovRecurDao</a><span class="token punctuation">, </span></span><span class="parameter ">movDao<span class="token operator">: </span><a href="../../com.arcaneia.spendwise.data.dao/-mov-dao/index.html">MovDao</a><span class="token punctuation">, </span></span><span class="parameter ">appContext<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-891108995%2FFunctions%2F492899073" anchor-label="delete" id="-891108995%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete.html"><span><span>delete</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-891108995%2FFunctions%2F492899073"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete.html"><span class="token function">delete</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">movRecur<span class="token operator">: </span><a href="../../com.arcaneia.spendwise.data.entity/-mov-recur/index.html">MovRecur</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Elimina un movimiento recurrente local.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1230592605%2FFunctions%2F492899073" anchor-label="getAllMovRecur" id="1230592605%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-all-mov-recur.html"><span>get</span><wbr></wbr><span>All</span><wbr></wbr><span>Mov</span><wbr></wbr><span><span>Recur</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1230592605%2FFunctions%2F492899073"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="get-all-mov-recur.html"><span class="token function">getAllMovRecur</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../com.arcaneia.spendwise.data.entity/-mov-recur/index.html">MovRecur</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Devuelve un flujo reactivo con todos los movimientos recurrentes almacenados en la base de datos.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-28733562%2FFunctions%2F492899073" anchor-label="getPendingRenewalsCount" id="-28733562%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-pending-renewals-count.html"><span>get</span><wbr></wbr><span>Pending</span><wbr></wbr><span>Renewals</span><wbr></wbr><span><span>Count</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-28733562%2FFunctions%2F492899073"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="get-pending-renewals-count.html"><span class="token function">getPendingRenewalsCount</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Devuelve cuántos movimientos recurrentes deberían renovarse hoy.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1869326453%2FFunctions%2F492899073" anchor-label="insert" id="-1869326453%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="insert.html"><span><span>insert</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1869326453%2FFunctions%2F492899073"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="insert.html"><span class="token function">insert</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">movRecur<span class="token operator">: </span><a href="../../com.arcaneia.spendwise.data.entity/-mov-recur/index.html">MovRecur</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Inserta un movimiento recurrente en la base de datos local.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-38652465%2FFunctions%2F492899073" anchor-label="processRenewals" id="-38652465%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="process-renewals.html"><span>process</span><wbr></wbr><span><span>Renewals</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-38652465%2FFunctions%2F492899073"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="process-renewals.html"><span class="token function">processRenewals</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../com.arcaneia.spendwise.data.entity/-mov/index.html">Mov</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Procesa todas las renovaciones pendientes de movimientos recurrentes.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2061616539%2FFunctions%2F492899073" anchor-label="update" id="2061616539%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update.html"><span><span>update</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2061616539%2FFunctions%2F492899073"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update.html"><span class="token function">update</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">movRecur<span class="token operator">: </span><a href="../../com.arcaneia.spendwise.data.entity/-mov-recur/index.html">MovRecur</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Actualiza el contenido de un movimiento recurrente local.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
