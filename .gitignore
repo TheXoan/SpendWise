@@ -1,0 +1,33 @@
+# ======================
+# ANDROID APP (solo módulo app/)
+# ======================
+
+# Carpetas de build do módulo app
+app/build/
+
+# Local cache interno do módulo
+app/.cxx/
+app/.externalNativeBuild/
+
+# Ficheiros do IDE dentro de app/
+app/.idea/
+app/.gradle/
+app/*.iml
+
+# Ficheiros temporais de compilación
+app/**/*.dex
+app/**/*.class
+app/**/*.jar
+app/**/*.apk
+app/**/*.aab
+
+# ======================
+# ANDROID WRAPPER
+# ======================
+# Wrapper interno xerado
+gradle/wrapper/gradle-wrapper.jar
+
+# ======================
+# CONFIGURACIÓN LOCAL
+# ======================
+local.properties

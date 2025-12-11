@@ -1,0 +1,106 @@
+[
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/font_inter_24pt_bold.ttf.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/font/inter_24pt_bold.ttf"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-mdpi_ic_launcher_spendwise_foreground.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-mdpi/ic_launcher_spendwise_foreground.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-mdpi_ic_launcher_spendwise_round.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-mdpi/ic_launcher_spendwise_round.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-xxxhdpi_ic_launcher_spendwise.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-xxxhdpi/ic_launcher_spendwise.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-mdpi_ic_launcher_spendwise.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-mdpi/ic_launcher_spendwise.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-anydpi-v26_ic_launcher_spendwise_round.xml.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-anydpi-v26/ic_launcher_spendwise_round.xml"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/xml_backup_rules.xml.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-hdpi_ic_launcher_spendwise_foreground.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-hdpi/ic_launcher_spendwise_foreground.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-anydpi-v26_ic_launcher_spendwise.xml.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-anydpi-v26/ic_launcher_spendwise.xml"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/xml_data_extraction_rules.xml.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-hdpi_ic_launcher_spendwise.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-hdpi/ic_launcher_spendwise.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-xhdpi_ic_launcher_spendwise.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-xhdpi/ic_launcher_spendwise.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/font_inter_18pt_regular.ttf.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/font/inter_18pt_regular.ttf"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/drawable_logo_spendwise.png.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/drawable/logo_spendwise.png"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-xhdpi_ic_launcher_spendwise_foreground.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-xhdpi/ic_launcher_spendwise_foreground.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-xxhdpi_ic_launcher_spendwise_foreground.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-xxhdpi/ic_launcher_spendwise_foreground.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-xxhdpi_ic_launcher_spendwise_round.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-xxhdpi/ic_launcher_spendwise_round.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/font_inter_18pt_medium.ttf.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/font/inter_18pt_medium.ttf"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-xxxhdpi_ic_launcher_spendwise_round.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-xxxhdpi/ic_launcher_spendwise_round.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-xxxhdpi_ic_launcher_spendwise_foreground.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-xxxhdpi/ic_launcher_spendwise_foreground.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-xxhdpi_ic_launcher_spendwise.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-xxhdpi/ic_launcher_spendwise.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-hdpi_ic_launcher_spendwise_round.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-hdpi/ic_launcher_spendwise_round.webp"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/drawable_clean_spendwise_logo.png.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/drawable/clean_spendwise_logo.png"
+    },
+    {
+        "merged": "com.arcaneia.spendwise.app-debug-59:/mipmap-xhdpi_ic_launcher_spendwise_round.webp.flat",
+        "source": "com.arcaneia.spendwise.app-main-61:/mipmap-xhdpi/ic_launcher_spendwise_round.webp"
+    }
+]
