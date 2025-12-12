@@ -44,7 +44,7 @@
     <string name="income">INGRESO</string>
     <string name="expense">GASTO</string>
     <string name="recur_movs">Movementos recorrentes</string>
-    <string name="new_title">Novo</string>
+    <string name="new_title">NOVO</string>
     <string name="empty_recur_movs">Non hai movementos recurrentes configurados</string>
     <string name="start">Comezo</string>
     <string name="renew">Renovaci\u00F3n</string>

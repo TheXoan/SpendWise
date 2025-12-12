@@ -294,22 +294,31 @@ fun NewMovRecurScreen(
 
                 val dateIni = formatDateForDB(selectedDate)
 
-                val movRecur = MovRecur(
-                    nome = name,
-                    importe = amount.toDoubleOrNull() ?: 0.0,
-                    periodicidade = selectedRecurrence,
-                    data_ini = dateIni,
-                    data_rnv = calculateNextDate(dateIni, selectedRecurrence!!),
-                    tipo = selectedTypeMov
-                )
-
-                if (selectedRecurrence != null && selectedTypeMov != null && name != "" && amount != "") {
-                    movRecurViewModel.insert(movRecur)
-                    Toast.makeText(context, context.getString(R.string.success_recur_mov_saved), Toast.LENGTH_SHORT).show()
-                    navController.popBackStack()
+                if (selectedRecurrence!=null) {
+                    val movRecur =
+                        MovRecur(
+                            nome = name,
+                            importe = amount.toDoubleOrNull()
+                                ?: 0.0,
+                            periodicidade = selectedRecurrence,
+                            data_ini = dateIni,
+                            data_rnv = calculateNextDate(
+                                dateIni,
+                                selectedRecurrence!!
+                            ),
+                            tipo = selectedTypeMov
+                        )
+                    if (selectedRecurrence != null && selectedTypeMov != null && name != "" && amount != "") {
+                        movRecurViewModel.insert(movRecur)
+                        Toast.makeText(context, context.getString(R.string.success_recur_mov_saved), Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.must_field_selected), Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(context, context.getString(R.string.must_field_selected), Toast.LENGTH_SHORT).show()
                 }
+
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)

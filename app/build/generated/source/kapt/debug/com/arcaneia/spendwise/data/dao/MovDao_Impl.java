@@ -849,7 +849,7 @@ public final class MovDao_Impl implements MovDao {
 
   @Override
   public Object getPendingNotifications(final Continuation<? super List<Mov>> $completion) {
-    final String _sql = "SELECT * FROM mov WHERE notificado = 0 ORDER BY data_mov ASC";
+    final String _sql = "SELECT * FROM mov WHERE notificado = 0 AND mov_recur_id IS NOT NULL ORDER BY data_mov ASC";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
       try {

@@ -193,7 +193,7 @@ interface MovDao {
      *
      * @return Lista de movimientos sin notificar.
      */
-    @Query("SELECT * FROM mov WHERE notificado = 0 ORDER BY data_mov ASC")
+    @Query("SELECT * FROM mov WHERE notificado = 0 AND mov_recur_id IS NOT NULL ORDER BY data_mov ASC")
     suspend fun getPendingNotifications(): List<Mov>
 
     /**

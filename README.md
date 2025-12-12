@@ -43,6 +43,7 @@ juanbuenovazquez@gmail.com
    - [Seguimento/prototipos](doc/3_prototipos.md)
    - [Manual Técnico](doc/6_manual_tecnico.md)
    - [Manual Usuario](doc/7_manual_usuario.md)
+   - [Video demostración](doc/videos/Video_demostración_final_SpendWise.mkv)
 
 #### [Documentación KDoc](doc/7_manual_usuario.md)
 

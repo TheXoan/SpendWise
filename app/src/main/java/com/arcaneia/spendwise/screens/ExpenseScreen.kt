@@ -197,9 +197,16 @@ fun ExpenseScreen(
             onValueChange = { entradaUsuario ->
                 expenseDescription = entradaUsuario
             },
-            placeholder = { Text(stringResource(id = R.string.description), color = ColorHint, style = TitleBox) },
+            placeholder = {
+                Text(
+                    stringResource(id = R.string.description),
+                    color = ColorHint,
+                    style = TitleBox
+                )
+            },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
+            shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = BackgroundBoxColorOne,
                 focusedContainerColor = BackgroundBoxColorOneSelected,
@@ -208,6 +215,7 @@ fun ExpenseScreen(
                 unfocusedTextColor = Color.Black
             )
         )
+
 
         Spacer(modifier = Modifier.height(35.dp))
 
@@ -226,7 +234,8 @@ fun ExpenseScreen(
                     data_mov = fechaActual,
                     descricion = expenseDescription,
                     categoria_id = categoriaSeleccionadaId ?: 0,
-                    mov_recur_id = null
+                    mov_recur_id = null,
+                    notificado = true
                 )
 
                 if (categoriaSeleccionadaId != null) {
@@ -250,7 +259,7 @@ fun ExpenseScreen(
         ) {
             Text(
                 context.getString(R.string.save_expense),
-                color = Color.White
+                color = Color.Black
             )
         }
     }

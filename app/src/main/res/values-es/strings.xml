@@ -14,7 +14,7 @@
     <string name="category_name">Nombre categor\u00EDa</string>
     <string name="success_category_update">Categor\u00EDa actualizada correctamente</string>
     <string name="success_category_created">Categor\u00EDa creada correctamente</string>
-    <string name="name_cat_cant_empty">El nombre de la categorí\u00EDa no puede estar vac\u00EDo</string>
+    <string name="name_cat_cant_empty">El nombre de la categor\u00EDa no puede estar vac\u00EDo</string>
     <string name="save_cat">GUARDAR CATEGOR\u00CDA</string>
     <string name="success_category_deleted">Categor\u00EDa eliminada correctamente</string>
     <string name="must_select_cat_first">Por favor selecciona una categorí\u00EDa primero</string>
@@ -44,7 +44,7 @@
     <string name="income">INGRESO</string>
     <string name="expense">GASTO</string>
     <string name="recur_movs">Movimientos recurrentes</string>
-    <string name="new_title">Nuevo</string>
+    <string name="new_title">NUEVO</string>
     <string name="empty_recur_movs">No hay movimientos recurrentes configurados</string>
     <string name="start">Inicio</string>
     <string name="renew">Renovaci\u00F3n</string>

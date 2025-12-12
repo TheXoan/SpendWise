@@ -205,9 +205,16 @@ fun IncomeScreen(
         OutlinedTextField(
             value = expenseDescription,
             onValueChange = { entradaUsuarip -> expenseDescription = entradaUsuarip },
-            placeholder = { Text(stringResource(id = R.string.description), color = ColorHint, style = TitleBox) },
+            placeholder = {
+                Text(
+                    stringResource(id = R.string.description),
+                    color = ColorHint,
+                    style = TitleBox
+                )
+            },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
+            shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = BackgroundBoxColorOne,
                 focusedContainerColor = BackgroundBoxColorOneSelected,
@@ -216,6 +223,7 @@ fun IncomeScreen(
                 unfocusedTextColor = Color.Black
             )
         )
+
 
         Spacer(modifier = Modifier.height(35.dp))
 
@@ -238,7 +246,8 @@ fun IncomeScreen(
                         data_mov = fechaActual,
                         descricion = expenseDescription,
                         categoria_id = categoriaSeleccionadaId ?: 0,
-                        mov_recur_id = null
+                        mov_recur_id = null,
+                        notificado = true
                     )
 
                     scope.launch(Dispatchers.IO) {
@@ -266,7 +275,7 @@ fun IncomeScreen(
             ),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text(stringResource(id = R.string.save_income), color = Color.White)
+            Text(stringResource(id = R.string.save_income), color = Color.Black)
         }
     }
 }

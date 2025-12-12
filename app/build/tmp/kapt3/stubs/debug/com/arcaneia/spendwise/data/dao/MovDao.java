@@ -186,7 +186,7 @@ public abstract interface MovDao {
      *
      * @return Lista de movimientos sin notificar.
      */
-    @androidx.room.Query(value = "SELECT * FROM mov WHERE notificado = 0 ORDER BY data_mov ASC")
+    @androidx.room.Query(value = "SELECT * FROM mov WHERE notificado = 0 AND mov_recur_id IS NOT NULL ORDER BY data_mov ASC")
     @org.jetbrains.annotations.Nullable()
     public abstract java.lang.Object getPendingNotifications(@org.jetbrains.annotations.NotNull()
     kotlin.coroutines.Continuation<? super java.util.List<com.arcaneia.spendwise.data.entity.Mov>> $completion);

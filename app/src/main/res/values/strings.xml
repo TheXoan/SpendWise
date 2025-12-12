@@ -44,7 +44,7 @@
     <string name="income">INCOME</string>
     <string name="expense">EXPENSE</string>
     <string name="recur_movs">Recurring movements</string>
-    <string name="new_title">New</string>
+    <string name="new_title">NEW</string>
     <string name="empty_recur_movs">No movements recurring configured</string>
     <string name="start">Start</string>
     <string name="renew">Renew</string>

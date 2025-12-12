@@ -340,7 +340,11 @@ fun EditarMovDialog(
 
                 OutlinedTextField(
                     value = importe,
-                    onValueChange = { importe = it },
+                    onValueChange = { amountMovMod ->
+                        if (amountMovMod.matches(Regex("^\\d*\\.?\\d*\$"))) {
+                            importe = amountMovMod
+                        }
+                    },
                     label = { Text(stringResource(id = R.string.value)+ " (€)") },
                     keyboardOptions = KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
@@ -384,7 +388,12 @@ fun EditarMovDialog(
                                 nome = nombre,
                                 importe = importe.toDoubleOrNull() ?: mov.importe,
                                 data_ini = fecha,
-                                data_rnv = calculateNextDate(fecha, periodicidade!!),
+                                data_rnv = if (periodicidade != mov.periodicidade || fecha != mov.data_ini) {
+                                    // Só recalcular se o usuario cambia periodicidade ou data_ini
+                                    calculateNextDate(fecha, periodicidade!!)
+                                } else {
+                                    mov.data_rnv
+                                },
                                 periodicidade = periodicidade,
                                 tipo = tipo
                             )
