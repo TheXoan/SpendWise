@@ -38,9 +38,13 @@
     - [Diagrama E-R](#diagrama-e-r)
   - [Tecnoloxías empregadas](#tecnoloxías-empregadas)
     - [🎨 Jetpack Compose — UI declarativa](#-jetpack-compose--ui-declarativa)
-    - [🗄️ Room — Persistencia local en SQLite](#️-room--persistencia-local-en-sqlite)
+    - [🗄️ ROOM — Persistencia local en SQLite](#️-room--persistencia-local-en-sqlite)
     - [🔄 Flow — Datos reactivos en tempo real](#-flow--datos-reactivos-en-tempo-real)
     - [🧭 Navigation Compose — Navegación entre pantallas](#-navigation-compose--navegación-entre-pantallas)
+    - [🐳 Docker — Contedores para despregue e reproducibilidade](#-docker--contedores-para-despregue-e-reproducibilidade)
+    - [📦 F-Droid autoaloxado — Distribución privada da app](#-f-droid-autoaloxado--distribución-privada-da-app)
+    - [📚 Navigation Bar Compose — Barra de navegación moderna en Compose](#-navigation-bar-compose--barra-de-navegación-moderna-en-compose)
+    - [🗃️ PocketBase — Backend lixeiro con base de datos integrada](#️-pocketbase--backend-lixeiro-con-base-de-datos-integrada)
   - [Despregue](#despregue)
     - [F-Droid](#f-droid)
     - [Instalación e importación do repositorio en F-Droid](#instalación-e-importación-do-repositorio-en-f-droid)
@@ -834,7 +838,7 @@ Arquitectura da aplicación:
 ## Documentación da aplicación
 
 - A documentación da aplicación SpendWise está desenvolta co formato KDOC e xerada usando unha API de Android Studio chamada Dokka, a continuación deixo dous enlaces, un a versión HTML e outro a versión en Markdown
-### [HTML](manual_tecnico/html/)
+### [HTML](https://damd.pages.iessanclemente.net/-/a23juanvb/-/jobs/29083/artifacts/public/index.html)
 ### [Markdown](manual_tecnico/markdown/)
 
 
@@ -886,69 +890,157 @@ Arquitectura da aplicación:
 ## Tecnoloxías empregadas
 
 As principais tecnoloxías empregadas no proxecto son:
-### 🎨 Jetpack Compose — UI declarativa
 
-Que é:
+---
+
+### 🎨 Jetpack Compose — UI declarativa
+![Jetpack Compose](manual_tecnico/img/jcompose2.jpeg)
+
+**Ligazón:** https://developer.android.com/compose
+
+**Que é:**  
 Framework moderno de Android para crear interfaces mediante código declarativo.
 
-Uso no proxecto:
+**Uso no proxecto:**  
+- Construcción de todas as pantallas da aplicación (Login, Movementos, Categorías, Axustes...).  
+- Actualización automática da UI cando cambian os datos.  
+- Creación de compoñentes reutilizables (diálogos, listas, formularios...).
 
-Construcción de todas as pantallas da aplicación (Login, Movimientos, Categorías, Axustes...).
+**Que achega:**  
+UI máis limpa, menos código repetitivo e maior velocidade de desenvolvemento.
 
-Actualización automática da UI cando cambian os datos.
+---
 
-Creación de compoñentes reutilizables (diálogos, listas, formularios...).
+### 🗄️ ROOM — Persistencia local en SQLite
+![Room](manual_tecnico/img/room.png)
 
-Que achega:
-UI máis limpa, menos código boilerplate e maior velocidade de desenvolvemento.
+**Ligazón:** https://developer.android.com/jetpack/androidx/releases/room
 
-### 🗄️ Room — Persistencia local en SQLite
-
-Que é:
+**Que é:**  
 Libraría oficial de Android para traballar con SQLite de forma tipada e segura.
 
-Uso no proxecto:
+**Uso no proxecto:**  
+- Almacenamento de categorías, movementos e movementos recorrentes.  
+- Definición de entidades, DAOs e base de datos local.  
+- Garantir integridade e relacións entre táboas.
 
-Almacenamento de categorías, movimientos e movimientos recorrentes.
-
-Definición de entidades, DAOs e base de datos local.
-
-Garantir integridade e relacións entre táboas.
-
-Que achega:
+**Que achega:**  
 Persistencia offline e acceso estruturado e eficiente aos datos.
 
-### 🔄 Flow — Datos reactivos en tempo real
+---
 
-Que é:
+### 🔄 Flow — Datos reactivos en tempo real
+![Kotlin Flow](manual_tecnico/img/flows.png)
+
+**Ligazón:** https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/
+
+**Que é:**  
 API de Kotlin Coroutines que permite emitir fluxos de datos reactivos.
 
-Uso no proxecto:
+**Uso no proxecto:**  
+- Observar cambios en Room en tempo real.  
+- Actualizar automaticamente a UI cando os datos cambian.  
+- Xestionar estados asincrónicos dentro dos ViewModels.
 
-Observar cambios en Room en tempo real.
+**Que achega:**  
+Sincronización automática entre datos e UI sen listeners complexos nin callbacks tradicionais.
 
-Actualizar automaticamente a UI cando se modifican os datos.
-
-Xestionar estados asincrónicos dentro dos ViewModels.
-
-Que achega:
-UI sincronizada cos datos sen listeners nin mecánicas tradicionais máis complexas.
+---
 
 ### 🧭 Navigation Compose — Navegación entre pantallas
+![Navigation Compose](manual_tecnico/img/navigation.jpg)
 
-Que é:
-Sistema oficial de navegación para apps construídas con Jetpack Compose.
+**Ligazón:** https://developer.android.com/develop/ui/compose/navigation
 
-Uso no proxecto:
+**Que é:**  
+Sistema oficial de navegación para apps creadas con Jetpack Compose.
 
-Definir rutas e pantallas (Login → Main → Movementos → Detalles...).
+**Uso no proxecto:**  
+- Definir rutas e pantallas (Login → Main → Movementos → Detalles...).  
+- Pasar argumentos entre pantallas.  
+- Xestionar o back stack de forma segura e modular.
 
-Pasar argumentos entre pantallas.
+**Que achega:**  
+Un fluxo de navegación claro, escalable e totalmente integrado con Compose.
 
-Xestionar o back stack de forma segura e estruturada.
 
-Que achega:
-Un fluxo de navegación claro, modular e totalmente integrado con Compose.
+### 🐳 Docker — Contedores para despregue e reproducibilidade
+![Docker](https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png)
+
+**Ligazón:** https://www.docker.com/
+
+**Que é:**  
+Plataforma para crear, distribuír e executar aplicacións dentro de contedores illados.
+
+**Uso no proxecto:**  
+- Execución dun servidor autoaloxado (por exemplo para F-Droid ou PocketBase).  
+- Xerar contornos reproducibles para probas ou despregue.  
+- Facilitar o uso do proxecto en distintos equipos e sistemas operativos.
+
+**Que achega:**  
+Reproducibilidade, facilidade de despregue e illamento completo do entorno de execución.
+
+---
+
+### 📦 F-Droid autoaloxado — Distribución privada da app
+![F-Droid](https://static0.pocketlintimages.com/wordpress/wp-content/uploads/2025/03/top-f-droid-apps-header-image-2-1.jpg?q=70&fit=crop&w=1600&h=900&dpr=1)
+
+**Ligazón:** https://f-droid.org/
+
+**Que é:**  
+F-Droid é un repositorio libre de aplicacións para Android.  
+A súa versión autoaloxada permite crear un repositorio privado propio.
+
+**Uso no proxecto:**  
+- Distribuír as versións da app de maneira privada e controlada.  
+- Xestión centralizada de APKs compiladas (release e debug).  
+- Permitir instalación e actualización sen depender de Google Play.
+
+**Que achega:**  
+Control total sobre a distribución da aplicación, privacidade e integración do fluxo de CI/CD para publicar novas versións automaticamente.
+
+---
+
+### 📚 Navigation Bar Compose — Barra de navegación moderna en Compose
+![Navigation Bar Compose](manual_tecnico/img/navigation_bar.png)
+
+**Ligazón:** https://developer.android.com/develop/ui/compose/components/navigation-bar
+
+**Que é:**  
+Un compoñente oficial de Jetpack Compose que permite crear barras de navegación inferiores (Bottom Navigation Bar) seguindo as guías de Material Design 3.
+
+**Uso no proxecto:**  
+- Implementación da barra de navegación inferior en pantallas principais.  
+- Organización de seccións (Movementos, Categorías, Estatísticas, Axustes…).  
+- Actualización automática do estado visual (elemento seleccionado, iconas activas/inactivas).  
+- Integración directa con Navigation Compose para cambiar entre rutas.
+
+**Que achega:**  
+Un sistema de navegación moderno, accesible e adaptado visualmente ao estilo Material 3.  
+Reduce código boilerplate e facilita manter a estrutura global da app, especialmente en pantallas con varias seccións principais.
+
+---
+
+### 🗃️ PocketBase — Backend lixeiro con base de datos integrada
+![PocketBase](manual_tecnico/img/pocketbase.png)
+
+**Ligazón:** https://pocketbase.io/
+
+**Que é:**  
+PocketBase é un backend ultralixeiro escrito en Go que inclúe API REST, base de datos embebida (SQLite), autenticación, almacenamento de ficheiros e consola web de administración.  
+Funciona nun único binario e pode executarse en local, en Docker ou en servidores mínimos.
+
+**Uso no proxecto:**  
+- Servir como backend remoto para sincronizar movementos, categorías e datos asociados.  
+- Xestión de coleccións (taboas), regras de acceso e usuarios.  
+- Almacenamento remoto de datos e comunicación coa app mediante API REST.  
+- Sincronización cando o dispositivo recupera conexión.
+
+**Que achega:**  
+- Backend completo sen complexidade nin servidores pesados.  
+- API lista para usar e altamente personalizable.  
+- Integra autenticación, permisos e base de datos nun único paquete.  
+- Ideal para proxectos móbiles que necesitan sincronización rápida, simple e eficiente.
 
 ## Despregue
 

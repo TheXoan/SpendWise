@@ -31,7 +31,7 @@ juanbuenovazquez@gmail.com
   - Acceso mediante login correo-contrasinal
   - Notificación de creación de movementos recurrentes creados automáticamente según data de inicio e data de renovación
   - Gardado remoto de datos con posibilidade de multidispositivo
-  - Xestión de pantallas mediante un menú de accesos inferior
+  - Xestión de pantallas mediante un menú de navegación inferior
 
 
 ## Índice: Estrutura do proxecto (plantillas de apoio)
@@ -43,7 +43,9 @@ juanbuenovazquez@gmail.com
    - [Seguimento/prototipos](doc/3_prototipos.md)
    - [Manual Técnico](doc/6_manual_tecnico.md)
    - [Manual Usuario](doc/7_manual_usuario.md)
-  
+
+#### [Documentación KDoc](doc/7_manual_usuario.md)
+
 2. [Proxecto](/)  
 📁 [project-root](/)  
 ├─ 📁 [bin](bin/) → Contén os ficheiros APK xerados ou publicados da aplicación.  
@@ -57,6 +59,7 @@ juanbuenovazquez@gmail.com
 ├─ 📄 [gradle.properties](gradle.properties) → Axustes globais de Gradle (rendemento, opcións de compilación…).  
 ├─ 📄 [gradlew](gradlew) → Script para executar Gradle en Linux/macOS sen instalalo no sistema.  
 ├─ 📄 [gradlew.bat](gradlew.bat) → Script para executar Gradle en Windows.  
+├─ 🦊 [.gitlab-ci.yml](gradlew.bat) → Script para crear repositorio public en gitlab pages.  
 └─ 📄 [settings.gradle.kts](settings.gradle.kts) → Define os módulos incluídos no proxecto e configuración inicial.  
 
 
@@ -66,7 +69,7 @@ juanbuenovazquez@gmail.com
     - Débese dispor de un método de autenticación biométrica ou PIN/Patrón  __configurado__ no dispositivo
     - A versión mínima de Android para utilizar a app é: __Android 14__ Upside Down Cake (2023)
     - Para poder dispor da mellor experiencia de usuario recoméndase utilizar un dispositivo con mínimo 6.3" de pantalla
-- Para máis información consultar o manual de despregue da aplicación no [manual técnico](doc/6_manual_tecnico.md)
+- Para máis información consultar o apartado de despregue da aplicación no [manual técnico](doc/6_manual_tecnico.md)
 
 ## Licenza
    - [GNU GPL v3](LICENSE.md)
