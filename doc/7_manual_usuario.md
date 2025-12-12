@@ -135,12 +135,14 @@ Para poder executar a aplicación SpendWise deberemos ter instalado un método d
 - O filtrado de movementos funciona da seguinte maneira:
   - Ano: Listaranse os anos donte teñan polo menos un movemento creado
   - Mes: Listaranse os meses do ano que teñamos seleccionado e que teñan polo menos un movemento creado
+
 ![History_Screen_1](manual_usuario/img/history_screen_1.png)  
 - Os movementos ordearanse en orde de máis a menos recente mostrandose os seguintes campos:
   - Descrición do movemento
   - Data de creación do movemento
   - Categoría
   - Na parte dereita mostrarase o importe do movemento
+
 ![History_Screen_2](manual_usuario/img/history_screen_2.png)  
 
 ### Modificación de movementos
@@ -154,8 +156,11 @@ Para poder executar a aplicación SpendWise deberemos ter instalado un método d
     - Categoría: Permitenos modificar a categoría do movemento, no caso de non seleccionar ningunha manterase a que xa tiña
   - Botón "Gardar": Gardarase o movemento modificado
   - Cancelar: Desfaranse os cambios sen gardar
+
 ![History_Screen_4](manual_usuario/img/history_screen_4.png)  
+
   - Borrar: Eliminarase de forma instantánea o movemento
+
 ![History_Screen_3](manual_usuario/img/history_screen_3.png)  
 
 
@@ -163,6 +168,7 @@ Para poder executar a aplicación SpendWise deberemos ter instalado un método d
 
 - Visualización de todos os movementos recorrentes que teñamos configurados, ordeados por data de próxima renovación, de forma descendente, polo que o que estea máis arriba será o máis próximo.
 - Permisos: Ao acceder por primeira vez solicitaranos se queremos que se nos envíen notificacións, esto permitiranos ser notificados no momento da renovación dun gasto/ingreso recorrente
+
 ![Permission](manual_usuario/img/request_permiss.png)  
 
 ### Visualización de movementos recorrentes
@@ -172,6 +178,7 @@ Para poder executar a aplicación SpendWise deberemos ter instalado un método d
   - Data do comezo do movemento recorrentes, a primeira data de renovación
   - Data de renovación a próxima data de renovación, cando será renovado e xerado ese movemento
   - Periodicidade do movemento: Si se renovará de forma semanal, mensual ou anual
+
 ![Mov_Recor_1](manual_usuario/img/mov_recor_1.png)  
 
 ### Modificación de movementos recorrentes
@@ -183,8 +190,10 @@ Para poder executar a aplicación SpendWise deberemos ter instalado un método d
     - Data de comezo: Data donde comezará de novo o movemento recorrente
     - Mensual/Semanal/Anual: Periodicidade do movemento recorrente, cada canto se renovará
     - Gasto/Ingreso: Tipo do movemento recorrente, se é gasto ou ingreso
+
 ![Mov_Recor_2](manual_usuario/img/mov_recor_2.png)  
 ![Mov_Recor_3](manual_usuario/img/mov_recor_3.png)  
+
   - Gardar: Gardarse actualizado o movemento recorrente
   - Cancelar: Desfaranse os cambios sen gardar
 - Botón "Novo": Accederemos a pantalla de creación de movementos recorrentes
