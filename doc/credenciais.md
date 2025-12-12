@@ -1,2 +1,2 @@
-correo: probas@arcaneia.net
+correo: probas@arcaneia.net  
 contrasinal: T3st*Us3r0
