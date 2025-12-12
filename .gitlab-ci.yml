@@ -1,0 +1,11 @@
+pages:
+  stage: deploy
+  script:
+    # Creación del directorio para GitLab Pages
+    - mkdir public
+    - cp -r doc/manual_tecnico/html/* public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
