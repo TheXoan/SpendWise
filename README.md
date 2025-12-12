@@ -71,6 +71,7 @@ juanbuenovazquez@gmail.com
     - A versión mínima de Android para utilizar a app é: __Android 14__ Upside Down Cake (2023)
     - Para poder dispor da mellor experiencia de usuario recoméndase utilizar un dispositivo con mínimo 6.3" de pantalla
 - Para máis información consultar o apartado de despregue da aplicación no [manual técnico](doc/6_manual_tecnico.md)
+- **Durante a avaliación do proxecto estará habilitado o seguinte usuario e contrasinal para acceder a aplicación:** [credenciais](doc/credenciais.md)
 
 ## Licenza
    - [GNU GPL v3](LICENSE.md)

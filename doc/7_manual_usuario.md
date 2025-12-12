@@ -23,6 +23,7 @@
     - [Creación de movementos recorrentes](#creación-de-movementos-recorrentes)
     - [Funcionalidade de creación de movementos asociados](#funcionalidade-de-creación-de-movementos-asociados)
   - [Pantalla Configuración](#pantalla-configuración)
+  - [NOTA](#nota)
 
 ## Introdución
 SpendWise é unha aplicación de control de gastos persoais, coa posibilidade de engadir ingresos, gastos e movementos recurrentes, tendo así un control do histórico de notificación de gastos periódicos. A continuación detallase o seu uso por pantallas e funcionalidades:
@@ -232,3 +233,6 @@ Para poder executar a aplicación SpendWise deberemos ter instalado un método d
     - Importar datos: A través dun fichero zip podremos importar os datos de outra aplicación
   - Permisos:
     - Poderemos habilitar ou deshabilitar os permisos de notificacións da aplicación mediante un botón, ademáis disto mostrarse cando están habilitados ou deshabilitados, por se non estamos seguros
+
+## NOTA
+- **Durante a avaliación do proxecto estará habilitado o seguinte usuario e contrasinal para acceder a aplicación:** [credenciais](credenciais.md)
