@@ -4,6 +4,7 @@
 
 # Carpetas de build do módulo app
 app/build/
+/build
 
 # Local cache interno do módulo
 app/.cxx/
