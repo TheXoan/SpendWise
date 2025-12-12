@@ -438,7 +438,7 @@ fun EditMovDialog(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.width(140.dp)
                 ) {
-                    Text(stringResource(id = R.string.cancel_uppercase), color = Color.Black)
+                    Text(stringResource(id = R.string.cancel), color = Color.Black)
                 }
             }
         }
