@@ -42,7 +42,7 @@ juanbuenovazquez@gmail.com
    - [Anteproxecto](doc/2_anteproxecto.md)
    - [Seguimento/prototipos](doc/3_prototipos.md)
    - [Manual Técnico](doc/6_manual_tecnico.md)
-   - [Manual Usuario](doc/7_manual_usuario)
+   - [Manual Usuario](doc/7_manual_usuario.md)
   
 2. [Proxecto](/)  
 📁 [project-root](/)  
