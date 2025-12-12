@@ -838,7 +838,7 @@ Arquitectura da aplicación:
 ## Documentación da aplicación
 
 - A documentación da aplicación SpendWise está desenvolta co formato KDOC e xerada usando unha API de Android Studio chamada Dokka, a continuación deixo dous enlaces, un a versión HTML e outro a versión en Markdown
-### [HTML](https://damd.pages.iessanclemente.net/-/a23juanvb/-/jobs/29083/artifacts/public/index.html)
+### [HTML](https://a23juanvb-ed7d92.pages.iessanclemente.net/)
 ### [Markdown](manual_tecnico/markdown/)
 
 
