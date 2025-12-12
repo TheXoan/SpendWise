@@ -44,7 +44,7 @@ juanbuenovazquez@gmail.com
    - [Manual Técnico](doc/6_manual_tecnico.md)
    - [Manual Usuario](doc/7_manual_usuario)
   
-2. [Proxecto](/)
+2. [Proxecto](/)  
 📁 [project-root](/)  
 ├─ 📁 [bin](bin/) → Contén os ficheiros APK xerados ou publicados da aplicación.  
 ├─ 📁 [app](app/) → Código fonte principal da aplicación Android (Java/Kotlin + recursos).  
