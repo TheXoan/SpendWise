@@ -18,7 +18,7 @@ package com.arcaneia.spendwise.data.database;
  * @see RoomDatabase
  */
 @kotlin.Metadata(mv = {2, 2, 0}, k = 1, xi = 48, d1 = {"\u0000 \n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\'\u0018\u0000 \n2\u00020\u0001:\u0001\nB\u0007\u00a2\u0006\u0004\b\u0002\u0010\u0003J\b\u0010\u0004\u001a\u00020\u0005H&J\b\u0010\u0006\u001a\u00020\u0007H&J\b\u0010\b\u001a\u00020\tH&\u00a8\u0006\u000b"}, d2 = {"Lcom/arcaneia/spendwise/data/database/AppDatabase;", "Landroidx/room/RoomDatabase;", "<init>", "()V", "categoriaDao", "Lcom/arcaneia/spendwise/data/dao/CategoriaDao;", "movDao", "Lcom/arcaneia/spendwise/data/dao/MovDao;", "movRecurDao", "Lcom/arcaneia/spendwise/data/dao/MovRecurDao;", "Companion", "app_debug"})
-@androidx.room.Database(entities = {com.arcaneia.spendwise.data.entity.Categoria.class, com.arcaneia.spendwise.data.entity.Mov.class, com.arcaneia.spendwise.data.entity.MovRecur.class}, version = 10, exportSchema = false)
+@androidx.room.Database(entities = {com.arcaneia.spendwise.data.entity.Categoria.class, com.arcaneia.spendwise.data.entity.Mov.class, com.arcaneia.spendwise.data.entity.MovRecur.class}, version = 1, exportSchema = false)
 @androidx.room.TypeConverters(value = {com.arcaneia.spendwise.data.database.Converters.class})
 public abstract class AppDatabase extends androidx.room.RoomDatabase {
     @kotlin.jvm.Volatile()

@@ -40,7 +40,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected RoomOpenDelegate createOpenDelegate() {
-    final RoomOpenDelegate _openDelegate = new RoomOpenDelegate(10, "e95c7366ca9f4d187b024c16ddc8f3fa", "ec71991d43fa963df4cc233a7076a54f") {
+    final RoomOpenDelegate _openDelegate = new RoomOpenDelegate(1, "e95c7366ca9f4d187b024c16ddc8f3fa", "ec71991d43fa963df4cc233a7076a54f") {
       @Override
       public void createAllTables(@NonNull final SQLiteConnection connection) {
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `categoria` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `tipo` TEXT NOT NULL, `remote_id` TEXT)");

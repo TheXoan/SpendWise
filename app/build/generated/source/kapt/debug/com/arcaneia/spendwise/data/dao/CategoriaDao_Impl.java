@@ -110,29 +110,29 @@ public final class CategoriaDao_Impl implements CategoriaDao {
   }
 
   @Override
-  public Object insert(final Categoria categoria, final Continuation<? super Long> arg1) {
+  public Object insert(final Categoria categoria, final Continuation<? super Long> $completion) {
     if (categoria == null) throw new NullPointerException();
     return DBUtil.performSuspending(__db, false, true, (_connection) -> {
       return __insertAdapterOfCategoria.insertAndReturnId(_connection, categoria);
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object delete(final Categoria categoria, final Continuation<? super Unit> arg1) {
+  public Object delete(final Categoria categoria, final Continuation<? super Unit> $completion) {
     if (categoria == null) throw new NullPointerException();
     return DBUtil.performSuspending(__db, false, true, (_connection) -> {
       __deleteAdapterOfCategoria.handle(_connection, categoria);
       return Unit.INSTANCE;
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object update(final Categoria categoria, final Continuation<? super Unit> arg1) {
+  public Object update(final Categoria categoria, final Continuation<? super Unit> $completion) {
     if (categoria == null) throw new NullPointerException();
     return DBUtil.performSuspending(__db, false, true, (_connection) -> {
       __updateAdapterOfCategoria.handle(_connection, categoria);
       return Unit.INSTANCE;
-    }, arg1);
+    }, $completion);
   }
 
   @Override
@@ -179,7 +179,7 @@ public final class CategoriaDao_Impl implements CategoriaDao {
   }
 
   @Override
-  public Object getById(final int id, final Continuation<? super Categoria> arg1) {
+  public Object getById(final int id, final Continuation<? super Categoria> $completion) {
     final String _sql = "SELECT * FROM categoria WHERE id = ? LIMIT 1";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -220,11 +220,11 @@ public final class CategoriaDao_Impl implements CategoriaDao {
       } finally {
         _stmt.close();
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object getPendingToUpload(final Continuation<? super List<Categoria>> arg0) {
+  public Object getPendingToUpload(final Continuation<? super List<Categoria>> $completion) {
     final String _sql = "SELECT * FROM categoria WHERE remote_id IS NULL";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -263,11 +263,12 @@ public final class CategoriaDao_Impl implements CategoriaDao {
       } finally {
         _stmt.close();
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object getByRemoteId(final String remoteId, final Continuation<? super Categoria> arg1) {
+  public Object getByRemoteId(final String remoteId,
+      final Continuation<? super Categoria> $completion) {
     final String _sql = "SELECT * FROM categoria WHERE remote_id = ? LIMIT 1";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -312,11 +313,11 @@ public final class CategoriaDao_Impl implements CategoriaDao {
       } finally {
         _stmt.close();
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object getAllWithRemoteId(final Continuation<? super List<Categoria>> arg0) {
+  public Object getAllWithRemoteId(final Continuation<? super List<Categoria>> $completion) {
     final String _sql = "SELECT * FROM categoria WHERE remote_id IS NOT NULL";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -355,11 +356,11 @@ public final class CategoriaDao_Impl implements CategoriaDao {
       } finally {
         _stmt.close();
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object deleteById(final int categoriaId, final Continuation<? super Unit> arg1) {
+  public Object deleteById(final int categoriaId, final Continuation<? super Unit> $completion) {
     final String _sql = "DELETE FROM categoria WHERE id = ?";
     return DBUtil.performSuspending(__db, false, true, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -371,12 +372,12 @@ public final class CategoriaDao_Impl implements CategoriaDao {
       } finally {
         _stmt.close();
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
   public Object attachRemoteId(final int localId, final String remoteId,
-      final Continuation<? super Unit> arg2) {
+      final Continuation<? super Unit> $completion) {
     final String _sql = "UPDATE categoria SET remote_id = ? WHERE id = ?";
     return DBUtil.performSuspending(__db, false, true, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -394,7 +395,7 @@ public final class CategoriaDao_Impl implements CategoriaDao {
       } finally {
         _stmt.close();
       }
-    }, arg2);
+    }, $completion);
   }
 
   @NonNull

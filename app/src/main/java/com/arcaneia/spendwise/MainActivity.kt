@@ -120,7 +120,8 @@ class MainActivity : AppCompatActivity() {
                     categoriaViewModel = categoriaViewModel,
                     movRecurViewModel = movRecurViewModel,
                     loginViewModel = loginViewModel,
-                    categoriaSyncRepository = categoriaSyncRepository
+                    categoriaSyncRepository = categoriaSyncRepository,
+                    this
                 )
             }
         }

@@ -45,7 +45,7 @@ juanbuenovazquez@gmail.com
    - [Manual Usuario](doc/7_manual_usuario.md)
    - [Video demostración](doc/videos/Video_demostración_final_SpendWise.mkv)
 
-#### [Documentación KDoc](doc/7_manual_usuario.md)
+#### [Documentación KDoc](https://damd.pages.iessanclemente.net/-/a23juanvb/-/jobs/29083/artifacts/public/index.html)
 
 2. [Proxecto](/)  
 📁 [project-root](/)  

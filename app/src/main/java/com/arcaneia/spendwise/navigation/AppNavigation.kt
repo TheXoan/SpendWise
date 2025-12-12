@@ -1,5 +1,6 @@
 package com.arcaneia.spendwise.navigation
 
+import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -57,7 +58,8 @@ fun AppNavigation(
     categoriaViewModel: CategoriaViewModel,
     movRecurViewModel: MovRecurViewModel,
     loginViewModel: LoginViewModel,
-    categoriaSyncRepository: CategoriaSyncRepository
+    categoriaSyncRepository: CategoriaSyncRepository,
+    context: Context
 ) {
 
     // Único controlador de navegación
@@ -113,7 +115,7 @@ fun AppNavigation(
             )
         ) {
             composable(AppScreens.SplashScreen.route) {
-                SplashScreen(navController, authViewModel)
+                SplashScreen(navController, authViewModel, context)
             }
             composable(AppScreens.MainScreen.route) {
                 MainScreen(navController = navController, movViewModel = movViewModel)

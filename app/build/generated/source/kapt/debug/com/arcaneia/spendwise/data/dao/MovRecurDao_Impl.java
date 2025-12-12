@@ -151,29 +151,29 @@ public final class MovRecurDao_Impl implements MovRecurDao {
   }
 
   @Override
-  public Object insert(final MovRecur movRecur, final Continuation<? super Long> arg1) {
+  public Object insert(final MovRecur movRecur, final Continuation<? super Long> $completion) {
     if (movRecur == null) throw new NullPointerException();
     return DBUtil.performSuspending(__db, false, true, (_connection) -> {
       return __insertAdapterOfMovRecur.insertAndReturnId(_connection, movRecur);
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object delete(final MovRecur movRecur, final Continuation<? super Unit> arg1) {
+  public Object delete(final MovRecur movRecur, final Continuation<? super Unit> $completion) {
     if (movRecur == null) throw new NullPointerException();
     return DBUtil.performSuspending(__db, false, true, (_connection) -> {
       __deleteAdapterOfMovRecur.handle(_connection, movRecur);
       return Unit.INSTANCE;
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object update(final MovRecur movRecur, final Continuation<? super Unit> arg1) {
+  public Object update(final MovRecur movRecur, final Continuation<? super Unit> $completion) {
     if (movRecur == null) throw new NullPointerException();
     return DBUtil.performSuspending(__db, false, true, (_connection) -> {
       __updateAdapterOfMovRecur.handle(_connection, movRecur);
       return Unit.INSTANCE;
-    }, arg1);
+    }, $completion);
   }
 
   @Override
@@ -249,7 +249,7 @@ public final class MovRecurDao_Impl implements MovRecurDao {
 
   @Override
   public Object getMovsToRenew(final String today,
-      final Continuation<? super List<MovRecur>> arg1) {
+      final Continuation<? super List<MovRecur>> $completion) {
     final String _sql = "SELECT * FROM mov_recur WHERE data_rnv <= ?";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -322,11 +322,11 @@ public final class MovRecurDao_Impl implements MovRecurDao {
       } finally {
         _stmt.close();
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object getById(final int id, final Continuation<? super MovRecur> arg1) {
+  public Object getById(final int id, final Continuation<? super MovRecur> $completion) {
     final String _sql = "SELECT * FROM mov_recur WHERE id = ? LIMIT 1";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -395,11 +395,11 @@ public final class MovRecurDao_Impl implements MovRecurDao {
       } finally {
         _stmt.close();
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object getPendingToUpload(final Continuation<? super List<MovRecur>> arg0) {
+  public Object getPendingToUpload(final Continuation<? super List<MovRecur>> $completion) {
     final String _sql = "SELECT * FROM mov_recur WHERE remote_id IS NULL";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -466,11 +466,12 @@ public final class MovRecurDao_Impl implements MovRecurDao {
       } finally {
         _stmt.close();
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object getByRemoteId(final String remoteId, final Continuation<? super MovRecur> arg1) {
+  public Object getByRemoteId(final String remoteId,
+      final Continuation<? super MovRecur> $completion) {
     final String _sql = "SELECT * FROM mov_recur WHERE remote_id = ? LIMIT 1";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -543,11 +544,11 @@ public final class MovRecurDao_Impl implements MovRecurDao {
       } finally {
         _stmt.close();
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object getAllWithRemoteId(final Continuation<? super List<MovRecur>> arg0) {
+  public Object getAllWithRemoteId(final Continuation<? super List<MovRecur>> $completion) {
     final String _sql = "SELECT * FROM mov_recur WHERE remote_id IS NOT NULL";
     return DBUtil.performSuspending(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -614,12 +615,12 @@ public final class MovRecurDao_Impl implements MovRecurDao {
       } finally {
         _stmt.close();
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
   public Object attachRemoteId(final int localId, final String remoteId,
-      final Continuation<? super Unit> arg2) {
+      final Continuation<? super Unit> $completion) {
     final String _sql = "UPDATE mov_recur SET remote_id = ? WHERE id = ?";
     return DBUtil.performSuspending(__db, false, true, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
@@ -637,7 +638,7 @@ public final class MovRecurDao_Impl implements MovRecurDao {
       } finally {
         _stmt.close();
       }
-    }, arg2);
+    }, $completion);
   }
 
   @NonNull

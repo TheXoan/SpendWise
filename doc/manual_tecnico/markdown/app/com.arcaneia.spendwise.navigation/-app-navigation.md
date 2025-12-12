@@ -6,7 +6,7 @@
 
 @[Composable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html)
 
-fun [AppNavigation](-app-navigation.md)(authViewModel: [AuthViewModel](../com.arcaneia.spendwise.data.model/-auth-view-model/index.md), movViewModel: [MovViewModel](../com.arcaneia.spendwise.data.model/-mov-view-model/index.md), categoriaViewModel: [CategoriaViewModel](../com.arcaneia.spendwise.data.model/-categoria-view-model/index.md), movRecurViewModel: [MovRecurViewModel](../com.arcaneia.spendwise.data.model/-mov-recur-view-model/index.md), loginViewModel: [LoginViewModel](../com.arcaneia.spendwise.data.model/-login-view-model/index.md), categoriaSyncRepository: [CategoriaSyncRepository](../com.arcaneia.spendwise.apis.data.model/-categoria-sync-repository/index.md))
+fun [AppNavigation](-app-navigation.md)(authViewModel: [AuthViewModel](../com.arcaneia.spendwise.data.model/-auth-view-model/index.md), movViewModel: [MovViewModel](../com.arcaneia.spendwise.data.model/-mov-view-model/index.md), categoriaViewModel: [CategoriaViewModel](../com.arcaneia.spendwise.data.model/-categoria-view-model/index.md), movRecurViewModel: [MovRecurViewModel](../com.arcaneia.spendwise.data.model/-mov-recur-view-model/index.md), loginViewModel: [LoginViewModel](../com.arcaneia.spendwise.data.model/-login-view-model/index.md), categoriaSyncRepository: [CategoriaSyncRepository](../com.arcaneia.spendwise.apis.data.model/-categoria-sync-repository/index.md), context: [Context](https://developer.android.com/reference/kotlin/android/content/Context.html))
 
 Función principal que gestiona la navegación global de la aplicación.
 

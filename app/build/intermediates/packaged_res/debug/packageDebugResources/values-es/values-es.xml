@@ -52,7 +52,7 @@
     <string name="must_field_selected">Debes completar todos los campos</string>
     <string name="must_select_cat_first">Por favor selecciona una categorí\u00EDa primero</string>
     <string name="name">Nombre</string>
-    <string name="name_cat_cant_empty">El nombre de la categorí\u00EDa no puede estar vac\u00EDo</string>
+    <string name="name_cat_cant_empty">El nombre de la categor\u00EDa no puede estar vac\u00EDo</string>
     <string name="new_expense">Nuevo gasto</string>
     <string name="new_income">Nuevo ingreso</string>
     <string name="new_recur_mov">Nuevo moviemiento recurrente</string>
