@@ -50,3 +50,19 @@ Funcionalidades engadidas na segunda versión:
 * No movemento recurrente tiña almacenada as datas como Long, pero dificultábame moito manexalas e operar con elas, polo que as cambio a String para utilizar os métodos comúns de date.
 * Chamaba ao método de creación de movementos recurrentes no Main Activity, pero esto daba erros xa que cando a app estaba cerrada non se chamaban aos métodos, polo que se implementa unha clase Aplication. Forma de  facelo que recomenda Google: https://developer.android.com/topic/libraries/architecture/workmanager#schedule_from_application
 * A solicitude de permisos provocaba un bug e un exception na execución da aplicación. Investigando descubrin que este sistema de notificacións non é compatible con Fragment, clase da que heredaba o meu MainActivity, polo que migro a clase para que herede de: AppCompatActivity() e soluciona o problema.
+
+
+## 3 - Prototipo  v3.0 final
+* Abstraido código en métodos auxiliares
+* Traducida a aplicación a inglés, galego e castelán
+* Títulos aliñados e formateados
+* Implementado login a través de PocketBase
+* Implementado gardado e recuperación de datos en PocketBase
+* Implementado sistema multidispositivo con sincronización de datos a través de worker e no inicio de sesión
+* Implementado repositorio para instalación a través de F-Droid
+
+### Problemas atopados
+* Ao ter varios dispositivos duplicabanseme constantemente as notificacións xa que notificaba nun e no outro e creabanse os movementos e volvian a subirse. Para solucionalo implementei un atributo hash que será un indicador de que ese movemento en concreto xa se subeu a pocketbase e non se ten que volver a subir, o hash crease co nome do movemento e a data.
+* Despois disto atopeime outro problema, que ahora so notificaba nun dispositivo, no primeiro que creaba os movementos. Para solucionalo implementei outro atributo que indica se nese dispositivo se notificou ou non, este é un atributo interno de cada base de datos local, non se sube a pocketbase, así cada dispositivo saberá si notificou ou non.
+* Outro problema foi que por defecto Android Studio so soporta conexións seguras HTTPS, cando estaba en probas, a conexión a pocketbase facía con HTTP con unha API REST e sempre daba erro e non sabía por que, tardei en darme conta disto. Solucioneino engadindo un certificado let's encrypt a conexión.
+* Orde de sincronización: Xurdiron varios problemas de sincronización, xa que cando borraba unha categoría por exemplo en local a sincronización faciase de forma periódica e ao entrar a app, por se iniciaba sesión dende outro dispositivo que estivera sincronizado ao momento. O que pasaba era que borraba un movemento en local, chegaba a sincronización e como non estaba borrado en pocketbase ainda, descargabaseme en local e volvia aparecer na app, polo que nunca chegaba a borrarse. Para solucionalo implementei o creado, borrado e actualización instantáneos, tanto en local como en remoto.

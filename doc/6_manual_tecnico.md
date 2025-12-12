@@ -3,12 +3,48 @@
 - [Manual técnico SpendWise 2025](#manual-técnico-spendwise-2025)
   - [Introdución](#introdución)
   - [Despregue PocketBase utilizando Docker](#despregue-pocketbase-utilizando-docker)
-  - [Clonado repositorio](#clonado-repositorio)
+    - [Docker Compose PocketBase: Doc](#docker-compose-pocketbase-doc)
+    - [(Opcional) Nginx Proxy Manager: Doc](#opcional-nginx-proxy-manager-doc)
+    - [Creación de coleccións en PocketBase](#creación-de-coleccións-en-pocketbase)
+    - [Creación de usuarios PocketBase](#creación-de-usuarios-pocketbase)
+  - [Clonado repositorio e instalación de entorno](#clonado-repositorio-e-instalación-de-entorno)
+    - [Clonado proxecto](#clonado-proxecto)
+    - [Instalación Android Studio](#instalación-android-studio)
   - [Estrutura do código](#estrutura-do-código)
+    - [📁 apis](#-apis)
+    - [📁 components](#-components)
+    - [📁 data](#-data)
+    - [📁 backup](#-backup)
+    - [📁 dao](#-dao)
+    - [📁 database](#-database)
+    - [📁 datastore](#-datastore)
+    - [📁 di](#-di)
+    - [📁 entity](#-entity)
+    - [📁 model](#-model)
+    - [📁 repository](#-repository)
+    - [📁 workers](#-workers)
+    - [📁 navigation](#-navigation)
+    - [📁 permission](#-permission)
+    - [📁 screens](#-screens)
+    - [📁 ui/theme](#-uitheme)
+    - [📁 utils](#-utils)
   - [Documentación da aplicación](#documentación-da-aplicación)
+    - [HTML](#html)
+    - [Markdown](#markdown)
   - [Datos](#datos)
+    - [🟦 Entidad: Categoria](#-entidad-categoria)
+    - [🟧 Entidad: Mov (movimiento simple)](#-entidad-mov-movimiento-simple)
+    - [🟩 Entidad: MovRecur (movimiento recurrente)](#-entidad-movrecur-movimiento-recurrente)
+    - [Diagrama E-R](#diagrama-e-r)
   - [Tecnoloxías empregadas](#tecnoloxías-empregadas)
+    - [🎨 Jetpack Compose — UI declarativa](#-jetpack-compose--ui-declarativa)
+    - [🗄️ Room — Persistencia local en SQLite](#️-room--persistencia-local-en-sqlite)
+    - [🔄 Flow — Datos reactivos en tempo real](#-flow--datos-reactivos-en-tempo-real)
+    - [🧭 Navigation Compose — Navegación entre pantallas](#-navigation-compose--navegación-entre-pantallas)
   - [Despregue](#despregue)
+    - [F-Droid](#f-droid)
+    - [Instalación e importación do repositorio en F-Droid](#instalación-e-importación-do-repositorio-en-f-droid)
+    - [Configuración do repositorio en docker](#configuración-do-repositorio-en-docker)
 
 ## Introdución
 SpendWise é unha aplicación desenvolta en Android Studio utilizando Jetpack Compose, SQLite, ROOM, FLOW e facendo un gardado de datos e login contra unha base de datos PocketBase. A continuación expoñerase como poder crear este entorno de desenvolvemento.
@@ -21,7 +57,7 @@ A continuación exponse a configuración utilizada para o desenvolvemento do pro
 - A base de datos pocketbase está despregada nun contenedor docker nun servidor Linux virtualizado con Proxmox.
 - Ó contenedor accedese a través dun proxy configurado para bloquear o acceso a /_/ donde está a administración do servicio. Tamén fai unha redirección ao porto 8090 utilizado para a API e engade un certificado HTTPS xerado con Let's Encrypt. Tanto Nginx como PocketBase atopanse nunha rede DMZ securizada e ambos están no mesmo servidor docker compartido unha rede docker O dominio utilizado é valora.arcaneia.net, un subdominio de arcaneia.net, propiedade do autor da aplicación. A continuación mostrase a configuración usada:
 
-  - Docker Compose PocketBase: [Doc](https://github.com/muchobien/pocketbase-docker)
+### Docker Compose PocketBase: [Doc](https://github.com/muchobien/pocketbase-docker)
 
 ```yaml
 services:
@@ -72,7 +108,7 @@ networks:
     external:
       name: nginxproxy_proxy_net
 ```
-- (Opcional) Nginx Proxy Manager: [Doc](https://nginxproxymanager.com/setup/)
+### (Opcional) Nginx Proxy Manager: [Doc](https://nginxproxymanager.com/setup/)
 ```yaml
 services:
   npm:
@@ -107,6 +143,9 @@ networks:
 ```
 
 - Logo de ter o servicio de pocketbase despregado podemos proceder a crear as coleccións e usuarios necesarios:
+
+### Creación de coleccións en PocketBase
+
 <details>
   <summary>Ver código JSON</summary>
 
@@ -503,18 +542,22 @@ networks:
 ```
 </details>
 
+### Creación de usuarios PocketBase
+
 - Logo de crear as coleccións deberemos engadir un usuario para poder facer o login dende a aplicación:
   - Prememos arriba a dereita en: **New record** ![Paso 1](manual_tecnico/img/paso1_adduser.png)
   - E despois so deberemos cubrir os datos e marcar en verified para indicar que está habilitado ![Paso 2](manual_tecnico/img/paso2_adduser.png)
 
-## Clonado repositorio
+## Clonado repositorio e instalación de entorno
 
+### Clonado proxecto
 - Ahora xa podermos clonar o repositorio e lanzar a aplicación
   - Debemos dispor dunha conta no GitLab do IES San Clemente
   - Clonar o repositorio: Teremos que ter previamente descargado e instalado [Git](https://git-scm.com/install/windows)
   - Para clonar o repositorio so teremos que navegar ata a URL do proxecto, facer click en **Clone with SSH** ![clone](manual_tecnico/img/clone.png)
   - Unha vez teñamos o link iremos a nosa terminal do dispositivo e lanzaremos a descarga: ![Descarga](manual_tecnico/img/descarga.png)
 
+### Instalación Android Studio
 - Por último só teremos que instalar [Android Studio](https://developer.android.com/codelabs/basic-android-kotlin-compose-install-android-studio?hl=es-419#2) o IDE máis utilizado para desenvolver proxectos Android
 - Agora so nos queda abrir o proxecto previamente descargado, usando Android Studio e comezar a programar.
   - #NOTA: Android Studio tamén dispón de ferramentas para traballar directamente con git, e GitLab: ![git](manual_tecnico/img/git.png)
@@ -607,7 +650,7 @@ networks:
     └── SpendWiseApp.kt
 ```
 **Explicación da estrutura:**
-📁 apis
+### 📁 apis
 
 Capa encargada da comunicación con servizos externos (PocketBase, API REST).
 
@@ -633,7 +676,7 @@ Modelos, data sources remotos e repositorios de sincronización relacionados coa
 | **MovRemoteDataSource.kt**       | Obtén/envía movementos ao servidor.                     |
 | **MovSyncRepository.kt**         | Lóxica de sincronización de movementos.                 |
 
-📁 components
+### 📁 components
 
 Componentes reutilizables de UI.
 
@@ -642,16 +685,16 @@ Componentes reutilizables de UI.
 | **Dialog.kt**   | Composables para diálogos personalizados.        |
 | **Spinners.kt** | Composables de dropdowns/spinners reutilizables. |
 
-📁 data
+### 📁 data
 
 Contén toda a capa de datos locais: Room, DataStore, repositorios, workers…
 
-📁 backup
+### 📁 backup
 | Ficheiro             | Descrición                                                      |
 | -------------------- | --------------------------------------------------------------- |
 | **BackupManager.kt** | Lóxica para exportar/importar e xestionar copias de seguridade. |
 
-📁 dao
+### 📁 dao
 
 Interfaces de acceso á base de datos Room.
 
@@ -661,14 +704,14 @@ Interfaces de acceso á base de datos Room.
 | **MovDao.kt**       | Consultas sobre movementos.             |
 | **MovRecurDao.kt**  | Consultas sobre movementos recorrentes. |
 
-📁 database
+### 📁 database
 | Ficheiro                | Descrición                                        |
 | ----------------------- | ------------------------------------------------- |
 | **AppDatabase.kt**      | Base de datos Room principal.                     |
 | **Converters.kt**       | Conversores para tipos complexos (enums, datas…). |
 | **DatabaseCallBack.kt** | Callbacks ao crear/abrir a base de datos.         |
 
-📁 datastore
+### 📁 datastore
 
 DataStore para preferencias e valores persistentes.
 
@@ -677,12 +720,12 @@ DataStore para preferencias e valores persistentes.
 | **PermissionsDataStore.kt** | Garda o estado dos permisos concedidos. |
 | **TokenDataStore.kt**       | Almacena o token de autenticación.      |
 
-📁 di
+### 📁 di
 | Ficheiro              | Descrición                                                       |
 | --------------------- | ---------------------------------------------------------------- |
 | **ServiceLocator.kt** | Inicialización manual das dependencias (BD, repositorios, API…). |
 
-📁 entity
+### 📁 entity
 
 Modelos locais usados en Room.
 
@@ -693,7 +736,7 @@ Modelos locais usados en Room.
 | **MovRecur.kt**        | Entidade de movemento recorrente. |
 | **MovWithCategory.kt** | Relación movemento–categoría.     |
 
-📁 model
+### 📁 model
 
 ViewModels e modelos auxiliares da UI.
 
@@ -708,7 +751,7 @@ ViewModels e modelos auxiliares da UI.
 | **Recurrence.kt**         | Modelos/enum de recorrencia.              |
 | **TypeMov.kt**            | Tipo de movemento: ingreso ou gasto.      |
 
-📁 repository
+### 📁 repository
 
 Capa intermedia entre ViewModels e Room.
 
@@ -718,7 +761,7 @@ Capa intermedia entre ViewModels e Room.
 | **MovRecurRepository.kt**  | Acceso a movementos recorrentes locais. |
 | **MovRepository.kt**       | Acceso a movementos locais.             |
 
-📁 workers
+### 📁 workers
 
 Tarefas en segundo plano con WorkManager.
 
@@ -727,7 +770,7 @@ Tarefas en segundo plano con WorkManager.
 | **RenewMovsRecurWorker.kt** | Xera novos movementos segundo os recorrentes. |
 | **SyncWorker.kt**           | Sincroniza datos locais co servidor.          |
 
-📁 navigation
+### 📁 navigation
 
 Navegación principal da app con Jetpack Compose.
 
@@ -736,12 +779,12 @@ Navegación principal da app con Jetpack Compose.
 | **AppNavigation.kt** | Grafo principal de navegación.    |
 | **AppScreens.kt**    | Identificadores de cada pantalla. |
 
-📁 permission
+### 📁 permission
 | Ficheiro                 | Descrición                                    |
 | ------------------------ | --------------------------------------------- |
 | **PermissionManager.kt** | Xestión centralizada dos permisos de Android. |
 
-📁 screens
+### 📁 screens
 
 Todas as pantallas principais da aplicación.
 
@@ -759,7 +802,7 @@ Todas as pantallas principais da aplicación.
 | **SpendWiseBottomBar.kt**    | Barra de navegación inferior.                |
 | **SplashScreen.kt**          | Pantalla de carga inicial.                   |
 
-📁 ui/theme
+### 📁 ui/theme
 
 Definición do tema visual da app.
 
@@ -769,7 +812,7 @@ Definición do tema visual da app.
 | **Theme.kt** | Configuración de MaterialTheme. |
 | **Type.kt**  | Tipografías utilizadas.         |
 
-📁 utils
+### 📁 utils
 
 Funcións e utilidades auxiliares.
 
@@ -784,57 +827,66 @@ Ficheiros raíz
 | **MainActivity.kt** | Actividade principal que contén Compose.                            |
 | **SpendWiseApp.kt** | Inicialización global da app: tema, NavHost, configuración inicial. |
 
-Arquitectura de capas:
+Arquitectura da aplicación:
 
 ![Capas](manual_tecnico/img/capas.png)
 
 ## Documentación da aplicación
 
 - A documentación da aplicación SpendWise está desenvolta co formato KDOC e xerada usando unha API de Android Studio chamada Dokka, a continuación deixo dous enlaces, un a versión HTML e outro a versión en Markdown
-  - [HTML](manual_tecnico/html/)
-  - [Markdown](manual_tecnico/markdown/)
+### [HTML](manual_tecnico/html/)
+### [Markdown](manual_tecnico/markdown/)
 
 
 ## Datos
-🗂️ Explicación completa das entidades e atributos
+**Explicación completa das entidades e atributos**
 
-🟦 Entidad: Categoria
+### 🟦 Entidad: Categoria
 
-id: Int	Identificador único local. Autoxerado por Room.
-nome: String	Nome da categoría (“Comida”, “Transporte”, etc.).
-tipo: String	Permite distinguir tipos especiais de categorías (ex.: “sistema”, “usuario”).
-remote_id: String?	ID remoto en PocketBase. null → aínda non sincronizado.
+| Atributo   | Tipo     | Descrición |
+|------------|----------|-------------|
+| id         | Int      | Identificador único local. Autoxerado por Room. |
+| nome       | String   | Nome da categoría (“Comida”, “Transporte”, etc.). |
+| tipo       | String   | Distingue tipos especiais de categorías (ex.: “sistema”, “usuario”). |
+| remote_id  | String?  | ID remoto en PocketBase. `null` → aínda non sincronizado. |
 
-🟧 Entidad: Mov (movimiento simple)
 
-id: Int	Identificador local autoxerado.
-tipo: TypeMov?	Tipo de movemento: INGRESO ou GASTO.
-importe: Double	Cantidade económica do movemento.
-data_mov: String	Data do movemento en formato "YYYY-MM-DD" (ou con hora).
-descricion: String?	Texto opcional para explicar o movemento.
-categoria_id: Int	FK → Categoria.id. Clasifica o movemento.
-mov_recur_id: Int?	FK → MovRecur.id. Se vén dun movemento recurrente.
-remote_id: String?	ID en PocketBase. null → sen sincronizar.
-renew_hash: String?	Cadea única para evitar duplicados xerados automaticamente entre dispositivos.
-notificado: Boolean	Evita enviar notificacións duplicadas do mesmo movemento.
+### 🟧 Entidad: Mov (movimiento simple)
 
-🟩 Entidad: MovRecur (movimiento recurrente)
+| Atributo      | Tipo        | Descrición |
+|---------------|-------------|------------|
+| id            | Int         | Identificador local autoxerado. |
+| tipo          | TypeMov?    | Tipo de movemento: INGRESO ou GASTO. |
+| importe       | Double      | Cantidade económica do movemento. |
+| data_mov      | String      | Data do movemento en formato "YYYY-MM-DD" (ou con hora). |
+| descricion    | String?     | Texto opcional para explicar o movemento. |
+| categoria_id  | Int         | FK → Categoria.id. Clasifica o movemento. |
+| mov_recur_id  | Int?        | FK → MovRecur.id. Indica se provén dun movemento recurrente. |
+| remote_id     | String?     | ID en PocketBase. `null` → sen sincronizar. |
+| renew_hash    | String?     | Cadea única para evitar duplicados entre dispositivos. |
+| notificado    | Boolean     | Evita enviar notificacións duplicadas do mesmo movemento. |
 
-id: Int	Identificador local autoxerado.
-nome: String	Nome do movemento recurrente (“Netflix”, “Nómina mensual”).
-importe: Double	Cantidade que se renovará periodicamente.
-periodicidade: Recurrence?	Tipo de recurrencia: MENSUAL, ANUAL, SEMANAL…
-data_ini: String	Data de inicio da recurrencia.
-data_rnv: String	Data da próxima renovación. Actualízase automaticamente.
-tipo: TypeMov?	INGRESO ou GASTO.
-remote_id: String?	ID remoto en PocketBase. null → sen sincronizar.
 
+### 🟩 Entidad: MovRecur (movimiento recurrente)
+
+| Atributo      | Tipo         | Descrición |
+|---------------|--------------|------------|
+| id            | Int          | Identificador local autoxerado. |
+| nome          | String       | Nome do movemento recurrente (“Netflix”, “Nómina mensual”). |
+| importe       | Double       | Cantidade que se renovará periodicamente. |
+| periodicidade | Recurrence?  | Tipo de recurrencia: MENSUAL, ANUAL, SEMANAL… |
+| data_ini      | String       | Data de inicio da recurrencia. |
+| data_rnv      | String       | Data da próxima renovación. Actualízase automaticamente. |
+| tipo          | TypeMov?     | INGRESO ou GASTO. |
+| remote_id     | String?      | ID remoto en PocketBase. `null` → sen sincronizar. |
+
+### Diagrama E-R
 ![Diagrama](manual_tecnico/img/e_r.png)
 
 ## Tecnoloxías empregadas
 
 As principais tecnoloxías empregadas no proxecto son:
-🎨 Jetpack Compose — UI declarativa
+### 🎨 Jetpack Compose — UI declarativa
 
 Que é:
 Framework moderno de Android para crear interfaces mediante código declarativo.
@@ -850,7 +902,7 @@ Creación de compoñentes reutilizables (diálogos, listas, formularios...).
 Que achega:
 UI máis limpa, menos código boilerplate e maior velocidade de desenvolvemento.
 
-🗄️ Room — Persistencia local en SQLite
+### 🗄️ Room — Persistencia local en SQLite
 
 Que é:
 Libraría oficial de Android para traballar con SQLite de forma tipada e segura.
@@ -866,7 +918,7 @@ Garantir integridade e relacións entre táboas.
 Que achega:
 Persistencia offline e acceso estruturado e eficiente aos datos.
 
-🔄 Flow — Datos reactivos en tempo real
+### 🔄 Flow — Datos reactivos en tempo real
 
 Que é:
 API de Kotlin Coroutines que permite emitir fluxos de datos reactivos.
@@ -882,7 +934,7 @@ Xestionar estados asincrónicos dentro dos ViewModels.
 Que achega:
 UI sincronizada cos datos sen listeners nin mecánicas tradicionais máis complexas.
 
-🧭 Navigation Compose — Navegación entre pantallas
+### 🧭 Navigation Compose — Navegación entre pantallas
 
 Que é:
 Sistema oficial de navegación para apps construídas con Jetpack Compose.
@@ -899,14 +951,19 @@ Que achega:
 Un fluxo de navegación claro, modular e totalmente integrado con Compose.
 
 ## Despregue
+
+### F-Droid
 A aplicación SpendWise está dispoñible para a súa descarga a través dun repositorio privado da coñecida tenda F-Droid.
 F-Droid permite engadir unha aplicación a tenda oficial, pero debe ser 100% softwarelibre, e as validacións que debe pasar a aplicación tardan 1-2 semanas se todo vai ben, polo que neste caso optei por crear o meu propio repositorio privado, o cal pode engadirse a aplicación de F-Droid
+
+### Instalación e importación do repositorio en F-Droid
 - En primeiro lugar debese descargar a APK de F-Droid da [páxina oficial](https://f-droid.org/es/packages/org.fdroid.fdroid/)
 - Unha vez descargada debe irse a: Ajustes -> Repositorios e abaixo a dereita premer en +
 - Unha vez feito eso danos a posibilidade de escanear un QR ou engadir a URL manualmente. A URL baixo a cal está o repositorio é: https://androidapps.arcaneia.net/repo/ propiedade do autor da aplicación. No mesmo enlace temos a posibilidade de escanear o QR.
 - Unha vez engadido o QR xa poderemos engadir o repositorio e premer en "Mostrar las aplicaciones" na cal nos dará a posibilidade de descargar a aplicación.
 - É posible que debamos habilitar os permisos de instalación de aplicacións de orixe descoñecido xa que a aplicación non está rexistrada e carece de firmas oficiais. Unha vez instalada podemos volver a denegar ditos permisos por seguridade.
 
+### Configuración do repositorio en docker
 A continuación mostro a configuración de docker utilizada, neste caso os proxectos de repositorios privados que había en docker hub están descontinuados polo que tiven que crear a miña propia imaxe, a cal engado tamén:
 
 Dockerfile.fdroidserver

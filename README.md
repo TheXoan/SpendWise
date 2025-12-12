@@ -41,24 +41,23 @@ juanbuenovazquez@gmail.com
    - [Proposta inicial](doc/1_proposta.md)
    - [Anteproxecto](doc/2_anteproxecto.md)
    - [Seguimento/prototipos](doc/3_prototipos.md)
-   - [Documentación final](doc/4_documentacion_final.md)
    - [Manual Técnico](doc/6_manual_tecnico.md)
    - [Manual Usuario](doc/7_manual_usuario)
 
-2. [Proxecto](/)
-- [bin](bin/) → Contén os ficheiros APK xerados ou publicados da aplicación.
-- [app](app/) → Código fonte principal da aplicación Android (Java/Kotlin + recursos).
-- [documentacion](doc/) → Documentación do proxecto (manuais, diagramas, especificacións…).
-- [gradle](gradle/) → Ficheiros internos utilizados polo sistema de construción Gradle.
+- 📁 [project-root](/)
+- ├─ 📁 [bin](bin/) → Contén os ficheiros APK xerados ou publicados da aplicación.
+- ├─ 📁 [app](app/) → Código fonte principal da aplicación Android (Java/Kotlin + recursos).
+- ├─ 📁 [documentacion](documentacion/) → Documentación do proxecto (manuais, diagramas, especificacións…).
+- ├─ 📁 [gradle](gradle/) → Ficheiros internos utilizados polo sistema de construción Gradle.
+- ├─ 📄 [.gitignore](.gitignore) → Indica que ficheiros deben ser ignorados polo control de versións Git.
+- ├─ 📄 [LICENSE.md](LICENSE.md) → Licenza oficial do proxecto.
+- ├─ 📄 [README.md](README.md) → Descrición xeral do proxecto e do autor.
+- ├─ 📄 [build.gradle.kts](build.gradle.kts) → Configuración principal do proxecto Gradle en formato Kotlin Script.
+- ├─ 📄 [gradle.properties](gradle.properties) → Axustes globais de Gradle (rendemento, opcións de compilación…).
+- ├─ 📄 [gradlew](gradlew) → Script para executar Gradle en Linux/macOS sen instalalo no sistema.
+- ├─ 📄 [gradlew.bat](gradlew.bat) → Script para executar Gradle en Windows.
+- └─ 📄 [settings.gradle.kts](settings.gradle.kts) → Define os módulos incluídos no proxecto e configuración inicial.
 
-- .gitignore              → Indica que ficheiros deben ser ignorados polo control de versións Git.
-- LICENSE.md              → Licenza oficial do proxecto.
-- README.md               → Descrición xeral do proxecto e do autor.
-- build.gradle.kts        → Configuración principal do proxecto Gradle en formato Kotlin Script.
-- gradle.properties       → Axustes globais de Gradle (rendemento, opcións de compilación…).
-- gradlew                 → Script para executar Gradle en Linux/macOS sen instalalo no sistema.
-- gradlew.bat             → Script para executar Gradle en Windows.
-- settings.gradle.kts     → Define os módulos incluídos no proxecto e configuración inicial.
 
 ## Instalación/Posta en marcha
 
