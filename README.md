@@ -72,6 +72,7 @@ juanbuenovazquez@gmail.com
     - Para poder dispor da mellor experiencia de usuario recoméndase utilizar un dispositivo con mínimo 6.3" de pantalla
 - Para máis información consultar o apartado de despregue da aplicación no [manual técnico](doc/6_manual_tecnico.md)
 - **Durante a avaliación do proxecto estará habilitado o seguinte usuario e contrasinal para acceder a aplicación:** [credenciais](doc/credenciais.md)
+- Repositorio privado F-Droid para a descarga da aplicación: [repo](https://androidapps.arcaneia.net/repo)
 
 ## Licenza
    - [GNU GPL v3](LICENSE.md)
