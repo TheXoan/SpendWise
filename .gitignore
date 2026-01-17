@@ -36,3 +36,6 @@ local.properties
 .gradle/
 .idea/
 .kotlin/
+
+# Android build outputs
+*.apk
